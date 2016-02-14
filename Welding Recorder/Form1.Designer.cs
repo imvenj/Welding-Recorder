@@ -31,16 +31,16 @@
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.创建新纪录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.加载ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startNewDataRecordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startNewControlProcedureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startNewControlProcedureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startNewDataRecordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.historiesLabel = new System.Windows.Forms.Label();
-            this.historiesList = new System.Windows.Forms.ListBox();
             this.newRecordButton = new System.Windows.Forms.Button();
+            this.historiesList = new System.Windows.Forms.ListBox();
+            this.historiesLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -70,6 +70,18 @@
             this.加载ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.加载ToolStripMenuItem.Text = "Load Database...";
             // 
+            // startNewDataRecordToolStripMenuItem
+            // 
+            this.startNewDataRecordToolStripMenuItem.Name = "startNewDataRecordToolStripMenuItem";
+            this.startNewDataRecordToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.startNewDataRecordToolStripMenuItem.Text = "Start record...";
+            // 
+            // startNewControlProcedureToolStripMenuItem
+            // 
+            this.startNewControlProcedureToolStripMenuItem.Name = "startNewControlProcedureToolStripMenuItem";
+            this.startNewControlProcedureToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.startNewControlProcedureToolStripMenuItem.Text = "Start control...";
+            // 
             // preferenceToolStripMenuItem
             // 
             this.preferenceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -81,7 +93,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // menuStrip1
@@ -102,18 +114,6 @@
             this.editToolStripMenuItem.Size = new System.Drawing.Size(42, 21);
             this.editToolStripMenuItem.Text = "Edit";
             // 
-            // startNewControlProcedureToolStripMenuItem
-            // 
-            this.startNewControlProcedureToolStripMenuItem.Name = "startNewControlProcedureToolStripMenuItem";
-            this.startNewControlProcedureToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.startNewControlProcedureToolStripMenuItem.Text = "Start control...";
-            // 
-            // startNewDataRecordToolStripMenuItem
-            // 
-            this.startNewDataRecordToolStripMenuItem.Name = "startNewDataRecordToolStripMenuItem";
-            this.startNewDataRecordToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.startNewDataRecordToolStripMenuItem.Text = "Start record...";
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -129,14 +129,14 @@
             this.splitContainer1.SplitterDistance = 170;
             this.splitContainer1.TabIndex = 1;
             // 
-            // historiesLabel
+            // newRecordButton
             // 
-            this.historiesLabel.AutoSize = true;
-            this.historiesLabel.Location = new System.Drawing.Point(4, 4);
-            this.historiesLabel.Name = "historiesLabel";
-            this.historiesLabel.Size = new System.Drawing.Size(59, 12);
-            this.historiesLabel.TabIndex = 0;
-            this.historiesLabel.Text = "Histories";
+            this.newRecordButton.Location = new System.Drawing.Point(6, 309);
+            this.newRecordButton.Name = "newRecordButton";
+            this.newRecordButton.Size = new System.Drawing.Size(68, 23);
+            this.newRecordButton.TabIndex = 2;
+            this.newRecordButton.Text = "New";
+            this.newRecordButton.UseVisualStyleBackColor = true;
             // 
             // historiesList
             // 
@@ -147,14 +147,14 @@
             this.historiesList.Size = new System.Drawing.Size(163, 280);
             this.historiesList.TabIndex = 1;
             // 
-            // newRecordButton
+            // historiesLabel
             // 
-            this.newRecordButton.Location = new System.Drawing.Point(6, 309);
-            this.newRecordButton.Name = "newRecordButton";
-            this.newRecordButton.Size = new System.Drawing.Size(68, 23);
-            this.newRecordButton.TabIndex = 2;
-            this.newRecordButton.Text = "New";
-            this.newRecordButton.UseVisualStyleBackColor = true;
+            this.historiesLabel.AutoSize = true;
+            this.historiesLabel.Location = new System.Drawing.Point(4, 4);
+            this.historiesLabel.Name = "historiesLabel";
+            this.historiesLabel.Size = new System.Drawing.Size(59, 12);
+            this.historiesLabel.TabIndex = 0;
+            this.historiesLabel.Text = "Histories";
             // 
             // MainForm
             // 
