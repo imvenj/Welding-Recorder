@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SerialReader
+namespace Welding_Recorder
 {
     // Signal reading from chip
     class Signal

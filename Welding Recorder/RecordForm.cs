@@ -53,7 +53,7 @@ namespace Welding_Recorder
             }
         }
 
-        private void Form1_Closing(object sender, EventArgs e)
+        private void RecordForm_Closing(object sender, EventArgs e)
         {
             string portName = portsBox.Text.ToUpper();
             SerialPort port = getPortWithPortName(portName);
@@ -338,5 +338,4 @@ namespace Welding_Recorder
             }
         }
     }
-}
 }

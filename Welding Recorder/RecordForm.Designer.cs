@@ -76,6 +76,7 @@
             this.sendMessageButton.TabIndex = 31;
             this.sendMessageButton.Text = "发送消息";
             this.sendMessageButton.UseVisualStyleBackColor = true;
+            this.sendMessageButton.Click += new System.EventHandler(this.sendMessageButton_Click);
             // 
             // dataOutputBox
             // 
@@ -96,6 +97,7 @@
             this.clearDataButton.TabIndex = 29;
             this.clearDataButton.Text = "清空数据";
             this.clearDataButton.UseVisualStyleBackColor = true;
+            this.clearDataButton.Click += new System.EventHandler(this.clearDataButton_Click);
             // 
             // clearLogButton
             // 
@@ -105,6 +107,7 @@
             this.clearLogButton.TabIndex = 28;
             this.clearLogButton.Text = "清空日志";
             this.clearLogButton.UseVisualStyleBackColor = true;
+            this.clearLogButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // label4
             // 
@@ -236,6 +239,7 @@
             this.openCloseButton.TabIndex = 16;
             this.openCloseButton.Text = "打开";
             this.openCloseButton.UseVisualStyleBackColor = true;
+            this.openCloseButton.Click += new System.EventHandler(this.openCloseButton_Click);
             // 
             // RecordForm
             // 
@@ -262,6 +266,7 @@
             this.Controls.Add(this.openCloseButton);
             this.Name = "RecordForm";
             this.Text = "RecordForm";
+            this.Load += new System.EventHandler(this.RecordForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
