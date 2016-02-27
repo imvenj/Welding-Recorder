@@ -15,6 +15,18 @@ namespace Welding_Recorder
         public MainForm()
         {
             InitializeComponent();
+            InitializeDataBase();
+        }
+
+        private void InitializeDataBase()
+        {
+            var db = new DataProcess();
+        }
+
+        private void startNewDataRecordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new RecordForm();
+            var result = form.ShowDialog();
         }
     }
 }

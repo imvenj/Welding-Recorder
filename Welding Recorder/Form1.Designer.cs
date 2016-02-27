@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.创建新纪录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.加载ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNewDataRecordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNewControlProcedureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,31 +48,18 @@
             // 文件ToolStripMenuItem
             // 
             this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.创建新纪录ToolStripMenuItem,
-            this.加载ToolStripMenuItem,
             this.startNewDataRecordToolStripMenuItem,
             this.startNewControlProcedureToolStripMenuItem});
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
             this.文件ToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
             this.文件ToolStripMenuItem.Text = "File";
             // 
-            // 创建新纪录ToolStripMenuItem
-            // 
-            this.创建新纪录ToolStripMenuItem.Name = "创建新纪录ToolStripMenuItem";
-            this.创建新纪录ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.创建新纪录ToolStripMenuItem.Text = "New Database...";
-            // 
-            // 加载ToolStripMenuItem
-            // 
-            this.加载ToolStripMenuItem.Name = "加载ToolStripMenuItem";
-            this.加载ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.加载ToolStripMenuItem.Text = "Load Database...";
-            // 
             // startNewDataRecordToolStripMenuItem
             // 
             this.startNewDataRecordToolStripMenuItem.Name = "startNewDataRecordToolStripMenuItem";
             this.startNewDataRecordToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.startNewDataRecordToolStripMenuItem.Text = "Start record...";
+            this.startNewDataRecordToolStripMenuItem.Click += new System.EventHandler(this.startNewDataRecordToolStripMenuItem_Click);
             // 
             // startNewControlProcedureToolStripMenuItem
             // 
@@ -93,7 +78,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // menuStrip1
@@ -180,8 +165,6 @@
         #endregion
 
         private System.Windows.Forms.ToolStripMenuItem 文件ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 创建新纪录ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 加载ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startNewDataRecordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startNewControlProcedureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferenceToolStripMenuItem;
