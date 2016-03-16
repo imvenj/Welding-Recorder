@@ -57,14 +57,14 @@
             // startNewDataRecordToolStripMenuItem
             // 
             this.startNewDataRecordToolStripMenuItem.Name = "startNewDataRecordToolStripMenuItem";
-            this.startNewDataRecordToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.startNewDataRecordToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.startNewDataRecordToolStripMenuItem.Text = "Start record...";
             this.startNewDataRecordToolStripMenuItem.Click += new System.EventHandler(this.startNewDataRecordToolStripMenuItem_Click);
             // 
             // startNewControlProcedureToolStripMenuItem
             // 
             this.startNewControlProcedureToolStripMenuItem.Name = "startNewControlProcedureToolStripMenuItem";
-            this.startNewControlProcedureToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.startNewControlProcedureToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.startNewControlProcedureToolStripMenuItem.Text = "Start control...";
             // 
             // preferenceToolStripMenuItem
@@ -78,7 +78,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // menuStrip1

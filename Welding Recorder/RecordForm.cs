@@ -16,6 +16,8 @@ namespace Welding_Recorder
         private List<SerialPort> portsList = new List<SerialPort>();
         private List<byte> signalBuffer = new List<byte>(6);
         private DateTime timestamp = DateTime.Now;
+        private bool isRecording = false;
+        private List<Signal> signalCache = new List<Signal>(); // Signal cache to save recording process.
 
         public RecordForm()
         {
@@ -36,20 +38,27 @@ namespace Welding_Recorder
 
         private void RecordForm_Load(object sender, EventArgs e)
         {
-            loadPortList();
+            InitialRecordingUI();
         }
 
         private void openCloseButton_Click(object sender, EventArgs e)
         {
-            string portName = portsBox.Text.ToUpper();
-            SerialPort port = getPortWithPortName(portName);
-            if (port != null && port.IsOpen)
+            if (isRecording)
             {
-                closePortWithName(portName);
+                MessageBox.Show("You can not close port while recording data.");
             }
             else
             {
-                openPortWithName(portName);
+                string portName = portsBox.Text.ToUpper();
+                SerialPort port = getPortWithPortName(portName);
+                if (port != null && port.IsOpen)
+                {
+                    closePortWithName(portName);
+                }
+                else
+                {
+                    openPortWithName(portName);
+                }
             }
         }
 
@@ -101,11 +110,11 @@ namespace Welding_Recorder
             SerialPort port = getPortWithPortName(selectedPortName);
             if (port != null && port.IsOpen)
             {
-                openCloseButton.Text = "关闭";
+                OpenCloseButton.Text = "关闭";
             }
             else
             {
-                openCloseButton.Text = "打开";
+                OpenCloseButton.Text = "打开";
             }
         }
 
@@ -164,6 +173,15 @@ namespace Welding_Recorder
                     {
                         message = signal.Type.ToString() + " detected.\r\n";
                     }
+                    if (signal.Type == SignalType.SolderStart)
+                    {
+                        isRecording = true;
+                    }
+                    if (signal.Type == SignalType.SolderEnd)
+                    {
+                        isRecording = false;
+                        SaveRecordButton.Enabled = true; // enable save record button
+                    }
                 }
                 else
                 {
@@ -175,6 +193,29 @@ namespace Welding_Recorder
         }
 
         /**  Helpers  **/
+
+        private void InitialRecordingUI()
+        {
+            loadPortList();
+            loadWeldingDataLists();
+        }
+
+        private void loadWeldingDataLists()
+        {
+            var db = new DataProcess();
+            var gangtaoList = db.GangTaoList();
+            gangtaoList.ForEach((item) => {
+                GangTaoTypeComboBox.Items.Add(item);
+            });
+            var operatorList = db.OperatorList();
+            operatorList.ForEach((item) => {
+                OperatorNameComboBox.Items.Add(item);
+            });
+            var weldingItemList = db.WeldingItemList();
+            weldingItemList.ForEach((item) => {
+                WeldingItemComboBox.Items.Add(item);
+            });
+        }
 
         private void loadPortList()
         {
@@ -224,7 +265,7 @@ namespace Welding_Recorder
                 }
                 portsList.Add(p);
                 logBox.Text += portName + "已打开。" + "共打开了" + portsList.Count + "个串口。\r\n";
-                openCloseButton.Text = "关闭";
+                OpenCloseButton.Text = "关闭";
             }
         }
 
@@ -238,7 +279,7 @@ namespace Welding_Recorder
                 {
                     portsList.Remove(p);
                     logBox.Text += portName + "已关闭。" + "共打开了" + portsList.Count + "个串口。\r\n";
-                    openCloseButton.Text = "打开";
+                    OpenCloseButton.Text = "打开";
                     dataOutputBox.Text = ""; //清空数据框。
                 }
                 else
@@ -321,6 +362,48 @@ namespace Welding_Recorder
         {
             byte[] dataBytes = { 0x08 };
             from.Write(dataBytes, 0, dataBytes.Count());
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            if (!isRecording)
+            { // Not recording...
+                string[] ports = SerialPort.GetPortNames();
+                foreach (var port in ports)
+                {
+                    try
+                    {
+                        var p = new SerialPort(port);
+                        if (p.IsOpen)
+                        {
+                            p.Close();
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Failed to close serial port {0}", port);
+                    }
+                }
+                DialogResult = DialogResult.Cancel;
+                Close(); // Close form.
+            }
+            else // Prevent form close while recording.
+            {
+                MessageBox.Show("You can not close this window while recording data.");
+            }
+        }
+
+        private void SaveRecordButton_Click(object sender, EventArgs e)
+        {
+            // Prompt user to ender a name for the record,
+            // Read metadata from UI, 
+            // and do database saving...
+
+            // If all OK, close.
+            DialogResult = DialogResult.OK;
+            Close();
+            // If database save failed, save data to text file, 
+            // which user can import to database after this error.
         }
     }
 

@@ -5,22 +5,22 @@ using System.Text;
 
 namespace Welding_Recorder
 {
-    // Signal reading from chip
-    class Signal
+    public enum SignalType
     {
-        public enum SignalType
-        {
-            ArcStart = 0,
-            ArcEnd,
-            SolderStart,
-            SolderEnd,
-            Acceleration,
-            Deceleration,
-            RevolveStart,
-            RevolveEnd,
-            Unknown = Int32.MaxValue
-        }
+        ArcStart = 0,
+        ArcEnd,
+        SolderStart,
+        SolderEnd,
+        Acceleration,
+        Deceleration,
+        RevolveStart,
+        RevolveEnd,
+        Unknown = Int32.MaxValue
+    }
 
+    // Signal reading from chip
+    public class Signal
+    {
         private DateTime timestamp;
         private byte[] rawBytes;
 
