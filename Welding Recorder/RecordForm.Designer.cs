@@ -281,9 +281,11 @@
             this.GangTaoTypeComboBox.Name = "GangTaoTypeComboBox";
             this.GangTaoTypeComboBox.Size = new System.Drawing.Size(108, 20);
             this.GangTaoTypeComboBox.TabIndex = 35;
+            this.GangTaoTypeComboBox.TextChanged += new System.EventHandler(this.GangTaoTypeComboBox_TextChanged);
             // 
             // WeldingItemComboBox
             // 
+            this.WeldingItemComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.WeldingItemComboBox.FormattingEnabled = true;
             this.WeldingItemComboBox.Location = new System.Drawing.Point(258, 20);
             this.WeldingItemComboBox.Name = "WeldingItemComboBox";
@@ -314,6 +316,7 @@
             this.WeldingCurrentTextBox.Name = "WeldingCurrentTextBox";
             this.WeldingCurrentTextBox.Size = new System.Drawing.Size(89, 21);
             this.WeldingCurrentTextBox.TabIndex = 39;
+            this.WeldingCurrentTextBox.TextChanged += new System.EventHandler(this.WeldingCurrentTextBox_TextChanged);
             // 
             // groupBox1
             // 
@@ -371,6 +374,7 @@
             this.ArGasFlowTextBox.Name = "ArGasFlowTextBox";
             this.ArGasFlowTextBox.Size = new System.Drawing.Size(74, 21);
             this.ArGasFlowTextBox.TabIndex = 45;
+            this.ArGasFlowTextBox.TextChanged += new System.EventHandler(this.ArGasFlowTextBox_TextChanged);
             // 
             // label14
             // 
@@ -396,6 +400,7 @@
             this.RoomTempTextBox.Name = "RoomTempTextBox";
             this.RoomTempTextBox.Size = new System.Drawing.Size(89, 21);
             this.RoomTempTextBox.TabIndex = 42;
+            this.RoomTempTextBox.TextChanged += new System.EventHandler(this.RoomTempTextBox_TextChanged);
             // 
             // label12
             // 

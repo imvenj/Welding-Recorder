@@ -85,6 +85,7 @@
       <DependentUpon>RecordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Signal.cs" />
+    <Compile Include="SQLiteHelper.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

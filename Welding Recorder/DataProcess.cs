@@ -130,7 +130,7 @@ namespace Welding_Recorder
 
             return operatorList;
         }
-
+        
         public void addGangTao(string type)
         {
             using (var conn = new SQLiteConnection(DataSource))
@@ -139,11 +139,7 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     command.CommandText = "INSERT INTO GangTao ('type') values (@type)";
-                    SQLiteParameter typeParam = new SQLiteParameter();
-                    typeParam.ParameterName = "@type";
-                    typeParam.DbType = DbType.String;
-                    typeParam.Direction = ParameterDirection.Input;
-                    typeParam.Value = type;
+                    var typeParam = SQLiteHelper.CreateStringParameter("@type", type);
                     command.Parameters.Add(typeParam);
 
                     command.ExecuteNonQuery();
@@ -159,11 +155,7 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     command.CommandText = "INSERT INTO WeldingItem ('type') values (@type)";
-                    SQLiteParameter typeParam = new SQLiteParameter();
-                    typeParam.ParameterName = "@type";
-                    typeParam.DbType = DbType.String;
-                    typeParam.Direction = ParameterDirection.Input;
-                    typeParam.Value = type;
+                    var typeParam = SQLiteHelper.CreateStringParameter("@type", type);
                     command.Parameters.Add(typeParam);
 
                     command.ExecuteNonQuery();
@@ -179,11 +171,7 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     command.CommandText = "INSERT INTO Operator ('name') values (@name)";
-                    SQLiteParameter nameParam = new SQLiteParameter();
-                    nameParam.ParameterName = "@name";
-                    nameParam.DbType = DbType.String;
-                    nameParam.Direction = ParameterDirection.Input;
-                    nameParam.Value = name;
+                    var nameParam = SQLiteHelper.CreateStringParameter("@name", name);
                     command.Parameters.Add(nameParam);
 
                     command.ExecuteNonQuery();

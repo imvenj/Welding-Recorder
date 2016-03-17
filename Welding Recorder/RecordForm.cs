@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.Text.RegularExpressions;
 
 namespace Welding_Recorder
 {
@@ -36,10 +37,28 @@ namespace Welding_Recorder
             stopBitsBox.SelectedIndex = 0;
         }
 
+        /***************************************************************************
+                               Form life cycle
+        ****************************************************************************/
+
         private void RecordForm_Load(object sender, EventArgs e)
         {
             InitialRecordingUI();
         }
+
+        private void RecordForm_Closing(object sender, EventArgs e)
+        {
+            string portName = portsBox.Text.ToUpper();
+            SerialPort port = getPortWithPortName(portName);
+            if (port != null && port.IsOpen)
+            {
+                port.Close();
+            }
+        }
+
+        /***************************************************************************
+                               Serial port event handlers start
+        ****************************************************************************/
 
         private void openCloseButton_Click(object sender, EventArgs e)
         {
@@ -59,16 +78,6 @@ namespace Welding_Recorder
                 {
                     openPortWithName(portName);
                 }
-            }
-        }
-
-        private void RecordForm_Closing(object sender, EventArgs e)
-        {
-            string portName = portsBox.Text.ToUpper();
-            SerialPort port = getPortWithPortName(portName);
-            if (port != null && port.IsOpen)
-            {
-                port.Close();
             }
         }
 
@@ -95,8 +104,6 @@ namespace Welding_Recorder
                 sendMessage(p, p, 1024);
             }
         }
-
-        /**  Event Handlers  **/
 
         private void portsBox_DropDown(object sender, EventArgs e)
         {
@@ -192,30 +199,9 @@ namespace Welding_Recorder
             }
         }
 
-        /**  Helpers  **/
-
-        private void InitialRecordingUI()
-        {
-            loadPortList();
-            loadWeldingDataLists();
-        }
-
-        private void loadWeldingDataLists()
-        {
-            var db = new DataProcess();
-            var gangtaoList = db.GangTaoList();
-            gangtaoList.ForEach((item) => {
-                GangTaoTypeComboBox.Items.Add(item);
-            });
-            var operatorList = db.OperatorList();
-            operatorList.ForEach((item) => {
-                OperatorNameComboBox.Items.Add(item);
-            });
-            var weldingItemList = db.WeldingItemList();
-            weldingItemList.ForEach((item) => {
-                WeldingItemComboBox.Items.Add(item);
-            });
-        }
+        /***************************************************************************
+                               Serial port helper methods start
+        ****************************************************************************/
 
         private void loadPortList()
         {
@@ -364,6 +350,80 @@ namespace Welding_Recorder
             from.Write(dataBytes, 0, dataBytes.Count());
         }
 
+        /***************************************************************************
+                               General helper methods start
+        ****************************************************************************/
+
+        // Form initialization
+        private void InitialRecordingUI()
+        {
+            loadPortList();
+            loadWeldingDataLists();
+        }
+
+        // Load static data from database to UI.
+        private void loadWeldingDataLists()
+        {
+            var db = new DataProcess();
+            var gangtaoList = db.GangTaoList();
+            gangtaoList.ForEach((item) => {
+                GangTaoTypeComboBox.Items.Add(item);
+            });
+            var operatorList = db.OperatorList();
+            operatorList.ForEach((item) => {
+                OperatorNameComboBox.Items.Add(item);
+            });
+            var weldingItemList = db.WeldingItemList();
+            weldingItemList.ForEach((item) => {
+                WeldingItemComboBox.Items.Add(item);
+            });
+
+            if (WeldingItemComboBox.Items.Count > 0)
+            {
+                WeldingItemComboBox.SelectedIndex = 0;
+            }
+        }
+
+        // Validate text input
+        private void UpdateControlColor(Control sender, bool isFloat = false)
+        {
+            string text = sender.Text;
+            text = text.Trim();
+            sender.Text = text;
+
+            var property = sender.GetType().GetProperty("SelectionStart");
+            property?.SetValue(sender, sender.Text.Length + 1, null);
+
+            if (isValidNumberInput(text, isFloat))
+            {
+                sender.BackColor = Color.White;
+            }
+            else
+            {
+                sender.BackColor = Color.Red;
+            }
+        }
+
+        private bool isValidNumberInput(string text, bool isFloatNumber = false)
+        {
+            string pattern;
+            if (isFloatNumber)
+            {
+                pattern = "^(\\s?\\s?\\d+(\\.\\d{0,3}){0,1}\\s?)?$"; // Negtive number is excluded.
+            }
+            else
+            {
+                pattern = "^(\\s?-?\\s?\\d+\\s?)?$";
+            }
+            Regex regex = new Regex(pattern);
+
+            return regex.IsMatch(text);
+        }
+
+        /***************************************************************************
+                              General Event handlers start
+        ****************************************************************************/
+
         private void CancelButton_Click(object sender, EventArgs e)
         {
             if (!isRecording)
@@ -404,6 +464,26 @@ namespace Welding_Recorder
             Close();
             // If database save failed, save data to text file, 
             // which user can import to database after this error.
+        }
+
+        private void GangTaoTypeComboBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateControlColor((ComboBox)sender);
+        }
+
+        private void WeldingCurrentTextBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateControlColor((TextBox)sender, true);
+        }
+
+        private void ArGasFlowTextBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateControlColor((TextBox)sender, true);
+        }
+
+        private void RoomTempTextBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateControlColor((TextBox)sender, true);
         }
     }
 
