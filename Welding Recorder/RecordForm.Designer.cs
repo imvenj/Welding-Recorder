@@ -44,7 +44,7 @@
             this.rateBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.portsBox = new System.Windows.Forms.ComboBox();
+            this.PortsBox = new System.Windows.Forms.ComboBox();
             this.OpenCloseButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.GangTaoTypeComboBox = new System.Windows.Forms.ComboBox();
@@ -63,20 +63,21 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
             this.CancelButton = new System.Windows.Forms.Button();
             this.SaveRecordButton = new System.Windows.Forms.Button();
             this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.PlotBox = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
             this.SuspendLayout();
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(550, 282);
+            this.label6.Location = new System.Drawing.Point(549, 441);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(203, 12);
             this.label6.TabIndex = 33;
@@ -94,7 +95,7 @@
             // 
             // sendMessageButton
             // 
-            this.sendMessageButton.Location = new System.Drawing.Point(759, 277);
+            this.sendMessageButton.Location = new System.Drawing.Point(758, 436);
             this.sendMessageButton.Name = "sendMessageButton";
             this.sendMessageButton.Size = new System.Drawing.Size(75, 23);
             this.sendMessageButton.TabIndex = 31;
@@ -104,18 +105,18 @@
             // 
             // dataOutputBox
             // 
-            this.dataOutputBox.Location = new System.Drawing.Point(418, 23);
+            this.dataOutputBox.Location = new System.Drawing.Point(417, 277);
             this.dataOutputBox.Multiline = true;
             this.dataOutputBox.Name = "dataOutputBox";
             this.dataOutputBox.ReadOnly = true;
             this.dataOutputBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataOutputBox.Size = new System.Drawing.Size(416, 248);
+            this.dataOutputBox.Size = new System.Drawing.Size(416, 153);
             this.dataOutputBox.TabIndex = 30;
             this.dataOutputBox.Tag = "是";
             // 
             // clearDataButton
             // 
-            this.clearDataButton.Location = new System.Drawing.Point(419, 277);
+            this.clearDataButton.Location = new System.Drawing.Point(418, 436);
             this.clearDataButton.Name = "clearDataButton";
             this.clearDataButton.Size = new System.Drawing.Size(75, 23);
             this.clearDataButton.TabIndex = 29;
@@ -238,26 +239,26 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(12, 306);
+            this.logBox.Location = new System.Drawing.Point(12, 277);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
             this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logBox.Size = new System.Drawing.Size(822, 124);
+            this.logBox.Size = new System.Drawing.Size(390, 153);
             this.logBox.TabIndex = 18;
             this.logBox.Tag = "是";
             // 
-            // portsBox
+            // PortsBox
             // 
-            this.portsBox.FormattingEnabled = true;
-            this.portsBox.Location = new System.Drawing.Point(62, 20);
-            this.portsBox.Name = "portsBox";
-            this.portsBox.Size = new System.Drawing.Size(117, 20);
-            this.portsBox.TabIndex = 17;
+            this.PortsBox.FormattingEnabled = true;
+            this.PortsBox.Location = new System.Drawing.Point(62, 20);
+            this.PortsBox.Name = "PortsBox";
+            this.PortsBox.Size = new System.Drawing.Size(117, 20);
+            this.PortsBox.TabIndex = 17;
             // 
             // OpenCloseButton
             // 
-            this.OpenCloseButton.Location = new System.Drawing.Point(14, 104);
+            this.OpenCloseButton.Location = new System.Drawing.Point(17, 104);
             this.OpenCloseButton.Name = "OpenCloseButton";
             this.OpenCloseButton.Size = new System.Drawing.Size(73, 23);
             this.OpenCloseButton.TabIndex = 16;
@@ -422,10 +423,10 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.pictureBox1);
+            this.groupBox2.Controls.Add(this.PortStatusImageBox);
             this.groupBox2.Controls.Add(this.rateBox);
             this.groupBox2.Controls.Add(this.OpenCloseButton);
-            this.groupBox2.Controls.Add(this.portsBox);
+            this.groupBox2.Controls.Add(this.PortsBox);
             this.groupBox2.Controls.Add(this.base64CheckBox);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.stopBitsBox);
@@ -442,17 +443,18 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "串口设置";
             // 
-            // pictureBox1
+            // PortStatusImageBox
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(93, 104);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(21, 23);
-            this.pictureBox1.TabIndex = 33;
-            this.pictureBox1.TabStop = false;
+            this.PortStatusImageBox.Image = global::Welding_Recorder.Properties.Resources.Red_Ball;
+            this.PortStatusImageBox.Location = new System.Drawing.Point(96, 103);
+            this.PortStatusImageBox.Name = "PortStatusImageBox";
+            this.PortStatusImageBox.Size = new System.Drawing.Size(24, 24);
+            this.PortStatusImageBox.TabIndex = 33;
+            this.PortStatusImageBox.TabStop = false;
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(759, 436);
+            this.CancelButton.Location = new System.Drawing.Point(758, 465);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 42;
@@ -463,7 +465,7 @@
             // SaveRecordButton
             // 
             this.SaveRecordButton.Enabled = false;
-            this.SaveRecordButton.Location = new System.Drawing.Point(678, 436);
+            this.SaveRecordButton.Location = new System.Drawing.Point(677, 465);
             this.SaveRecordButton.Name = "SaveRecordButton";
             this.SaveRecordButton.Size = new System.Drawing.Size(75, 23);
             this.SaveRecordButton.TabIndex = 43;
@@ -473,18 +475,28 @@
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 467);
+            this.statusBar.Location = new System.Drawing.Point(0, 495);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(845, 22);
             this.statusBar.TabIndex = 44;
             this.statusBar.Text = "statusStrip1";
             // 
+            // PlotBox
+            // 
+            this.PlotBox.Location = new System.Drawing.Point(418, 12);
+            this.PlotBox.Name = "PlotBox";
+            this.PlotBox.Size = new System.Drawing.Size(415, 259);
+            this.PlotBox.TabIndex = 45;
+            this.PlotBox.TabStop = false;
+            this.PlotBox.Text = "监控图";
+            // 
             // RecordForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 489);
+            this.ClientSize = new System.Drawing.Size(845, 517);
             this.ControlBox = false;
+            this.Controls.Add(this.PlotBox);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.SaveRecordButton);
             this.Controls.Add(this.CancelButton);
@@ -505,7 +517,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -529,7 +541,7 @@
         private System.Windows.Forms.ComboBox rateBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox logBox;
-        private System.Windows.Forms.ComboBox portsBox;
+        private System.Windows.Forms.ComboBox PortsBox;
         private System.Windows.Forms.Button OpenCloseButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox GangTaoTypeComboBox;
@@ -548,9 +560,10 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox OperatorNameComboBox;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button SaveRecordButton;
         private System.Windows.Forms.StatusStrip statusBar;
+        private System.Windows.Forms.GroupBox PlotBox;
+        private System.Windows.Forms.PictureBox PortStatusImageBox;
     }
 }

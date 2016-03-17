@@ -24,8 +24,8 @@ namespace Welding_Recorder
         {
             InitializeComponent();
 
-            portsBox.SelectedIndexChanged += new EventHandler(portsBox_SelectedIndexChanged);
-            portsBox.DropDown += new EventHandler(portsBox_DropDown);
+            PortsBox.SelectedIndexChanged += new EventHandler(portsBox_SelectedIndexChanged);
+            PortsBox.DropDown += new EventHandler(portsBox_DropDown);
 
             // 波特率默认选择9600。 // BaudRate
             rateBox.SelectedIndex = 6;
@@ -48,7 +48,7 @@ namespace Welding_Recorder
 
         private void RecordForm_Closing(object sender, EventArgs e)
         {
-            string portName = portsBox.Text.ToUpper();
+            string portName = PortsBox.Text.ToUpper();
             SerialPort port = getPortWithPortName(portName);
             if (port != null && port.IsOpen)
             {
@@ -68,7 +68,7 @@ namespace Welding_Recorder
             }
             else
             {
-                string portName = portsBox.Text.ToUpper();
+                string portName = PortsBox.Text.ToUpper();
                 SerialPort port = getPortWithPortName(portName);
                 if (port != null && port.IsOpen)
                 {
@@ -93,7 +93,7 @@ namespace Welding_Recorder
 
         private void sendMessageButton_Click(object sender, EventArgs e)
         {
-            SerialPort p = getPortWithPortName(portsBox.Text.ToUpper());
+            SerialPort p = getPortWithPortName(PortsBox.Text.ToUpper());
             if (p == null)
             {
                 logBox.Text += "端口未打开。\r\n";
@@ -207,10 +207,10 @@ namespace Welding_Recorder
         {
             // 初始化端口列表
             string[] ports = SerialPort.GetPortNames();
-            portsBox.Items.Clear();
+            PortsBox.Items.Clear();
             foreach (var port in ports)
             {
-                portsBox.Items.Add(port);
+                PortsBox.Items.Add(port);
             }
         }
 
@@ -242,6 +242,9 @@ namespace Welding_Recorder
                 try
                 {
                     p.Open();
+                    // Disable PortsBox after port opened.
+                    PortsBox.Enabled = false;
+                    PortStatusImageBox.Image = Properties.Resources.Green_Ball;
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -267,6 +270,9 @@ namespace Welding_Recorder
                     logBox.Text += portName + "已关闭。" + "共打开了" + portsList.Count + "个串口。\r\n";
                     OpenCloseButton.Text = "打开";
                     dataOutputBox.Text = ""; //清空数据框。
+                    // Re-enable PortsBox after port closed.
+                    PortsBox.Enabled = true;
+                    PortStatusImageBox.Image = Properties.Resources.Red_Ball;
                 }
                 else
                 {
