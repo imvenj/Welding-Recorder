@@ -30,7 +30,6 @@
         {
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNewDataRecordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startNewControlProcedureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -48,8 +47,7 @@
             // 文件ToolStripMenuItem
             // 
             this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.startNewDataRecordToolStripMenuItem,
-            this.startNewControlProcedureToolStripMenuItem});
+            this.startNewDataRecordToolStripMenuItem});
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
             this.文件ToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
             this.文件ToolStripMenuItem.Text = "File";
@@ -57,15 +55,9 @@
             // startNewDataRecordToolStripMenuItem
             // 
             this.startNewDataRecordToolStripMenuItem.Name = "startNewDataRecordToolStripMenuItem";
-            this.startNewDataRecordToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.startNewDataRecordToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.startNewDataRecordToolStripMenuItem.Text = "Start record...";
             this.startNewDataRecordToolStripMenuItem.Click += new System.EventHandler(this.startNewDataRecordToolStripMenuItem_Click);
-            // 
-            // startNewControlProcedureToolStripMenuItem
-            // 
-            this.startNewControlProcedureToolStripMenuItem.Name = "startNewControlProcedureToolStripMenuItem";
-            this.startNewControlProcedureToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.startNewControlProcedureToolStripMenuItem.Text = "Start control...";
             // 
             // preferenceToolStripMenuItem
             // 
@@ -78,7 +70,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // menuStrip1
@@ -118,9 +110,9 @@
             // 
             this.newRecordButton.Location = new System.Drawing.Point(6, 309);
             this.newRecordButton.Name = "newRecordButton";
-            this.newRecordButton.Size = new System.Drawing.Size(68, 23);
+            this.newRecordButton.Size = new System.Drawing.Size(97, 23);
             this.newRecordButton.TabIndex = 2;
-            this.newRecordButton.Text = "New";
+            this.newRecordButton.Text = "Start Welding";
             this.newRecordButton.UseVisualStyleBackColor = true;
             // 
             // historiesList
@@ -166,7 +158,6 @@
 
         private System.Windows.Forms.ToolStripMenuItem 文件ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startNewDataRecordToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem startNewControlProcedureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferenceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;

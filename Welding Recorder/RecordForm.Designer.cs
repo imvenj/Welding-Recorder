@@ -64,7 +64,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.CancelFormButton = new System.Windows.Forms.Button();
             this.SaveRecordButton = new System.Windows.Forms.Button();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.PlotBox = new System.Windows.Forms.GroupBox();
@@ -452,15 +452,15 @@
             this.PortStatusImageBox.TabIndex = 33;
             this.PortStatusImageBox.TabStop = false;
             // 
-            // CancelButton
+            // CancelFormButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(758, 465);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 42;
-            this.CancelButton.Text = "取消";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.CancelFormButton.Location = new System.Drawing.Point(758, 465);
+            this.CancelFormButton.Name = "CancelFormButton";
+            this.CancelFormButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelFormButton.TabIndex = 42;
+            this.CancelFormButton.Text = "取消";
+            this.CancelFormButton.UseVisualStyleBackColor = true;
+            this.CancelFormButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // SaveRecordButton
             // 
@@ -499,7 +499,7 @@
             this.Controls.Add(this.PlotBox);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.SaveRecordButton);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.CancelFormButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label6);
@@ -560,7 +560,7 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox OperatorNameComboBox;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button CancelFormButton;
         private System.Windows.Forms.Button SaveRecordButton;
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.GroupBox PlotBox;

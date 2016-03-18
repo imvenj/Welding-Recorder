@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using OxyPlot;
+using OxyPlot.Series;
+using OxyPlot.Axes;
+using OxyPlot.WindowsForms;
 
 namespace Welding_Recorder
 {
@@ -19,6 +23,10 @@ namespace Welding_Recorder
         private DateTime timestamp = DateTime.Now;
         private bool isRecording = false;
         private List<Signal> signalCache = new List<Signal>(); // Signal cache to save recording process.
+        
+        private PlotView Plot = new PlotView();
+        private LinearAxis axis1 = new LinearAxis();
+        private LineSeries s1 = new LineSeries { Title = "Speed", StrokeThickness = 1 };
 
         public RecordForm()
         {
@@ -44,6 +52,7 @@ namespace Welding_Recorder
         private void RecordForm_Load(object sender, EventArgs e)
         {
             InitialRecordingUI();
+            InitializePlot();
         }
 
         private void RecordForm_Closing(object sender, EventArgs e)
@@ -388,6 +397,35 @@ namespace Welding_Recorder
             {
                 WeldingItemComboBox.SelectedIndex = 0;
             }
+        }
+        
+        private void InitializePlot()
+        {
+            Plot.Model = new PlotModel();
+            Plot.Dock = DockStyle.Fill;
+            this.PlotBox.Controls.Add(Plot);
+            //this.Controls.Add(Plot);
+
+            Plot.Model.PlotType = PlotType.XY;
+            Plot.Model.Background = OxyColor.FromRgb(255, 255, 255);
+            Plot.Model.TextColor = OxyColor.FromRgb(0, 0, 0);
+
+            axis1.Position = AxisPosition.Bottom;
+            axis1.Minimum = 0.0;
+            axis1.Maximum = 10.0;
+            Plot.Model.Axes.Add(axis1);
+
+            var axis2 = new LinearAxis();
+            axis2.Position = AxisPosition.Left;
+            axis2.Minimum = 0.0;
+            axis2.Maximum = 15.0;
+            Plot.Model.Axes.Add(axis2);
+
+            // Create Line series
+            s1.Points.Add(new DataPoint(1, 1));
+
+            // add Series and Axis to plot model
+            Plot.Model.Series.Add(s1);
         }
 
         // Validate text input
