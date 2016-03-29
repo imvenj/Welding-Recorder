@@ -23,10 +23,13 @@ namespace Welding_Recorder
         private DateTime timestamp = DateTime.Now;
         private bool isRecording = false;
         private List<Signal> signalCache = new List<Signal>(); // Signal cache to save recording process.
-        
+        private int currentSpeed = 0;
+        private double currentTime = 0.0;
+
         private PlotView Plot = new PlotView();
         private LinearAxis axis1 = new LinearAxis();
-        private LineSeries s1 = new LineSeries { Title = "Speed", StrokeThickness = 1 };
+        //private LineSeries s1 = new LineSeries { Title = "Speed", StrokeThickness = 1 };
+        private ScatterSeries s1 = new ScatterSeries { MarkerType = MarkerType.Circle };
 
         public RecordForm()
         {
@@ -136,13 +139,18 @@ namespace Welding_Recorder
 
         private void serialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+#if (DEBUG)
+            Console.WriteLine("Serial Port Data Receivered.");
+#endif
             SerialPort port = (SerialPort)sender;
             bool isBase64 = base64CheckBox.Checked;
 
-            byte[] readBytes = { 0x00 };
+            int bytesInBuffer = port.BytesToRead;
+
+            byte[] readBytes = new byte[bytesInBuffer];
             try
             {
-                port.Read(readBytes, 0, 1);
+                port.Read(readBytes, 0, bytesInBuffer);
             }
             catch (TimeoutException)
             {
@@ -158,53 +166,38 @@ namespace Welding_Recorder
                 MessageBox.Show("未知错误。");
             }
 
-            byte b = readBytes[0];
-            if (signalBuffer.Count() == 6 && b == 0xFF) // Signal start
+            for (int i = 0; i < bytesInBuffer; i++)
             {
-                timestamp = DateTime.Now; // Save TimeStamp for signal start.
-                signalBuffer.Clear();
-                signalBuffer.Add(b);
-            }
-            else if (signalBuffer.Count() < 6) // Signal continue 
-            {
-                signalBuffer.Add(b);
-            }
-            else
-            {
-                // Do nothing.
-            }
+                var b = readBytes[i];
 
-            if (signalBuffer.Count() == 6) // Signal catch finished.
-            {
-                Signal signal = new Signal(signalBuffer.ToArray(), timestamp);
-                string message = "";
-
-                if (signal.isValid())
+                if ((signalBuffer.Count == 6 || signalBuffer.Count == 0) && b == 0xFF) // Signal start
                 {
-                    if (signal.Step != int.MaxValue)
-                    {
-                        message = signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
-                    }
-                    else
-                    {
-                        message = signal.Type.ToString() + " detected.\r\n";
-                    }
-                    if (signal.Type == SignalType.SolderStart)
-                    {
-                        isRecording = true;
-                    }
-                    if (signal.Type == SignalType.SolderEnd)
-                    {
-                        isRecording = false;
-                        SaveRecordButton.Enabled = true; // enable save record button
-                    }
+                    timestamp = DateTime.Now; // Save TimeStamp for signal start.
+                    signalBuffer.Clear();
+                    signalBuffer.Add(b);
+                }
+                else if (signalBuffer.Count() < 6) // Signal continue 
+                {
+                    signalBuffer.Add(b);
                 }
                 else
                 {
-                    message = "Invalid signal: " + signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
+                    // Do nothing.
                 }
 
-                this.UIThread(() => this.dataOutputBox.Text += message);
+                if (signalBuffer.Count == 6) // Signal catch finished.
+                {
+#if (DEBUG)
+                    Console.Write("Signal content: ");
+                    for (int j = 0; j < signalBuffer.Count; j++)
+                    {
+                        Console.Write("{0}", signalBuffer[j]);
+                    }
+                    Console.WriteLine();
+#endif
+                    Signal signal = new Signal(signalBuffer.ToArray(), timestamp);
+                    SignalProcess(signal);
+                }
             }
         }
 
@@ -220,6 +213,10 @@ namespace Welding_Recorder
             foreach (var port in ports)
             {
                 PortsBox.Items.Add(port);
+            }
+            if (PortsBox.Items.Count > 0)
+            {
+                PortsBox.SelectedIndex = 0;
             }
         }
 
@@ -361,7 +358,7 @@ namespace Welding_Recorder
 
         private void sendMessage(SerialPort from, SerialPort to, object obj)
         {
-            byte[] dataBytes = { 0x08 };
+            byte[] dataBytes = { 0xFF, 0x01, 0x00, 0x08, 0x00, 0x09 };
             from.Write(dataBytes, 0, dataBytes.Count());
         }
 
@@ -411,19 +408,16 @@ namespace Welding_Recorder
             Plot.Model.TextColor = OxyColor.FromRgb(0, 0, 0);
 
             axis1.Position = AxisPosition.Bottom;
-            axis1.Minimum = 0.0;
+            axis1.Minimum = -1.0;
             axis1.Maximum = 10.0;
             Plot.Model.Axes.Add(axis1);
 
             var axis2 = new LinearAxis();
             axis2.Position = AxisPosition.Left;
-            axis2.Minimum = 0.0;
+            axis2.Minimum = -15.0;
             axis2.Maximum = 15.0;
             Plot.Model.Axes.Add(axis2);
-
-            // Create Line series
-            s1.Points.Add(new DataPoint(1, 1));
-
+            
             // add Series and Axis to plot model
             Plot.Model.Series.Add(s1);
         }
@@ -462,6 +456,64 @@ namespace Welding_Recorder
             Regex regex = new Regex(pattern);
 
             return regex.IsMatch(text);
+        }
+
+        private void SignalProcess(Signal signal)
+        {
+            //TODO: Do more with signals.
+            string message = "";
+
+            if (signal.isValid())
+            {
+                signalCache.Add(signal);
+                if (signal.Step != int.MaxValue)
+                {
+                    message = signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
+                }
+                else
+                {
+                    message = signal.Type.ToString() + " detected.\r\n";
+                }
+                if (signal.Type == SignalType.SolderStart)
+                {
+                    isRecording = true;
+                }
+                if (signal.Type == SignalType.SolderEnd)
+                {
+                    isRecording = false;
+                    SaveRecordButton.Enabled = true; // enable save record button
+                }
+            }
+            else
+            {
+                message = "Invalid signal: " + signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
+            }
+
+            this.UIThread(() => {
+                this.dataOutputBox.Text += message;
+
+                Plot.Model.InvalidatePlot(true);
+                var signals = signalCache;
+                var signalCount = signals.Count;
+                var r = new Random(signalCount);
+
+                if (signalCount == 1) // First point
+                {
+                    s1.Points.Add(new ScatterPoint(currentTime, 0, r.Next(1, 5), 0xFFAABB));
+                }
+                if (signalCount > 1)
+                {
+                    var previousSignal = signals[signalCount - 2];
+                    var currentSignal = signals[signalCount - 1];
+
+                    TimeSpan span = currentSignal.Timestamp - previousSignal.Timestamp;
+                    currentTime += span.TotalSeconds;
+                    s1.Points.Add(new ScatterPoint(currentTime, currentSpeed++, r.Next(1, 5), 0xFFBBAA));
+                    axis1.Maximum = currentTime + 10;
+                }
+                // Create Line series
+                
+            });
         }
 
         /***************************************************************************
