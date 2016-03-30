@@ -104,12 +104,7 @@ namespace Welding_Recorder
         {
             logBox.Text = "";
         }
-
-        private void clearDataButton_Click(object sender, EventArgs e)
-        {
-            dataOutputBox.Text = "";
-        }
-
+        
         private void sendMessageButton_Click(object sender, EventArgs e)
         {
             SerialPort p = getPortWithPortName(PortsBox.Text.ToUpper());
@@ -296,7 +291,6 @@ namespace Welding_Recorder
                     portsList.Remove(p);
                     logBox.Text += portName + "已关闭。" + "共打开了" + portsList.Count + "个串口。\r\n";
                     OpenCloseButton.Text = "打开";
-                    dataOutputBox.Text = ""; //清空数据框。
                     // Re-enable PortsBox after port closed.
                     PortsBox.Enabled = true;
                     PortStatusImageBox.Image = Properties.Resources.Red_Ball;
@@ -530,12 +524,13 @@ namespace Welding_Recorder
 
         private void SignalProcess(Signal signal)
         {
-            //TODO: Do more with signals.
+#if DEBUG
             string message = "";
-
+#endif
             if (signal.isValid())
             {
                 signalCache.Add(signal);
+#if DEBUG
                 if (signal.Step != int.MaxValue)
                 {
                     message = signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
@@ -544,7 +539,7 @@ namespace Welding_Recorder
                 {
                     message = signal.Type.ToString() + " detected.\r\n";
                 }
-                
+#endif
                 if (signal.Type == SignalType.ArcStart)
                 {
                     isRecording = true;
@@ -554,19 +549,21 @@ namespace Welding_Recorder
                 {
                     isRecording = false;
                     this.UIThread(() => {
-                        SaveRecordButton.Enabled = true;
+                        SaveRecordButton.Enabled = true;  // enable save record button
                         ForceStopButton.Visible = false;
-                    }); // enable save record button
+                    });
                 }
 
                 updatePlotWithSignal(signal);
             }
+#if DEBUG
             else
             {
                 message = "Invalid signal: " + signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
             }
 
-            this.UIThread(() => { dataOutputBox.Text += message; });
+            Console.WriteLine(message);
+#endif
         }
 
         private void updatePlotWithSignal(Signal signal)

@@ -31,8 +31,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.base64CheckBox = new System.Windows.Forms.CheckBox();
             this.sendMessageButton = new System.Windows.Forms.Button();
-            this.dataOutputBox = new System.Windows.Forms.TextBox();
-            this.clearDataButton = new System.Windows.Forms.Button();
             this.clearLogButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -63,11 +61,11 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
             this.CancelFormButton = new System.Windows.Forms.Button();
             this.SaveRecordButton = new System.Windows.Forms.Button();
             this.PlotBox = new System.Windows.Forms.GroupBox();
             this.ForceStopButton = new System.Windows.Forms.Button();
-            this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
@@ -77,7 +75,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(549, 441);
+            this.label6.Location = new System.Drawing.Point(549, 401);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(203, 12);
             this.label6.TabIndex = 33;
@@ -89,47 +87,26 @@
             this.base64CheckBox.Location = new System.Drawing.Point(201, 74);
             this.base64CheckBox.Name = "base64CheckBox";
             this.base64CheckBox.Size = new System.Drawing.Size(60, 16);
-            this.base64CheckBox.TabIndex = 32;
+            this.base64CheckBox.TabIndex = 12;
             this.base64CheckBox.Text = "Base64";
             this.base64CheckBox.UseVisualStyleBackColor = true;
             // 
             // sendMessageButton
             // 
-            this.sendMessageButton.Location = new System.Drawing.Point(758, 436);
+            this.sendMessageButton.Location = new System.Drawing.Point(758, 396);
             this.sendMessageButton.Name = "sendMessageButton";
             this.sendMessageButton.Size = new System.Drawing.Size(75, 23);
-            this.sendMessageButton.TabIndex = 31;
+            this.sendMessageButton.TabIndex = 18;
             this.sendMessageButton.Text = "发送消息";
             this.sendMessageButton.UseVisualStyleBackColor = true;
             this.sendMessageButton.Click += new System.EventHandler(this.sendMessageButton_Click);
             // 
-            // dataOutputBox
-            // 
-            this.dataOutputBox.Location = new System.Drawing.Point(417, 277);
-            this.dataOutputBox.Multiline = true;
-            this.dataOutputBox.Name = "dataOutputBox";
-            this.dataOutputBox.ReadOnly = true;
-            this.dataOutputBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataOutputBox.Size = new System.Drawing.Size(416, 153);
-            this.dataOutputBox.TabIndex = 30;
-            this.dataOutputBox.Tag = "是";
-            // 
-            // clearDataButton
-            // 
-            this.clearDataButton.Location = new System.Drawing.Point(418, 436);
-            this.clearDataButton.Name = "clearDataButton";
-            this.clearDataButton.Size = new System.Drawing.Size(75, 23);
-            this.clearDataButton.TabIndex = 29;
-            this.clearDataButton.Text = "清空数据";
-            this.clearDataButton.UseVisualStyleBackColor = true;
-            this.clearDataButton.Click += new System.EventHandler(this.clearDataButton_Click);
-            // 
             // clearLogButton
             // 
-            this.clearLogButton.Location = new System.Drawing.Point(12, 436);
+            this.clearLogButton.Location = new System.Drawing.Point(443, 396);
             this.clearLogButton.Name = "clearLogButton";
             this.clearLogButton.Size = new System.Drawing.Size(75, 23);
-            this.clearLogButton.TabIndex = 28;
+            this.clearLogButton.TabIndex = 17;
             this.clearLogButton.Text = "清空日志";
             this.clearLogButton.UseVisualStyleBackColor = true;
             this.clearLogButton.Click += new System.EventHandler(this.button1_Click);
@@ -163,7 +140,7 @@
             this.dataBitsBox.Location = new System.Drawing.Point(62, 46);
             this.dataBitsBox.Name = "dataBitsBox";
             this.dataBitsBox.Size = new System.Drawing.Size(117, 20);
-            this.dataBitsBox.TabIndex = 25;
+            this.dataBitsBox.TabIndex = 9;
             // 
             // parityBox
             // 
@@ -177,7 +154,7 @@
             this.parityBox.Location = new System.Drawing.Point(62, 72);
             this.parityBox.Name = "parityBox";
             this.parityBox.Size = new System.Drawing.Size(117, 20);
-            this.parityBox.TabIndex = 24;
+            this.parityBox.TabIndex = 11;
             // 
             // label5
             // 
@@ -206,7 +183,7 @@
             this.stopBitsBox.Location = new System.Drawing.Point(246, 46);
             this.stopBitsBox.Name = "stopBitsBox";
             this.stopBitsBox.Size = new System.Drawing.Size(120, 20);
-            this.stopBitsBox.TabIndex = 21;
+            this.stopBitsBox.TabIndex = 10;
             // 
             // rateBox
             // 
@@ -226,7 +203,7 @@
             this.rateBox.Location = new System.Drawing.Point(246, 20);
             this.rateBox.Name = "rateBox";
             this.rateBox.Size = new System.Drawing.Size(120, 20);
-            this.rateBox.TabIndex = 20;
+            this.rateBox.TabIndex = 8;
             // 
             // label1
             // 
@@ -239,13 +216,14 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(12, 277);
+            this.logBox.Location = new System.Drawing.Point(443, 157);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
             this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logBox.Size = new System.Drawing.Size(390, 153);
+            this.logBox.Size = new System.Drawing.Size(390, 233);
             this.logBox.TabIndex = 18;
+            this.logBox.TabStop = false;
             this.logBox.Tag = "是";
             // 
             // PortsBox
@@ -254,14 +232,14 @@
             this.PortsBox.Location = new System.Drawing.Point(62, 20);
             this.PortsBox.Name = "PortsBox";
             this.PortsBox.Size = new System.Drawing.Size(117, 20);
-            this.PortsBox.TabIndex = 17;
+            this.PortsBox.TabIndex = 7;
             // 
             // OpenCloseButton
             // 
             this.OpenCloseButton.Location = new System.Drawing.Point(17, 104);
             this.OpenCloseButton.Name = "OpenCloseButton";
             this.OpenCloseButton.Size = new System.Drawing.Size(73, 23);
-            this.OpenCloseButton.TabIndex = 16;
+            this.OpenCloseButton.TabIndex = 13;
             this.OpenCloseButton.Text = "打开";
             this.OpenCloseButton.UseVisualStyleBackColor = true;
             this.OpenCloseButton.Click += new System.EventHandler(this.openCloseButton_Click);
@@ -269,7 +247,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 23);
+            this.label7.Location = new System.Drawing.Point(20, 23);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 12);
             this.label7.TabIndex = 34;
@@ -279,25 +257,25 @@
             // 
             this.GangTaoTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GangTaoTypeComboBox.FormattingEnabled = true;
-            this.GangTaoTypeComboBox.Location = new System.Drawing.Point(71, 20);
+            this.GangTaoTypeComboBox.Location = new System.Drawing.Point(79, 20);
             this.GangTaoTypeComboBox.Name = "GangTaoTypeComboBox";
             this.GangTaoTypeComboBox.Size = new System.Drawing.Size(108, 20);
-            this.GangTaoTypeComboBox.TabIndex = 35;
+            this.GangTaoTypeComboBox.TabIndex = 1;
             this.GangTaoTypeComboBox.TextChanged += new System.EventHandler(this.GangTaoTypeComboBox_TextChanged);
             // 
             // WeldingItemComboBox
             // 
             this.WeldingItemComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.WeldingItemComboBox.FormattingEnabled = true;
-            this.WeldingItemComboBox.Location = new System.Drawing.Point(258, 20);
+            this.WeldingItemComboBox.Location = new System.Drawing.Point(271, 20);
             this.WeldingItemComboBox.Name = "WeldingItemComboBox";
             this.WeldingItemComboBox.Size = new System.Drawing.Size(108, 20);
-            this.WeldingItemComboBox.TabIndex = 37;
+            this.WeldingItemComboBox.TabIndex = 2;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(199, 23);
+            this.label8.Location = new System.Drawing.Point(212, 23);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 12);
             this.label8.TabIndex = 36;
@@ -306,7 +284,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 49);
+            this.label9.Location = new System.Drawing.Point(20, 49);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(53, 12);
             this.label9.TabIndex = 38;
@@ -314,10 +292,10 @@
             // 
             // WeldingCurrentTextBox
             // 
-            this.WeldingCurrentTextBox.Location = new System.Drawing.Point(71, 46);
+            this.WeldingCurrentTextBox.Location = new System.Drawing.Point(79, 46);
             this.WeldingCurrentTextBox.Name = "WeldingCurrentTextBox";
             this.WeldingCurrentTextBox.Size = new System.Drawing.Size(89, 21);
-            this.WeldingCurrentTextBox.TabIndex = 39;
+            this.WeldingCurrentTextBox.TabIndex = 3;
             this.WeldingCurrentTextBox.TextChanged += new System.EventHandler(this.WeldingCurrentTextBox_TextChanged);
             // 
             // groupBox1
@@ -339,7 +317,7 @@
             this.groupBox1.Controls.Add(this.WeldingItemComboBox);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(390, 113);
+            this.groupBox1.Size = new System.Drawing.Size(415, 113);
             this.groupBox1.TabIndex = 40;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "焊接信息";
@@ -347,7 +325,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(199, 78);
+            this.label15.Location = new System.Drawing.Point(212, 78);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(53, 12);
             this.label15.TabIndex = 47;
@@ -356,15 +334,15 @@
             // OperatorNameComboBox
             // 
             this.OperatorNameComboBox.FormattingEnabled = true;
-            this.OperatorNameComboBox.Location = new System.Drawing.Point(258, 75);
+            this.OperatorNameComboBox.Location = new System.Drawing.Point(271, 75);
             this.OperatorNameComboBox.Name = "OperatorNameComboBox";
             this.OperatorNameComboBox.Size = new System.Drawing.Size(108, 20);
-            this.OperatorNameComboBox.TabIndex = 48;
+            this.OperatorNameComboBox.TabIndex = 6;
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(338, 51);
+            this.label13.Location = new System.Drawing.Point(351, 51);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(35, 12);
             this.label13.TabIndex = 46;
@@ -372,16 +350,16 @@
             // 
             // ArGasFlowTextBox
             // 
-            this.ArGasFlowTextBox.Location = new System.Drawing.Point(258, 46);
+            this.ArGasFlowTextBox.Location = new System.Drawing.Point(271, 46);
             this.ArGasFlowTextBox.Name = "ArGasFlowTextBox";
             this.ArGasFlowTextBox.Size = new System.Drawing.Size(74, 21);
-            this.ArGasFlowTextBox.TabIndex = 45;
+            this.ArGasFlowTextBox.TabIndex = 4;
             this.ArGasFlowTextBox.TextChanged += new System.EventHandler(this.ArGasFlowTextBox_TextChanged);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(199, 49);
+            this.label14.Location = new System.Drawing.Point(212, 49);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 12);
             this.label14.TabIndex = 44;
@@ -390,7 +368,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(164, 78);
+            this.label11.Location = new System.Drawing.Point(172, 78);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(17, 12);
             this.label11.TabIndex = 43;
@@ -398,16 +376,16 @@
             // 
             // RoomTempTextBox
             // 
-            this.RoomTempTextBox.Location = new System.Drawing.Point(71, 73);
+            this.RoomTempTextBox.Location = new System.Drawing.Point(79, 73);
             this.RoomTempTextBox.Name = "RoomTempTextBox";
             this.RoomTempTextBox.Size = new System.Drawing.Size(89, 21);
-            this.RoomTempTextBox.TabIndex = 42;
+            this.RoomTempTextBox.TabIndex = 5;
             this.RoomTempTextBox.TextChanged += new System.EventHandler(this.RoomTempTextBox_TextChanged);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(12, 76);
+            this.label12.Location = new System.Drawing.Point(20, 76);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(53, 12);
             this.label12.TabIndex = 41;
@@ -416,7 +394,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(168, 51);
+            this.label10.Location = new System.Drawing.Point(176, 51);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(11, 12);
             this.label10.TabIndex = 40;
@@ -437,54 +415,12 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.dataBitsBox);
             this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Location = new System.Drawing.Point(12, 132);
+            this.groupBox2.Location = new System.Drawing.Point(443, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(390, 139);
             this.groupBox2.TabIndex = 41;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "串口设置";
-            // 
-            // CancelFormButton
-            // 
-            this.CancelFormButton.Location = new System.Drawing.Point(758, 465);
-            this.CancelFormButton.Name = "CancelFormButton";
-            this.CancelFormButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelFormButton.TabIndex = 42;
-            this.CancelFormButton.Text = "取消";
-            this.CancelFormButton.UseVisualStyleBackColor = true;
-            this.CancelFormButton.Click += new System.EventHandler(this.CancelButton_Click);
-            // 
-            // SaveRecordButton
-            // 
-            this.SaveRecordButton.Enabled = false;
-            this.SaveRecordButton.Location = new System.Drawing.Point(677, 465);
-            this.SaveRecordButton.Name = "SaveRecordButton";
-            this.SaveRecordButton.Size = new System.Drawing.Size(75, 23);
-            this.SaveRecordButton.TabIndex = 43;
-            this.SaveRecordButton.Text = "保存记录";
-            this.SaveRecordButton.UseVisualStyleBackColor = true;
-            this.SaveRecordButton.Click += new System.EventHandler(this.SaveRecordButton_Click);
-            // 
-            // PlotBox
-            // 
-            this.PlotBox.Location = new System.Drawing.Point(418, 12);
-            this.PlotBox.Name = "PlotBox";
-            this.PlotBox.Size = new System.Drawing.Size(415, 259);
-            this.PlotBox.TabIndex = 45;
-            this.PlotBox.TabStop = false;
-            this.PlotBox.Text = "监控图";
-            // 
-            // ForceStopButton
-            // 
-            this.ForceStopButton.ForeColor = System.Drawing.Color.Red;
-            this.ForceStopButton.Location = new System.Drawing.Point(12, 464);
-            this.ForceStopButton.Name = "ForceStopButton";
-            this.ForceStopButton.Size = new System.Drawing.Size(75, 23);
-            this.ForceStopButton.TabIndex = 46;
-            this.ForceStopButton.Text = "停止记录";
-            this.ForceStopButton.UseVisualStyleBackColor = true;
-            this.ForceStopButton.Visible = false;
-            this.ForceStopButton.Click += new System.EventHandler(this.ForceStopButton_Click);
             // 
             // PortStatusImageBox
             // 
@@ -495,12 +431,55 @@
             this.PortStatusImageBox.TabIndex = 33;
             this.PortStatusImageBox.TabStop = false;
             // 
+            // CancelFormButton
+            // 
+            this.CancelFormButton.Location = new System.Drawing.Point(758, 425);
+            this.CancelFormButton.Name = "CancelFormButton";
+            this.CancelFormButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelFormButton.TabIndex = 14;
+            this.CancelFormButton.Text = "取消";
+            this.CancelFormButton.UseVisualStyleBackColor = true;
+            this.CancelFormButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
+            // SaveRecordButton
+            // 
+            this.SaveRecordButton.Enabled = false;
+            this.SaveRecordButton.Location = new System.Drawing.Point(677, 425);
+            this.SaveRecordButton.Name = "SaveRecordButton";
+            this.SaveRecordButton.Size = new System.Drawing.Size(75, 23);
+            this.SaveRecordButton.TabIndex = 15;
+            this.SaveRecordButton.Text = "保存记录";
+            this.SaveRecordButton.UseVisualStyleBackColor = true;
+            this.SaveRecordButton.Click += new System.EventHandler(this.SaveRecordButton_Click);
+            // 
+            // PlotBox
+            // 
+            this.PlotBox.Location = new System.Drawing.Point(12, 131);
+            this.PlotBox.Name = "PlotBox";
+            this.PlotBox.Size = new System.Drawing.Size(415, 259);
+            this.PlotBox.TabIndex = 45;
+            this.PlotBox.TabStop = false;
+            this.PlotBox.Text = "监控图";
+            // 
+            // ForceStopButton
+            // 
+            this.ForceStopButton.ForeColor = System.Drawing.Color.Red;
+            this.ForceStopButton.Location = new System.Drawing.Point(12, 396);
+            this.ForceStopButton.Name = "ForceStopButton";
+            this.ForceStopButton.Size = new System.Drawing.Size(75, 23);
+            this.ForceStopButton.TabIndex = 16;
+            this.ForceStopButton.Text = "停止记录";
+            this.ForceStopButton.UseVisualStyleBackColor = true;
+            this.ForceStopButton.Visible = false;
+            this.ForceStopButton.Click += new System.EventHandler(this.ForceStopButton_Click);
+            // 
             // RecordForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 493);
+            this.ClientSize = new System.Drawing.Size(845, 459);
             this.ControlBox = false;
+            this.Controls.Add(this.logBox);
             this.Controls.Add(this.ForceStopButton);
             this.Controls.Add(this.PlotBox);
             this.Controls.Add(this.SaveRecordButton);
@@ -509,10 +488,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.sendMessageButton);
-            this.Controls.Add(this.dataOutputBox);
-            this.Controls.Add(this.clearDataButton);
             this.Controls.Add(this.clearLogButton);
-            this.Controls.Add(this.logBox);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "RecordForm";
@@ -533,8 +509,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox base64CheckBox;
         private System.Windows.Forms.Button sendMessageButton;
-        private System.Windows.Forms.TextBox dataOutputBox;
-        private System.Windows.Forms.Button clearDataButton;
         private System.Windows.Forms.Button clearLogButton;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
