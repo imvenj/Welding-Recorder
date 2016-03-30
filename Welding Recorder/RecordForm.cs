@@ -701,7 +701,7 @@ namespace Welding_Recorder
                 {
                     dict["name"] = inputBox.InputResult;
                     var history = new History(dict);
-                    history.signals = signalCache;
+                    history.Signals = signalCache;
                     history.Save();
                 }
                 catch (Exception excp)

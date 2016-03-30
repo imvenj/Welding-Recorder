@@ -172,6 +172,7 @@
             this.historiesList.Name = "historiesList";
             this.historiesList.Size = new System.Drawing.Size(158, 304);
             this.historiesList.TabIndex = 1;
+            this.historiesList.SelectedIndexChanged += new System.EventHandler(this.historiesList_SelectedIndexChanged);
             // 
             // historiesLabel
             // 
@@ -203,6 +204,7 @@
             this.newRecordButton.TabIndex = 2;
             this.newRecordButton.Text = "启动自动焊接";
             this.newRecordButton.UseVisualStyleBackColor = true;
+            this.newRecordButton.Click += new System.EventHandler(this.newRecordButton_Click);
             // 
             // MainForm
             // 

@@ -34,7 +34,7 @@ namespace Welding_Recorder
                 conn.Open();
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
-                    command.CommandText = "CREATE TABLE Histories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, gangtao_type string, welding_item string, welding_current real, ar_flow string, room_temperature string, operator string, created_at timestamp)";
+                    command.CommandText = "CREATE TABLE Histories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, gangtao_type string, welding_item string, welding_current string, ar_flow string, room_temperature string, operator string, created_at timestamp)";
                     command.ExecuteNonQuery();
                     command.CommandText = "CREATE TABLE GangTao(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type string UNIQUE)";
                     command.ExecuteNonQuery();
@@ -131,9 +131,9 @@ namespace Welding_Recorder
             return operatorList;
         }
 
-        public List<string> HistoryList()
+        public List<History> HistoryList()
         {
-            var historyList = new List<string>();
+            var historyList = new List<History>();
             using (var conn = new SQLiteConnection(DataSource))
             {
                 conn.Open();
@@ -145,8 +145,20 @@ namespace Welding_Recorder
 
                     while (reader.Read())
                     {
-                        var type = (string)reader.GetValue(1);
-                        historyList.Add(type);
+                        var dict = new Dictionary<string, object>();
+                        dict["name"] = reader.GetValue(1);
+                        dict["gangtao_type"] = reader.GetValue(2);
+                        dict["welding_item"] =  reader.GetValue(3);
+                        dict["welding_current"] = reader.GetValue(4);
+                        dict["ar_flow"] = reader.GetValue(5);
+                        dict["room_temperature"] = reader.GetValue(6);
+                        dict["operator"] = reader.GetValue(7);
+                        dict["created_at"] = reader.GetValue(8);
+
+                        var history = new History(dict);
+                        history.Id = reader.GetInt64(0);
+
+                        historyList.Add(history);
                     }
                 }
             }
