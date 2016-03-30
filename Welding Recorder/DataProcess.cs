@@ -42,7 +42,7 @@ namespace Welding_Recorder
                     command.ExecuteNonQuery();
                     command.CommandText = "CREATE TABLE Operator(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string UNIQUE)";
                     command.ExecuteNonQuery();
-                    command.CommandText = "CREATE TABLE Signal(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type integer, at timestamp, delta integer, history_id integer)";
+                    command.CommandText = "CREATE TABLE Signal(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type integer, step integer, at timestamp, delta integer, history_id integer)";
                     command.ExecuteNonQuery();
                     command.CommandText = "INSERT INTO GangTao ('type') values ('270'), ('242'), ('215'), ('190'), ('170'), ('150'), ('130'), ('110'), ('90'), ('75'), ('60'), ('46')";
                     command.ExecuteNonQuery();
@@ -130,7 +130,30 @@ namespace Welding_Recorder
 
             return operatorList;
         }
-        
+
+        public List<string> HistoryList()
+        {
+            var historyList = new List<string>();
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    var sql = "SELECT * FROM Histories ORDER BY `created_at` DESC";
+                    command.CommandText = sql;
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        var type = (string)reader.GetValue(1);
+                        historyList.Add(type);
+                    }
+                }
+            }
+
+            return historyList;
+        }
+
         public void addGangTao(string type)
         {
             using (var conn = new SQLiteConnection(DataSource))
@@ -179,7 +202,67 @@ namespace Welding_Recorder
             }
         }
 
-        public void saveSignals(List<Signal> signals, Dictionary<string, object> meta)
+        public long saveSignal(Signal sig)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    command.CommandText = "INSERT INTO Signal ('type', 'at', 'step', 'delta', 'history_id') values (@type, @at, @step, @delta, @history_id)";
+                    var typeParam = SQLiteHelper.CreateParameter("@type", (int)sig.Type, DbType.Int32);
+                    var atParam = SQLiteHelper.CreateParameter("@at", sig.Timestamp, DbType.DateTime);
+                    var stepParam = SQLiteHelper.CreateParameter("@step", sig.Step, DbType.Int32);
+                    var deltaParam = SQLiteHelper.CreateParameter("@delta", sig.Delta, DbType.Int32);
+                    var historyIdParam = SQLiteHelper.CreateParameter("@history_id", sig.History.Id, DbType.Int64);
+                    command.Parameters.Add(typeParam);
+                    command.Parameters.Add(atParam);
+                    command.Parameters.Add(deltaParam);
+                    command.Parameters.Add(stepParam);
+                    command.Parameters.Add(historyIdParam);
+                    command.ExecuteNonQuery();
+
+                    // signal id
+                    long sigId = -1;
+                    var sql = "SELECT * FROM Signal ORDER BY `id` DESC LIMIT 1"; // Not thread safe.
+                    command.CommandText = sql;
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        sigId = reader.GetInt64(0);
+                    }
+                    reader.Close();
+                    return sigId;
+                }
+            }
+        }
+
+        public void updateSignal(Signal sig)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    command.CommandText = "UPDATE Signal SET `type` = @type `at` = @at, `step` = @step, `delta` = @delta, `history_id` = @history_id WHERE `id` = @sid";
+                    var typeParam = SQLiteHelper.CreateParameter("@type", (int)sig.Type, DbType.Int32);
+                    var atParam = SQLiteHelper.CreateParameter("@at", sig.Timestamp, DbType.DateTime);
+                    var stepParam = SQLiteHelper.CreateParameter("@at", sig.Step, DbType.Int32);
+                    var deltaParam = SQLiteHelper.CreateParameter("@delta", sig.Delta, DbType.Int32);
+                    var historyIdParam = SQLiteHelper.CreateParameter("@history_id", sig.History.Id, DbType.Int64);
+                    var sIdParam = SQLiteHelper.CreateParameter("@sid", sig.Id, DbType.Int64);
+                    command.Parameters.Add(typeParam);
+                    command.Parameters.Add(atParam);
+                    command.Parameters.Add(deltaParam);
+                    command.Parameters.Add(stepParam);
+                    command.Parameters.Add(historyIdParam);
+                    command.Parameters.Add(sIdParam);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        
+        public long saveHistory(History history)
         {
             using (var conn = new SQLiteConnection(DataSource))
             {
@@ -188,14 +271,14 @@ namespace Welding_Recorder
                 {
                     // history
                     command.CommandText = "INSERT INTO Histories ('name', 'gangtao_type', 'welding_item', 'welding_current', 'ar_flow', 'room_temperature', 'operator', 'created_at') values (@name, @gangtao_type, @welding_item, @welding_current, @ar_flow, @room_temperature, @operator, @created_at)";
-                    var nameParam = SQLiteHelper.CreateStringParameter("@name", (string)meta["name"]);
-                    var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", (string)meta["gangtao_type"]);
-                    var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", (string)meta["welding_item"]);
-                    var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", (string)meta["welding_current"]);
-                    var ARFlowParam = SQLiteHelper.CreateStringParameter("@ar_flow", (string)meta["ar_flow"]);
-                    var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", (string)meta["room_temperature"]);
-                    var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", (string)meta["operator"]);
-                    var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", (DateTime)meta["created_at"], DbType.DateTime);
+                    var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
+                    var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
+                    var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", history.WeldingItem);
+                    var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", history.WeldingCurrent);
+                    var ARFlowParam = SQLiteHelper.CreateStringParameter("@ar_flow", history.ArFlow);
+                    var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", history.RoomTemperature);
+                    var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
+                    var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
                     command.Parameters.Add(nameParam);
                     command.Parameters.Add(gangtaoTypeParam);
                     command.Parameters.Add(WeldingItemParam);
@@ -204,45 +287,72 @@ namespace Welding_Recorder
                     command.Parameters.Add(RoomTemperatureParam);
                     command.Parameters.Add(OperatorParam);
                     command.Parameters.Add(CreatedAtParam);
-
                     command.ExecuteNonQuery();
 
                     // history id
                     long historyId = -1;
 
-                    var sql = "SELECT * FROM Histories ORDER BY `created_at` DESC LIMIT 1";
+                    var sql = "SELECT * FROM Histories ORDER BY `created_at` DESC LIMIT 1"; // Not thread safe.
                     command.CommandText = sql;
                     var reader = command.ExecuteReader();
-
                     while (reader.Read())
                     {
                         historyId = reader.GetInt64(0);
                     }
-
                     reader.Close();
+                    return historyId;
+                }
+            }
+        }
 
-                    // signals
-                    for (int i = 0; i < signals.Count; i++)
-                    {
-                        var sig = signals[i];
-                        var delta = 0;
-                        if (i != 0) //first
-                        {
-                            var interval = signals[i].Timestamp - signals[i - 1].Timestamp;
-                            delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
-                        }
-                        command.CommandText = "INSERT INTO Signal ('type', 'at', 'delta', 'history_id') values (@type, @at, @delta, @history_id)";
-                        var typeParam = SQLiteHelper.CreateParameter("@type", (int)sig.Type, DbType.Int32);
-                        var atParam = SQLiteHelper.CreateParameter("@at", sig.Timestamp, DbType.DateTime);
-                        var deltaParam = SQLiteHelper.CreateParameter("@delta", delta, DbType.Int32);
-                        var historyIdParam = SQLiteHelper.CreateParameter("@history_id", historyId, DbType.Int64);
-                        command.Parameters.Add(typeParam);
-                        command.Parameters.Add(atParam);
-                        command.Parameters.Add(deltaParam);
-                        command.Parameters.Add(historyIdParam);
+        public void updateHistory(History history)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    // history
+                    command.CommandText = "UPDATE Histories SET `name` = @name, `welding_item` = @welding_item, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
+                    var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
+                    var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
+                    var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", history.WeldingItem);
+                    var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", history.WeldingCurrent);
+                    var ARFlowParam = SQLiteHelper.CreateStringParameter("@ar_flow", history.ArFlow);
+                    var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", history.RoomTemperature);
+                    var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
+                    var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
+                    var hIdParam = SQLiteHelper.CreateParameter("@hid", history.Id, DbType.DateTime);
+                    command.Parameters.Add(nameParam);
+                    command.Parameters.Add(gangtaoTypeParam);
+                    command.Parameters.Add(WeldingItemParam);
+                    command.Parameters.Add(WeldingCurrentParam);
+                    command.Parameters.Add(ARFlowParam);
+                    command.Parameters.Add(RoomTemperatureParam);
+                    command.Parameters.Add(OperatorParam);
+                    command.Parameters.Add(CreatedAtParam);
+                    command.Parameters.Add(hIdParam);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
 
-                        command.ExecuteNonQuery();
-                    }
+        public void deleteHistory(History history)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    // history
+                    command.CommandText = "DELETE FROM Histories WHERE `id` = @hid";
+                    var hIdParam = SQLiteHelper.CreateStringParameter("@hid", history.Id);
+                    command.Parameters.Add(hIdParam);
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = "DELETE FROM Signal WHERE `history_id` = @hid";
+                    command.Parameters.Add(hIdParam);
+                    command.ExecuteNonQuery();
                 }
             }
         }
