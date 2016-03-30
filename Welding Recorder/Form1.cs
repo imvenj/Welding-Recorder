@@ -26,7 +26,7 @@ namespace Welding_Recorder
         private void startNewDataRecordToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = new RecordForm();
-            var result = form.ShowDialog();
+            var result = form.ShowDialog(this);
         }
     }
 }

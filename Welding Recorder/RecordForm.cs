@@ -29,7 +29,14 @@ namespace Welding_Recorder
         private PlotView Plot = new PlotView();
         private LinearAxis axis1 = new LinearAxis();
         //private LineSeries s1 = new LineSeries { Title = "Speed", StrokeThickness = 1 };
-        private ScatterSeries s1 = new ScatterSeries { MarkerType = MarkerType.Circle };
+        private ScatterSeries arcScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0xFF, 0x66, 0x77) };
+        private ScatterSeries solderScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0xBB, 0x11, 0x66) };
+        private ScatterSeries accScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0x88, 0x33, 0x44) };
+        private ScatterSeries deaccScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0x55, 0x88, 0xAA) };
+        private ScatterSeries rotateScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0x33, 0xAA, 0xDD) };
+        private ScatterSeries reverseRotateScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0x55, 0x99, 0x11) };
+
+        private Random r = new Random(384739);
 
         public RecordForm()
         {
@@ -76,7 +83,7 @@ namespace Welding_Recorder
         {
             if (isRecording)
             {
-                MessageBox.Show("You can not close port while recording data.");
+                MessageBox.Show(this, "正在采集数据，此时不允许关闭串口。", "数据采集中...", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
             else
             {
@@ -154,36 +161,31 @@ namespace Welding_Recorder
             }
             catch (TimeoutException)
             {
-                MessageBox.Show("数据读取超时。");
+
+                MessageBox.Show(this, "数据读取超时。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (InvalidOperationException)
             {
-                MessageBox.Show("非法操作。");
+
+                MessageBox.Show(this, "非法操作。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
             catch (Exception)
             {
-                MessageBox.Show("未知错误。");
+                MessageBox.Show(this, "未知错误。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             for (int i = 0; i < bytesInBuffer; i++)
             {
                 var b = readBytes[i];
 
-                if ((signalBuffer.Count == 6 || signalBuffer.Count == 0) && b == 0xFF) // Signal start
+                if (b == 0xFF)
                 {
-                    timestamp = DateTime.Now; // Save TimeStamp for signal start.
                     signalBuffer.Clear();
-                    signalBuffer.Add(b);
+                    timestamp = DateTime.Now;
                 }
-                else if (signalBuffer.Count() < 6) // Signal continue 
-                {
-                    signalBuffer.Add(b);
-                }
-                else
-                {
-                    // Do nothing.
-                }
+
+                signalBuffer.Add(b);
 
                 if (signalBuffer.Count == 6) // Signal catch finished.
                 {
@@ -220,21 +222,40 @@ namespace Welding_Recorder
             }
         }
 
+        private void updateUIWithPort(string portName)
+        {
+            var port = getPortWithPortName(portName);
+            if (port.IsOpen)
+            {
+                PortStatusImageBox.Image = Properties.Resources.Green_Ball;
+                OpenCloseButton.Text = "关闭";
+            }
+            else
+            {
+                PortStatusImageBox.Image = Properties.Resources.Red_Ball;
+                OpenCloseButton.Text = "打开";
+            }
+        }
+
         private void openPortWithName(string portName)
         {
             if (String.IsNullOrEmpty(portName))
             {
-                MessageBox.Show("请选择一个串口或输入串口名称。");
+                MessageBox.Show(this, "请选择一个串口或输入串口名称。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             else if (!isPortNameValid(portName.ToUpper()))
             {
-                MessageBox.Show("串口名不合法或串口不存在。");
+                MessageBox.Show(this, "串口名不合法或串口不存在。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             SerialPort p = getPortWithPortName(portName);
             if (p != null)
             {
+                if (!portsList.Contains(p))
+                {
+                    portsList.Add(p);
+                }
                 return;
             }
             else
@@ -254,7 +275,7 @@ namespace Welding_Recorder
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    MessageBox.Show("端口被占用。");
+                    MessageBox.Show(this, "端口被占用。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                     //throw;
                 }
@@ -298,6 +319,16 @@ namespace Welding_Recorder
             }
 
             return null;
+        }
+
+        private void closeAllPorts()
+        {
+            var ports = SerialPort.GetPortNames();
+
+            foreach (var port in ports)
+            {
+                closePortWithName(port);
+            }
         }
 
         private Parity translateStringToParity(string str)
@@ -358,8 +389,42 @@ namespace Welding_Recorder
 
         private void sendMessage(SerialPort from, SerialPort to, object obj)
         {
-            byte[] dataBytes = { 0xFF, 0x01, 0x00, 0x08, 0x00, 0x09 };
-            from.Write(dataBytes, 0, dataBytes.Count());
+            /* Simulate timing */
+            sendMessageButton.Enabled = false;
+            //TODO: Fixme
+            byte[][] dataBytes = { 
+                new byte[] { 0xFF, 0x01, 0x00, 0x08, 0x00, 0x09 }, // Arc Start
+                new byte[] { 0xFF, 0x01, 0x00, 0x10, 0x00, 0x11 }, // Arc End
+                new byte[] { 0xFF, 0x01, 0x00, 0x40, 0x00, 0x05 }, // Solder Start
+                new byte[] { 0xFF, 0x01, 0x00, 0x09, 0x00, 0x91 }, // Rotate
+                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x01, 0x04 }, // Acc step 1
+                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x02, 0x07 }, // Acc step 2
+                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x01, 0x02 }, // Deacc step 1
+                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x02, 0x01 }, // Deacc step 1
+                new byte[] { 0xFF, 0x01, 0x00, 0x60, 0x00, 0x61 }, // Rotate Stop
+                new byte[] { 0xFF, 0x01, 0x00, 0x80, 0x00, 0x81 }, // Reverse Rotate
+                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x01, 0x04 }, // Acc step 1
+                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x01, 0x02 }, // Deacc step 1
+                new byte[] { 0xFF, 0x01, 0x00, 0x70, 0x00, 0x71 }, // Reverse Rotate Stop
+                new byte[] { 0xFF, 0x01, 0x00, 0x20, 0x00, 0x21 },  // Solder End (according to doc)
+                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x00, 0x03 }  // Solder End (according to signal implementation)
+            };
+
+            int counter = 0;
+            Timer timer = new Timer();
+            timer.Interval = r.Next(1000, 3000); // Random interval.
+            timer.Tick += new EventHandler((sender, e) => {
+                if (counter == dataBytes.Length)
+                {
+                    sendMessageButton.Enabled = true;
+                    timer.Stop();
+                    return;
+                }
+                var data = dataBytes[counter];
+                from.Write(data, 0, data.Count());
+                counter++;
+            });
+            timer.Start();
         }
 
         /***************************************************************************
@@ -400,7 +465,7 @@ namespace Welding_Recorder
         {
             Plot.Model = new PlotModel();
             Plot.Dock = DockStyle.Fill;
-            this.PlotBox.Controls.Add(Plot);
+            PlotBox.Controls.Add(Plot);
             //this.Controls.Add(Plot);
 
             Plot.Model.PlotType = PlotType.XY;
@@ -417,9 +482,14 @@ namespace Welding_Recorder
             axis2.Minimum = -15.0;
             axis2.Maximum = 15.0;
             Plot.Model.Axes.Add(axis2);
-            
+
             // add Series and Axis to plot model
-            Plot.Model.Series.Add(s1);
+            Plot.Model.Series.Add(arcScatterSeries);
+            Plot.Model.Series.Add(solderScatterSeries);
+            Plot.Model.Series.Add(accScatterSeries);
+            Plot.Model.Series.Add(deaccScatterSeries);
+            Plot.Model.Series.Add(rotateScatterSeries);
+            Plot.Model.Series.Add(reverseRotateScatterSeries);
         }
 
         // Validate text input
@@ -474,32 +544,89 @@ namespace Welding_Recorder
                 {
                     message = signal.Type.ToString() + " detected.\r\n";
                 }
-                if (signal.Type == SignalType.SolderStart)
+                
+                if (signal.Type == SignalType.ArcStart)
                 {
                     isRecording = true;
+                    this.UIThread(()=> { ForceStopButton.Visible = true; });
                 }
                 if (signal.Type == SignalType.SolderEnd)
                 {
                     isRecording = false;
-                    SaveRecordButton.Enabled = true; // enable save record button
+                    this.UIThread(() => {
+                        SaveRecordButton.Enabled = true;
+                        ForceStopButton.Visible = false;
+                    }); // enable save record button
                 }
+
+                updatePlotWithSignal(signal);
             }
             else
             {
                 message = "Invalid signal: " + signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
             }
 
+            this.UIThread(() => { dataOutputBox.Text += message; });
+        }
+
+        private void updatePlotWithSignal(Signal signal)
+        {
             this.UIThread(() => {
-                this.dataOutputBox.Text += message;
+                ScatterSeries currentSerials = null;
+                switch (signal.Type)
+                {
+                    case SignalType.ArcStart:
+                        WriteToLogBox("焊接开始:\r\n起弧");
+                        currentSerials = arcScatterSeries;
+                        break;
+                    case SignalType.ArcEnd:
+                        WriteToLogBox("起弧停止");
+                        currentSerials = arcScatterSeries;
+                        break;
+                    case SignalType.SolderStart:
+                        currentSerials = solderScatterSeries;
+                        WriteToLogBox("起焊");
+                        break;
+                    case SignalType.SolderEnd:
+                        currentSerials = solderScatterSeries;
+                        WriteToLogBox("起焊停止");
+                        break;
+                    case SignalType.Acceleration:
+                        currentSerials = accScatterSeries;
+                        currentSpeed += signal.Step;
+                        WriteToLogBox("加速" + signal.Step + "档");
+                        break;
+                    case SignalType.Deceleration:
+                        currentSerials = deaccScatterSeries;
+                        currentSpeed -= signal.Step; // TODO: Fixme, should be minus while reverse rotate.
+                        WriteToLogBox("减速" + signal.Step + "档");
+                        break;
+                    case SignalType.RevolveStart:
+                        currentSerials = reverseRotateScatterSeries;
+                        WriteToLogBox("反转");
+                        break;
+                    case SignalType.RevolveEnd:
+                        currentSerials = reverseRotateScatterSeries;
+                        WriteToLogBox("反转停止");
+                        break;
+                    case SignalType.Unknown:
+                        currentSerials = rotateScatterSeries; // TODO: Fix it.
+                        WriteToLogBox("未知信号");
+                        break;
+                    default:
+                        WriteToLogBox("默认信号");
+                        currentSerials = rotateScatterSeries; // TODO: Fix it.
+                        break;
+                }
 
                 Plot.Model.InvalidatePlot(true);
                 var signals = signalCache;
                 var signalCount = signals.Count;
-                var r = new Random(signalCount);
 
                 if (signalCount == 1) // First point
                 {
-                    s1.Points.Add(new ScatterPoint(currentTime, 0, r.Next(1, 5), 0xFFAABB));
+                    var point = new ScatterPoint(currentTime, currentSpeed, 3);
+                    arcScatterSeries.Points.Add(point);
                 }
                 if (signalCount > 1)
                 {
@@ -508,11 +635,21 @@ namespace Welding_Recorder
 
                     TimeSpan span = currentSignal.Timestamp - previousSignal.Timestamp;
                     currentTime += span.TotalSeconds;
-                    s1.Points.Add(new ScatterPoint(currentTime, currentSpeed++, r.Next(1, 5), 0xFFBBAA));
-                    axis1.Maximum = currentTime + 10;
+                    var point = new ScatterPoint(currentTime, currentSpeed, 3);
+                    currentSerials.Points.Add(point);
+                    if (currentTime > 10)
+                    {
+                        axis1.Maximum = currentTime + 5;
+                    }
                 }
                 // Create Line series
-                
+            });
+        }
+
+        private void WriteToLogBox(string content)
+        {
+            this.UIThread(() => {
+                logBox.Text += content + "\r\n";
             });
         }
 
@@ -524,42 +661,62 @@ namespace Welding_Recorder
         {
             if (!isRecording)
             { // Not recording...
-                string[] ports = SerialPort.GetPortNames();
-                foreach (var port in ports)
-                {
-                    try
-                    {
-                        var p = new SerialPort(port);
-                        if (p.IsOpen)
-                        {
-                            p.Close();
-                        }
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Failed to close serial port {0}", port);
-                    }
-                }
+                closeAllPorts();
                 DialogResult = DialogResult.Cancel;
-                Close(); // Close form.
             }
             else // Prevent form close while recording.
             {
-                MessageBox.Show("You can not close this window while recording data.");
+                MessageBox.Show(this, "不能在数据采集时关闭这个窗口。", "数据采集中...", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
 
         private void SaveRecordButton_Click(object sender, EventArgs e)
         {
-            // Prompt user to ender a name for the record,
-            // Read metadata from UI, 
-            // and do database saving...
+            SaveRecordButton.Enabled = false; // Disable it.
+            var dict = new Dictionary<string, object>();
+            dict["gangtao_type"] = GangTaoTypeComboBox.Text;
+            dict["welding_item"] = WeldingItemComboBox.Text;
+            dict["welding_current"] = WeldingCurrentTextBox.Text;
+            dict["ar_flow"] = ArGasFlowTextBox.Text;
+            dict["room_temperature"] = RoomTempTextBox.Text;
+            var op = OperatorNameComboBox.Text;
+            dict["operator"] = op;
+
+            var db = new DataProcess();
+            var ops = db.OperatorList();
+            if (!ops.Contains(op))
+            {
+                db.addOperator(op); // Save operator
+            }
 
             // If all OK, close.
-            DialogResult = DialogResult.OK;
-            Close();
-            // If database save failed, save data to text file, 
-            // which user can import to database after this error.
+            DateTime dt = DateTime.Now;
+            dict["created_at"] = dt;
+            var inputBox = new InputBox("请输入焊接记录标题", "提示", "记录 - " + dt.ToLongDateString() + " " + dt.ToLongTimeString());
+            var result = inputBox.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                
+                try
+                {
+                    dict["name"] = inputBox.InputResult;
+                    db.saveSignals(signalCache, dict);
+                }
+                catch (Exception excp)
+                {
+                    //TODO: Save Result and crash.
+#if DEBUG
+                    Console.WriteLine(excp.StackTrace);
+#endif
+                    throw;
+                }
+
+                if (MessageBox.Show(this, "已保存。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                {
+                    closeAllPorts();
+                    DialogResult = DialogResult.OK;
+                }
+            }
         }
 
         private void GangTaoTypeComboBox_TextChanged(object sender, EventArgs e)
@@ -580,6 +737,19 @@ namespace Welding_Recorder
         private void RoomTempTextBox_TextChanged(object sender, EventArgs e)
         {
             UpdateControlColor((TextBox)sender, true);
+        }
+
+        private void ForceStopButton_Click(object sender, EventArgs e)
+        {
+            if (isRecording)
+            {
+                var result = MessageBox.Show(this, "数据采集正在进行中。如果现在停止，您将丢失所有已采集的数据。\r\n\r\n是否停止采集？", "数据采集中...", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
+                {
+                    isRecording = false; // Stop recording
+                    CancelButton_Click(CancelButton, e); // Quit and close 
+                }
+            }
         }
     }
 

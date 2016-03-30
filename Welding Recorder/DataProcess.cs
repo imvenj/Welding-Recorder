@@ -179,5 +179,72 @@ namespace Welding_Recorder
             }
         }
 
+        public void saveSignals(List<Signal> signals, Dictionary<string, object> meta)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    // history
+                    command.CommandText = "INSERT INTO Histories ('name', 'gangtao_type', 'welding_item', 'welding_current', 'ar_flow', 'room_temperature', 'operator', 'created_at') values (@name, @gangtao_type, @welding_item, @welding_current, @ar_flow, @room_temperature, @operator, @created_at)";
+                    var nameParam = SQLiteHelper.CreateStringParameter("@name", (string)meta["name"]);
+                    var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", (string)meta["gangtao_type"]);
+                    var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", (string)meta["welding_item"]);
+                    var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", (string)meta["welding_current"]);
+                    var ARFlowParam = SQLiteHelper.CreateStringParameter("@ar_flow", (string)meta["ar_flow"]);
+                    var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", (string)meta["room_temperature"]);
+                    var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", (string)meta["operator"]);
+                    var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", (DateTime)meta["created_at"], DbType.DateTime);
+                    command.Parameters.Add(nameParam);
+                    command.Parameters.Add(gangtaoTypeParam);
+                    command.Parameters.Add(WeldingItemParam);
+                    command.Parameters.Add(WeldingCurrentParam);
+                    command.Parameters.Add(ARFlowParam);
+                    command.Parameters.Add(RoomTemperatureParam);
+                    command.Parameters.Add(OperatorParam);
+                    command.Parameters.Add(CreatedAtParam);
+
+                    command.ExecuteNonQuery();
+
+                    // history id
+                    long historyId = -1;
+
+                    var sql = "SELECT * FROM Histories ORDER BY `created_at` DESC LIMIT 1";
+                    command.CommandText = sql;
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        historyId = reader.GetInt64(0);
+                    }
+
+                    reader.Close();
+
+                    // signals
+                    for (int i = 0; i < signals.Count; i++)
+                    {
+                        var sig = signals[i];
+                        var delta = 0;
+                        if (i != 0) //first
+                        {
+                            var interval = signals[i].Timestamp - signals[i - 1].Timestamp;
+                            delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
+                        }
+                        command.CommandText = "INSERT INTO Signal ('type', 'at', 'delta', 'history_id') values (@type, @at, @delta, @history_id)";
+                        var typeParam = SQLiteHelper.CreateParameter("@type", (int)sig.Type, DbType.Int32);
+                        var atParam = SQLiteHelper.CreateParameter("@at", sig.Timestamp, DbType.DateTime);
+                        var deltaParam = SQLiteHelper.CreateParameter("@delta", delta, DbType.Int32);
+                        var historyIdParam = SQLiteHelper.CreateParameter("@history_id", historyId, DbType.Int64);
+                        command.Parameters.Add(typeParam);
+                        command.Parameters.Add(atParam);
+                        command.Parameters.Add(deltaParam);
+                        command.Parameters.Add(historyIdParam);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
     }
 }

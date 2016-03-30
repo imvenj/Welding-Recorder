@@ -39,10 +39,10 @@ namespace Welding_Recorder
                         t = SignalType.ArcEnd;
                         break;
                     case 0x04:
-                        t = (rawBytes[4] == 0x00) ? SignalType.ArcStart : t = SignalType.Acceleration;
+                        t = (rawBytes[4] == 0x00) ? SignalType.SolderStart : SignalType.Acceleration;
                         break;
                     case 0x02:
-                        t = (rawBytes[4] == 0x00) ? SignalType.ArcEnd : t = SignalType.Deceleration;
+                        t = (rawBytes[4] == 0x00) ? SignalType.SolderEnd : SignalType.Deceleration;
                         break;
                     case 0x40:
                         t = SignalType.RevolveStart;
@@ -62,13 +62,13 @@ namespace Welding_Recorder
         {
             get
             {
-                if (Type == SignalType.Acceleration)
+                if (Type == SignalType.Acceleration || Type == SignalType.Deceleration)
                 {
                     return rawBytes[4];
                 }
                 else
                 {
-                    return -1;
+                    return int.MinValue;
                 }
             }
         }

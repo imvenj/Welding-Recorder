@@ -63,11 +63,11 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
             this.CancelFormButton = new System.Windows.Forms.Button();
             this.SaveRecordButton = new System.Windows.Forms.Button();
-            this.statusBar = new System.Windows.Forms.StatusStrip();
             this.PlotBox = new System.Windows.Forms.GroupBox();
+            this.ForceStopButton = new System.Windows.Forms.Button();
+            this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
@@ -277,6 +277,7 @@
             // 
             // GangTaoTypeComboBox
             // 
+            this.GangTaoTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GangTaoTypeComboBox.FormattingEnabled = true;
             this.GangTaoTypeComboBox.Location = new System.Drawing.Point(71, 20);
             this.GangTaoTypeComboBox.Name = "GangTaoTypeComboBox";
@@ -443,15 +444,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "串口设置";
             // 
-            // PortStatusImageBox
-            // 
-            this.PortStatusImageBox.Image = global::Welding_Recorder.Properties.Resources.Red_Ball;
-            this.PortStatusImageBox.Location = new System.Drawing.Point(96, 103);
-            this.PortStatusImageBox.Name = "PortStatusImageBox";
-            this.PortStatusImageBox.Size = new System.Drawing.Size(24, 24);
-            this.PortStatusImageBox.TabIndex = 33;
-            this.PortStatusImageBox.TabStop = false;
-            // 
             // CancelFormButton
             // 
             this.CancelFormButton.Location = new System.Drawing.Point(758, 465);
@@ -473,14 +465,6 @@
             this.SaveRecordButton.UseVisualStyleBackColor = true;
             this.SaveRecordButton.Click += new System.EventHandler(this.SaveRecordButton_Click);
             // 
-            // statusBar
-            // 
-            this.statusBar.Location = new System.Drawing.Point(0, 495);
-            this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(845, 22);
-            this.statusBar.TabIndex = 44;
-            this.statusBar.Text = "statusStrip1";
-            // 
             // PlotBox
             // 
             this.PlotBox.Location = new System.Drawing.Point(418, 12);
@@ -490,14 +474,35 @@
             this.PlotBox.TabStop = false;
             this.PlotBox.Text = "监控图";
             // 
+            // ForceStopButton
+            // 
+            this.ForceStopButton.ForeColor = System.Drawing.Color.Red;
+            this.ForceStopButton.Location = new System.Drawing.Point(12, 464);
+            this.ForceStopButton.Name = "ForceStopButton";
+            this.ForceStopButton.Size = new System.Drawing.Size(75, 23);
+            this.ForceStopButton.TabIndex = 46;
+            this.ForceStopButton.Text = "停止记录";
+            this.ForceStopButton.UseVisualStyleBackColor = true;
+            this.ForceStopButton.Visible = false;
+            this.ForceStopButton.Click += new System.EventHandler(this.ForceStopButton_Click);
+            // 
+            // PortStatusImageBox
+            // 
+            this.PortStatusImageBox.Image = global::Welding_Recorder.Properties.Resources.Red_Ball;
+            this.PortStatusImageBox.Location = new System.Drawing.Point(96, 103);
+            this.PortStatusImageBox.Name = "PortStatusImageBox";
+            this.PortStatusImageBox.Size = new System.Drawing.Size(24, 24);
+            this.PortStatusImageBox.TabIndex = 33;
+            this.PortStatusImageBox.TabStop = false;
+            // 
             // RecordForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 517);
+            this.ClientSize = new System.Drawing.Size(845, 493);
             this.ControlBox = false;
+            this.Controls.Add(this.ForceStopButton);
             this.Controls.Add(this.PlotBox);
-            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.SaveRecordButton);
             this.Controls.Add(this.CancelFormButton);
             this.Controls.Add(this.groupBox2);
@@ -511,7 +516,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "RecordForm";
-            this.Text = "数据采集";
+            this.Text = "焊接数据采集";
             this.Load += new System.EventHandler(this.RecordForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -562,8 +567,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button CancelFormButton;
         private System.Windows.Forms.Button SaveRecordButton;
-        private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.GroupBox PlotBox;
         private System.Windows.Forms.PictureBox PortStatusImageBox;
+        private System.Windows.Forms.Button ForceStopButton;
     }
 }
