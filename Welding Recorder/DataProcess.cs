@@ -166,6 +166,39 @@ namespace Welding_Recorder
             return historyList;
         }
 
+        public List<Signal> SignalListOfHistory(History history)
+        {
+            var signals = new List<Signal>();
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    var sql = "SELECT * FROM Signal WHERE `history_id` = @hid ORDER BY `at` ASC ";
+                    command.CommandText = sql;
+                    var hIdParam = SQLiteHelper.CreateStringParameter("@hid", history.Id);
+                    command.Parameters.Add(hIdParam);
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        var id = reader.GetInt64(0);
+                        var type = reader.GetInt32(1);
+                        var step = reader.GetInt32(2);
+                        var at = (DateTime)reader.GetValue(3);
+                        var delta = reader.GetInt32(4);
+
+                        var signal = new Signal(type, step, at);
+                        signal.Id = id;
+                        signal.Delta = delta;
+                        signals.Add(signal);
+                    }
+
+                    return signals;
+                }
+            }
+        }
+
         public void addGangTao(string type)
         {
             using (var conn = new SQLiteConnection(DataSource))

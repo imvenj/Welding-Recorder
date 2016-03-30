@@ -17,7 +17,23 @@ namespace Welding_Recorder
         public string RoomTemperature { get; set; }
         public string OperatorName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<Signal> Signals { get; set; }
+        private List<Signal> signals;
+        public List<Signal> Signals {
+            get
+            {
+                if (signals == null)
+                {
+                    var db = new DataProcess();
+                    signals = db.SignalListOfHistory(this);
+                }
+
+                return signals;
+            }
+            set
+            {
+                signals = value;
+            }
+        }
 
         public History(Dictionary<string, object> meta)
         {

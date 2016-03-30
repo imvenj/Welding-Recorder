@@ -22,7 +22,6 @@ namespace Welding_Recorder
     // Signal reading from chip
     public class Signal
     {
-        private long? id = null;
         public long? Id { get; set; }
         private DateTime timestamp;
         private byte[] rawBytes;
@@ -85,7 +84,6 @@ namespace Welding_Recorder
         }
 
         public History History { get; set; }
-        private int delta = 0;
         public int Delta { get; set; }
 
         public Signal(byte[] rawBytes, DateTime timestamp)

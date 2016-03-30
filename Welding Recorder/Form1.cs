@@ -73,7 +73,7 @@ namespace Welding_Recorder
                     return; 
                 }
                 var history = Histories[index];
-                historyDetailTextBox.Text = "历史记录详情： " + history.Name;
+                historyDetailTextBox.Text = "历史记录详情： " + history.Name + "，有" + history.Signals.Count + "个信号指令。";
             }
         }
     }
