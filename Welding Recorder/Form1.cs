@@ -22,6 +22,7 @@ namespace Welding_Recorder
 
         private void UpdateUI()
         {
+            historiesList.Items.Clear();
             var db = new DataProcess();
             Histories = db.HistoryList();
             Histories.ForEach((history) => {
@@ -73,7 +74,8 @@ namespace Welding_Recorder
                     return; 
                 }
                 var history = Histories[index];
-                historyDetailTextBox.Text = "历史记录详情： " + history.Name + "，有" + history.Signals.Count + "个信号指令。";
+                
+                historyDetailTextBox.Text = history.ToString();
             }
         }
     }

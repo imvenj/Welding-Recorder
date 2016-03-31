@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label6 = new System.Windows.Forms.Label();
+            this.sendMessageInfoLabel = new System.Windows.Forms.Label();
             this.base64CheckBox = new System.Windows.Forms.CheckBox();
             this.sendMessageButton = new System.Windows.Forms.Button();
             this.clearLogButton = new System.Windows.Forms.Button();
@@ -71,15 +71,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // label6
+            // sendMessageInfoLabel
             // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(549, 401);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(203, 12);
-            this.label6.TabIndex = 33;
-            this.label6.Text = "发送消息按钮仅用于单串口调试。-->";
+            this.sendMessageInfoLabel.AutoSize = true;
+            this.sendMessageInfoLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.sendMessageInfoLabel.Location = new System.Drawing.Point(549, 401);
+            this.sendMessageInfoLabel.Name = "sendMessageInfoLabel";
+            this.sendMessageInfoLabel.Size = new System.Drawing.Size(203, 12);
+            this.sendMessageInfoLabel.TabIndex = 33;
+            this.sendMessageInfoLabel.Text = "发送消息按钮仅用于单串口调试。-->";
             // 
             // base64CheckBox
             // 
@@ -486,7 +486,7 @@
             this.Controls.Add(this.CancelFormButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.sendMessageInfoLabel);
             this.Controls.Add(this.sendMessageButton);
             this.Controls.Add(this.clearLogButton);
             this.MaximizeBox = false;
@@ -506,7 +506,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label sendMessageInfoLabel;
         private System.Windows.Forms.CheckBox base64CheckBox;
         private System.Windows.Forms.Button sendMessageButton;
         private System.Windows.Forms.Button clearLogButton;

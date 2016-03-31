@@ -45,7 +45,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.WeldingItemComboBox = new System.Windows.Forms.ComboBox();
-            this.statusBar = new System.Windows.Forms.StatusStrip();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
             this.rateBox = new System.Windows.Forms.ComboBox();
@@ -59,20 +58,18 @@
             this.label4 = new System.Windows.Forms.Label();
             this.dataBitsBox = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.SaveRecordButton = new System.Windows.Forms.Button();
             this.CancelFormButton = new System.Windows.Forms.Button();
-            this.PlotBox = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.sendMessageButton = new System.Windows.Forms.Button();
-            this.dataOutputBox = new System.Windows.Forms.TextBox();
-            this.clearDataButton = new System.Windows.Forms.Button();
             this.clearLogButton = new System.Windows.Forms.Button();
             this.logBox = new System.Windows.Forms.TextBox();
             this.RecordGroupBox = new System.Windows.Forms.GroupBox();
             this.StartWeldingButton = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // OpenCloseButton
@@ -101,7 +98,7 @@
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.WeldingItemComboBox);
-            this.groupBox1.Location = new System.Drawing.Point(12, 6);
+            this.groupBox1.Location = new System.Drawing.Point(414, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(390, 113);
             this.groupBox1.TabIndex = 52;
@@ -235,14 +232,6 @@
             this.WeldingItemComboBox.Size = new System.Drawing.Size(108, 20);
             this.WeldingItemComboBox.TabIndex = 37;
             // 
-            // statusBar
-            // 
-            this.statusBar.Location = new System.Drawing.Point(0, 661);
-            this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(974, 22);
-            this.statusBar.TabIndex = 56;
-            this.statusBar.Text = "statusStrip1";
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.PortStatusImageBox);
@@ -258,7 +247,7 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.dataBitsBox);
             this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Location = new System.Drawing.Point(12, 126);
+            this.groupBox2.Location = new System.Drawing.Point(414, 131);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(390, 139);
             this.groupBox2.TabIndex = 53;
@@ -395,76 +384,19 @@
             this.label3.TabIndex = 27;
             this.label3.Text = "校验位";
             // 
-            // SaveRecordButton
-            // 
-            this.SaveRecordButton.Enabled = false;
-            this.SaveRecordButton.Location = new System.Drawing.Point(887, 601);
-            this.SaveRecordButton.Name = "SaveRecordButton";
-            this.SaveRecordButton.Size = new System.Drawing.Size(75, 23);
-            this.SaveRecordButton.TabIndex = 55;
-            this.SaveRecordButton.Text = "保存记录";
-            this.SaveRecordButton.UseVisualStyleBackColor = true;
-            // 
             // CancelFormButton
             // 
-            this.CancelFormButton.Location = new System.Drawing.Point(887, 630);
+            this.CancelFormButton.Location = new System.Drawing.Point(723, 539);
             this.CancelFormButton.Name = "CancelFormButton";
             this.CancelFormButton.Size = new System.Drawing.Size(75, 23);
             this.CancelFormButton.TabIndex = 54;
             this.CancelFormButton.Text = "取消";
             this.CancelFormButton.UseVisualStyleBackColor = true;
             // 
-            // PlotBox
-            // 
-            this.PlotBox.Location = new System.Drawing.Point(418, 6);
-            this.PlotBox.Name = "PlotBox";
-            this.PlotBox.Size = new System.Drawing.Size(544, 459);
-            this.PlotBox.TabIndex = 57;
-            this.PlotBox.TabStop = false;
-            this.PlotBox.Text = "监控图";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(597, 635);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(203, 12);
-            this.label6.TabIndex = 51;
-            this.label6.Text = "发送消息按钮仅用于单串口调试。-->";
-            // 
-            // sendMessageButton
-            // 
-            this.sendMessageButton.Location = new System.Drawing.Point(806, 630);
-            this.sendMessageButton.Name = "sendMessageButton";
-            this.sendMessageButton.Size = new System.Drawing.Size(75, 23);
-            this.sendMessageButton.TabIndex = 50;
-            this.sendMessageButton.Text = "发送消息";
-            this.sendMessageButton.UseVisualStyleBackColor = true;
-            // 
-            // dataOutputBox
-            // 
-            this.dataOutputBox.Location = new System.Drawing.Point(418, 471);
-            this.dataOutputBox.Multiline = true;
-            this.dataOutputBox.Name = "dataOutputBox";
-            this.dataOutputBox.ReadOnly = true;
-            this.dataOutputBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataOutputBox.Size = new System.Drawing.Size(463, 153);
-            this.dataOutputBox.TabIndex = 49;
-            this.dataOutputBox.Tag = "是";
-            // 
-            // clearDataButton
-            // 
-            this.clearDataButton.Location = new System.Drawing.Point(419, 630);
-            this.clearDataButton.Name = "clearDataButton";
-            this.clearDataButton.Size = new System.Drawing.Size(75, 23);
-            this.clearDataButton.TabIndex = 48;
-            this.clearDataButton.Text = "清空数据";
-            this.clearDataButton.UseVisualStyleBackColor = true;
-            // 
             // clearLogButton
             // 
-            this.clearLogButton.Location = new System.Drawing.Point(12, 630);
+            this.clearLogButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearLogButton.Location = new System.Drawing.Point(309, 229);
             this.clearLogButton.Name = "clearLogButton";
             this.clearLogButton.Size = new System.Drawing.Size(75, 23);
             this.clearLogButton.TabIndex = 47;
@@ -473,18 +405,21 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(12, 471);
+            this.logBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.logBox.Location = new System.Drawing.Point(6, 49);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
             this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logBox.Size = new System.Drawing.Size(390, 153);
+            this.logBox.Size = new System.Drawing.Size(378, 174);
             this.logBox.TabIndex = 46;
             this.logBox.Tag = "是";
             // 
             // RecordGroupBox
             // 
-            this.RecordGroupBox.Location = new System.Drawing.Point(12, 271);
+            this.RecordGroupBox.Location = new System.Drawing.Point(12, 339);
             this.RecordGroupBox.Name = "RecordGroupBox";
             this.RecordGroupBox.Size = new System.Drawing.Size(390, 194);
             this.RecordGroupBox.TabIndex = 58;
@@ -493,33 +428,56 @@
             // 
             // StartWeldingButton
             // 
-            this.StartWeldingButton.Location = new System.Drawing.Point(888, 572);
+            this.StartWeldingButton.Location = new System.Drawing.Point(642, 539);
             this.StartWeldingButton.Name = "StartWeldingButton";
             this.StartWeldingButton.Size = new System.Drawing.Size(75, 23);
             this.StartWeldingButton.TabIndex = 59;
             this.StartWeldingButton.Text = "开始焊接";
             this.StartWeldingButton.UseVisualStyleBackColor = true;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(6, 20);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(378, 23);
+            this.progressBar1.TabIndex = 60;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.progressBar1);
+            this.groupBox3.Controls.Add(this.logBox);
+            this.groupBox3.Controls.Add(this.clearLogButton);
+            this.groupBox3.Location = new System.Drawing.Point(408, 275);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(390, 258);
+            this.groupBox3.TabIndex = 61;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "焊接进度";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Location = new System.Drawing.Point(12, 12);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(390, 321);
+            this.groupBox4.TabIndex = 62;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "焊接程序信息";
+            // 
             // WeldingControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(974, 683);
+            this.ClientSize = new System.Drawing.Size(814, 576);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.StartWeldingButton);
             this.Controls.Add(this.RecordGroupBox);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.SaveRecordButton);
             this.Controls.Add(this.CancelFormButton);
-            this.Controls.Add(this.PlotBox);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.sendMessageButton);
-            this.Controls.Add(this.dataOutputBox);
-            this.Controls.Add(this.clearDataButton);
-            this.Controls.Add(this.clearLogButton);
-            this.Controls.Add(this.logBox);
             this.Name = "WeldingControlForm";
             this.Text = "焊接控制";
             this.groupBox1.ResumeLayout(false);
@@ -527,8 +485,9 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -551,7 +510,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox WeldingItemComboBox;
-        private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.PictureBox PortStatusImageBox;
         private System.Windows.Forms.ComboBox rateBox;
@@ -565,16 +523,13 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox dataBitsBox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button SaveRecordButton;
         private System.Windows.Forms.Button CancelFormButton;
-        private System.Windows.Forms.GroupBox PlotBox;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button sendMessageButton;
-        private System.Windows.Forms.TextBox dataOutputBox;
-        private System.Windows.Forms.Button clearDataButton;
         private System.Windows.Forms.Button clearLogButton;
         private System.Windows.Forms.TextBox logBox;
         private System.Windows.Forms.GroupBox RecordGroupBox;
         private System.Windows.Forms.Button StartWeldingButton;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
     }
 }

@@ -151,7 +151,38 @@ namespace Welding_Recorder
         
         public override string ToString()
         {
-            return this.Type.ToString() + " " + ((this.Step != int.MaxValue) ? -1 : this.Step) + " " + (this.isValid() ? "Valid signal" : "Invalid signal");
+            var name = "未知信号";
+            switch (Type)
+            {
+                case SignalType.ArcStart:
+                    name = "起弧";
+                    break;
+                case SignalType.ArcEnd:
+                    name = "起弧停止";
+                    break;
+                case SignalType.SolderStart:
+                    name = "焊接开始";
+                    break;
+                case SignalType.SolderEnd:
+                    name = "焊接停止";
+                    break;
+                case SignalType.Acceleration:
+                    name = "加速" + Step + "档";
+                    break;
+                case SignalType.Deceleration:
+                    name = "减速" + Step + "档";
+                    break;
+                case SignalType.RevolveStart:
+                    name = "反转";
+                    break;
+                case SignalType.RevolveEnd:
+                    name = "反转停止";
+                    break;
+                case SignalType.Unknown:
+                default:
+                    break;
+            }
+            return name;
         }
 
         public Signal Save()
@@ -175,7 +206,7 @@ namespace Welding_Recorder
             }
         }
     }
-
+    
     // Place holder exception class
     public class SignalException : Exception
     {

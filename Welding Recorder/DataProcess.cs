@@ -191,6 +191,7 @@ namespace Welding_Recorder
                         var signal = new Signal(type, step, at);
                         signal.Id = id;
                         signal.Delta = delta;
+                        signal.History = history;
                         signals.Add(signal);
                     }
 

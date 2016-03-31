@@ -261,6 +261,11 @@ namespace Welding_Recorder
                 p.DataBits = Convert.ToInt32(dataBitsBox.Text);
                 p.StopBits = translateStringToStopBits(stopBitsBox.Text);
                 p.DataReceived += new SerialDataReceivedEventHandler(serialPortDataReceived);
+                p.ErrorReceived += new SerialErrorReceivedEventHandler((sender, e) => {
+                    var evt = e;
+                    Console.WriteLine(e.EventType);
+                });
+
                 try
                 {
                     p.Open();
@@ -435,6 +440,13 @@ namespace Welding_Recorder
         // Load static data from database to UI.
         private void loadWeldingDataLists()
         {
+#if DEBUG
+            sendMessageInfoLabel.Visible = true;
+            sendMessageButton.Visible = true;
+#else
+            sendMessageInfoLabel.Visible = false;
+            sendMessageButton.Visible = false;
+#endif
             var db = new DataProcess();
             var gangtaoList = db.GangTaoList();
             gangtaoList.ForEach((item) => {
@@ -573,48 +585,42 @@ namespace Welding_Recorder
                 switch (signal.Type)
                 {
                     case SignalType.ArcStart:
-                        WriteToLogBox("焊接开始:\r\n起弧");
+                        WriteToLogBox("焊接开始:\r\n");
                         currentSerials = arcScatterSeries;
                         break;
                     case SignalType.ArcEnd:
-                        WriteToLogBox("起弧停止");
                         currentSerials = arcScatterSeries;
                         break;
                     case SignalType.SolderStart:
                         currentSerials = solderScatterSeries;
-                        WriteToLogBox("起焊");
                         break;
                     case SignalType.SolderEnd:
                         currentSerials = solderScatterSeries;
-                        WriteToLogBox("起焊停止");
+                        MessageBox.Show(this, "焊接完成，你现在可以点击主界面上的“保存记录”，把本次焊接的数据保存到数据库。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     case SignalType.Acceleration:
                         currentSerials = accScatterSeries;
                         currentSpeed += signal.Step;
-                        WriteToLogBox("加速" + signal.Step + "档");
                         break;
                     case SignalType.Deceleration:
                         currentSerials = deaccScatterSeries;
                         currentSpeed -= signal.Step; // TODO: Fixme, should be minus while reverse rotate.
-                        WriteToLogBox("减速" + signal.Step + "档");
                         break;
                     case SignalType.RevolveStart:
                         currentSerials = reverseRotateScatterSeries;
-                        WriteToLogBox("反转");
                         break;
                     case SignalType.RevolveEnd:
                         currentSerials = reverseRotateScatterSeries;
-                        WriteToLogBox("反转停止");
                         break;
                     case SignalType.Unknown:
                         currentSerials = rotateScatterSeries; // TODO: Fix it.
-                        WriteToLogBox("未知信号");
                         break;
                     default:
-                        WriteToLogBox("默认信号");
                         currentSerials = rotateScatterSeries; // TODO: Fix it.
                         break;
                 }
+
+                WriteToLogBox(signal.ToString());
 
                 Plot.Model.InvalidatePlot(true);
                 var signals = signalCache;
@@ -634,7 +640,7 @@ namespace Welding_Recorder
                     currentTime += span.TotalSeconds;
                     var point = new ScatterPoint(currentTime, currentSpeed, 3);
                     currentSerials.Points.Add(point);
-                    if (currentTime > 10)
+                    if (currentTime >= 10)
                     {
                         axis1.Maximum = currentTime + 5;
                     }
@@ -658,6 +664,16 @@ namespace Welding_Recorder
         {
             if (!isRecording)
             { // Not recording...
+                if (signalCache.Count > 0) // Data exist.
+                {
+                    var result = MessageBox.Show(this, "你还没有保存本次焊接的数据。是否关闭数据采集窗口并忽略焊接数据？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    if (result != DialogResult.OK) 
+                    {
+                        // Do nothing.
+                        return;
+                    }
+                    // ignore data and quit.
+                }
                 closeAllPorts();
                 DialogResult = DialogResult.Cancel;
             }
@@ -671,19 +687,22 @@ namespace Welding_Recorder
         {
             SaveRecordButton.Enabled = false; // Disable it.
             var dict = new Dictionary<string, object>();
-            dict["gangtao_type"] = GangTaoTypeComboBox.Text;
-            dict["welding_item"] = WeldingItemComboBox.Text;
-            dict["welding_current"] = WeldingCurrentTextBox.Text;
-            dict["ar_flow"] = ArGasFlowTextBox.Text;
-            dict["room_temperature"] = RoomTempTextBox.Text;
-            var op = OperatorNameComboBox.Text;
+            dict["gangtao_type"] = GangTaoTypeComboBox.Text.Trim();
+            dict["welding_item"] = WeldingItemComboBox.Text.Trim();
+            dict["welding_current"] = WeldingCurrentTextBox.Text.Trim();
+            dict["ar_flow"] = ArGasFlowTextBox.Text.Trim();
+            dict["room_temperature"] = RoomTempTextBox.Text.Trim();
+            var op = OperatorNameComboBox.Text.Trim();
             dict["operator"] = op;
 
-            var db = new DataProcess();
-            var ops = db.OperatorList();
-            if (!ops.Contains(op))
+            if (op != "") // Valid op.
             {
-                db.addOperator(op); // Save operator
+                var db = new DataProcess();
+                var ops = db.OperatorList();
+                if (!ops.Contains(op))
+                {
+                    db.addOperator(op); // Save operator
+                }
             }
 
             // If all OK, close.

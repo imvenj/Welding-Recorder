@@ -84,30 +84,30 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.settingsToolStripMenuItem.Text = "程序设置";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(139, 6);
             // 
             // 缸套规格管理ToolStripMenuItem
             // 
             this.缸套规格管理ToolStripMenuItem.Name = "缸套规格管理ToolStripMenuItem";
-            this.缸套规格管理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.缸套规格管理ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.缸套规格管理ToolStripMenuItem.Text = "缸套规格管理";
             // 
             // 用户管理ToolStripMenuItem
             // 
             this.用户管理ToolStripMenuItem.Name = "用户管理ToolStripMenuItem";
-            this.用户管理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.用户管理ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.用户管理ToolStripMenuItem.Text = "焊接项目管理";
             // 
             // 操作人员管理ToolStripMenuItem
             // 
             this.操作人员管理ToolStripMenuItem.Name = "操作人员管理ToolStripMenuItem";
-            this.操作人员管理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.操作人员管理ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.操作人员管理ToolStripMenuItem.Text = "操作人员管理";
             // 
             // menuStrip1
@@ -188,10 +188,12 @@
             this.historyDetailTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.historyDetailTextBox.Font = new System.Drawing.Font("SimSun", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.historyDetailTextBox.Location = new System.Drawing.Point(4, 4);
             this.historyDetailTextBox.Multiline = true;
             this.historyDetailTextBox.Name = "historyDetailTextBox";
             this.historyDetailTextBox.ReadOnly = true;
+            this.historyDetailTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.historyDetailTextBox.Size = new System.Drawing.Size(462, 320);
             this.historyDetailTextBox.TabIndex = 3;
             // 
