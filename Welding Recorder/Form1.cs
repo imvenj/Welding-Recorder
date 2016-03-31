@@ -57,6 +57,14 @@ namespace Welding_Recorder
             else
             {
                 // TODO: Start Control.
+                var index = historiesList.SelectedIndex;
+                var history = Histories[index];
+                var weldingForm = new WeldingControlForm(history);
+                var result = weldingForm.ShowDialog(this);
+                if (result == DialogResult.OK)
+                {
+                    // Do more
+                }
             }
         }
 

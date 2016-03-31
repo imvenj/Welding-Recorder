@@ -25,6 +25,13 @@ namespace Welding_Recorder
         public long? Id { get; set; }
         private DateTime timestamp;
         private byte[] rawBytes;
+        public byte[] RawBytes
+        {
+            get
+            {
+                return rawBytes;
+            }
+        }
 
         public SignalType Type
         {

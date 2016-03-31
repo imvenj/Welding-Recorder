@@ -44,6 +44,7 @@
             this.historiesLabel = new System.Windows.Forms.Label();
             this.historyDetailTextBox = new System.Windows.Forms.TextBox();
             this.newRecordButton = new System.Windows.Forms.Button();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -112,6 +113,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件ToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -208,11 +210,20 @@
             this.newRecordButton.UseVisualStyleBackColor = true;
             this.newRecordButton.Click += new System.EventHandler(this.newRecordButton_Click);
             // 
+            // splitter1
+            // 
+            this.splitter1.Location = new System.Drawing.Point(0, 24);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 369);
+            this.splitter1.TabIndex = 2;
+            this.splitter1.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(662, 393);
+            this.Controls.Add(this.splitter1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -249,6 +260,7 @@
         private System.Windows.Forms.ToolStripMenuItem 操作人员管理ToolStripMenuItem;
         private System.Windows.Forms.Button deleteHistoryButton;
         private System.Windows.Forms.TextBox historyDetailTextBox;
+        private System.Windows.Forms.Splitter splitter1;
     }
 }
 

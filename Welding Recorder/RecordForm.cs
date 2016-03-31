@@ -106,7 +106,7 @@ namespace Welding_Recorder
             SerialPort p = getPortWithPortName(PortsBox.Text.ToUpper());
             if (p == null)
             {
-                logBox.Text += "端口未打开。\r\n";
+                logBox.AppendText("端口未打开。\r\n");
                 return;
             }
             else
@@ -276,7 +276,7 @@ namespace Welding_Recorder
                     //throw;
                 }
                 portsList.Add(p);
-                logBox.Text += portName + "已打开。" + "共打开了" + portsList.Count + "个串口。\r\n";
+                logBox.AppendText(portName + "已打开。" + "共打开了" + portsList.Count + "个串口。\r\n");
                 OpenCloseButton.Text = "关闭";
             }
         }
@@ -290,7 +290,7 @@ namespace Welding_Recorder
                 if (!p.IsOpen)
                 {
                     portsList.Remove(p);
-                    logBox.Text += portName + "已关闭。" + "共打开了" + portsList.Count + "个串口。\r\n";
+                    logBox.AppendText(portName + "已关闭。" + "共打开了" + portsList.Count + "个串口。\r\n");
                     OpenCloseButton.Text = "打开";
                     // Re-enable PortsBox after port closed.
                     PortsBox.Enabled = true;
@@ -298,7 +298,7 @@ namespace Welding_Recorder
                 }
                 else
                 {
-                    logBox.Text += "端口" + portName + "关闭失败。\r\n";
+                    logBox.AppendText("端口" + portName + "关闭失败。\r\n");
                 }
             }
         }
@@ -477,12 +477,16 @@ namespace Welding_Recorder
             axis1.Position = AxisPosition.Bottom;
             axis1.Minimum = -1.0;
             axis1.Maximum = 10.0;
+            axis1.Title = "运行时间";
+            axis1.Unit = "秒";
             Plot.Model.Axes.Add(axis1);
 
             var axis2 = new LinearAxis();
             axis2.Position = AxisPosition.Left;
             axis2.Minimum = -15.0;
             axis2.Maximum = 15.0;
+            axis2.Title = "转速";
+            axis2.Unit = "档";
             Plot.Model.Axes.Add(axis2);
 
             // add Series and Axis to plot model
@@ -638,7 +642,7 @@ namespace Welding_Recorder
                     currentSerials.Points.Add(point);
                     if (currentTime >= 10)
                     {
-                        axis1.Maximum = currentTime + 5;
+                        axis1.Maximum = Math.Floor(currentTime + 5);
                     }
                 }
                 // Create Line series
@@ -648,7 +652,7 @@ namespace Welding_Recorder
         private void WriteToLogBox(string content)
         {
             this.UIThread(() => {
-                logBox.Text += content + "\r\n";
+                logBox.AppendText(content + "\r\n");
             });
         }
 
@@ -767,18 +771,4 @@ namespace Welding_Recorder
         }
     }
 
-    public static class ControlExtensions
-    {
-        public static void UIThread(this Control @this, Action code)
-        {
-            if (@this.InvokeRequired)
-            {
-                @this.BeginInvoke(code);
-            }
-            else
-            {
-                code.Invoke();
-            }
-        }
-    }
 }
