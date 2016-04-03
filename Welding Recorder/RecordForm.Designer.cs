@@ -464,13 +464,12 @@
             // ForceStopButton
             // 
             this.ForceStopButton.ForeColor = System.Drawing.Color.Red;
-            this.ForceStopButton.Location = new System.Drawing.Point(12, 396);
+            this.ForceStopButton.Location = new System.Drawing.Point(596, 425);
             this.ForceStopButton.Name = "ForceStopButton";
             this.ForceStopButton.Size = new System.Drawing.Size(75, 23);
             this.ForceStopButton.TabIndex = 16;
             this.ForceStopButton.Text = "停止记录";
             this.ForceStopButton.UseVisualStyleBackColor = true;
-            this.ForceStopButton.Visible = false;
             this.ForceStopButton.Click += new System.EventHandler(this.ForceStopButton_Click);
             // 
             // RecordForm

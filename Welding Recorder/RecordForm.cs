@@ -178,7 +178,7 @@ namespace Welding_Recorder
 
                 signalBuffer.Add(b);
 
-                if (signalBuffer.Count == 6) // Signal catch finished.
+                if (signalBuffer.Count == Signal.LENGTH) // Signal catch finished.
                 {
 #if (DEBUG)
                     Console.Write("Signal content: ");
@@ -388,21 +388,22 @@ namespace Welding_Recorder
             sendMessageButton.Enabled = false;
             //TODO: Fixme
             byte[][] dataBytes = { 
-                new byte[] { 0xFF, 0x01, 0x00, 0x08, 0x00, 0x09 }, // Arc Start
-                new byte[] { 0xFF, 0x01, 0x00, 0x10, 0x00, 0x11 }, // Arc End
-                new byte[] { 0xFF, 0x01, 0x00, 0x40, 0x00, 0x05 }, // Solder Start
-                new byte[] { 0xFF, 0x01, 0x00, 0x09, 0x00, 0x91 }, // Rotate
-                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x01, 0x04 }, // Acc step 1
-                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x02, 0x07 }, // Acc step 2
-                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x01, 0x02 }, // Deacc step 1
-                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x02, 0x01 }, // Deacc step 1
-                new byte[] { 0xFF, 0x01, 0x00, 0x60, 0x00, 0x61 }, // Rotate Stop
-                new byte[] { 0xFF, 0x01, 0x00, 0x80, 0x00, 0x81 }, // Reverse Rotate
-                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x01, 0x04 }, // Acc step 1
-                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x01, 0x02 }, // Deacc step 1
-                new byte[] { 0xFF, 0x01, 0x00, 0x70, 0x00, 0x71 }, // Reverse Rotate Stop
-                new byte[] { 0xFF, 0x01, 0x00, 0x20, 0x00, 0x21 },  // Solder End (according to doc)
-                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x00, 0x03 }  // Solder End (according to signal implementation)
+                new byte[] { 0xFF, 0x01, 0x00, 0x08, 0x00, 0x00, 0x09 }, // Arc Start
+                new byte[] { 0xFF, 0x01, 0x00, 0x10, 0x00, 0x00, 0x11 }, // Arc End
+                new byte[] { 0xFF, 0x01, 0x00, 0x40, 0x00, 0x00, 0x41 }, // Solder Start
+                new byte[] { 0xFF, 0x01, 0x00, 0x90, 0x00, 0x00, 0x91 }, // Rotate
+                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x01, 0x00, 0x04 }, // Acc step 1
+                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x02, 0x00, 0x07 }, // Acc step 2
+                new byte[] { 0xFF, 0x01, 0x00, 0x02, 0x01, 0x00, 0x02 }, // Deacc step 1
+                new byte[] { 0xFF, 0x01, 0x00, 0x60, 0x00, 0x00, 0x61 }, // Rotate Stop
+                new byte[] { 0xFF, 0x01, 0x00, 0x20, 0x00, 0x00, 0x21 }, // Solder End (First round)
+                new byte[] { 0xFF, 0x01, 0x00, 0x80, 0x00, 0x00, 0x81 }, // Revolve start
+                new byte[] { 0xFF, 0x01, 0x00, 0x70, 0x00, 0x00, 0x71 }, // Revolve Stop
+                new byte[] { 0xFF, 0x01, 0x00, 0x40, 0x00, 0x00, 0x41 }, // Solder Start
+                new byte[] { 0xFF, 0x01, 0x00, 0x90, 0x00, 0x00, 0x91 }, // Rotate
+                new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x02, 0x00, 0x07 }, // Acc step 2
+                new byte[] { 0xFF, 0x01, 0x00, 0x60, 0x00, 0x00, 0x61 }, // Rotate Stop
+                new byte[] { 0xFF, 0x01, 0x00, 0x20, 0x00, 0x00, 0x21 }, // Solder End (Second round)
             };
 
             int counter = 0;
@@ -555,15 +556,6 @@ namespace Welding_Recorder
                 if (signal.Type == SignalType.ArcStart)
                 {
                     isRecording = true;
-                    this.UIThread(()=> { ForceStopButton.Visible = true; });
-                }
-                if (signal.Type == SignalType.SolderEnd)
-                {
-                    isRecording = false;
-                    this.UIThread(() => {
-                        SaveRecordButton.Enabled = true;  // enable save record button
-                        ForceStopButton.Visible = false;
-                    });
                 }
 
                 updatePlotWithSignal(signal);
@@ -585,7 +577,7 @@ namespace Welding_Recorder
                 switch (signal.Type)
                 {
                     case SignalType.ArcStart:
-                        WriteToLogBox("焊接开始:\r\n");
+                        WriteToLogBox("\r\n焊接程序开始:\r\n");
                         currentSerials = arcScatterSeries;
                         break;
                     case SignalType.ArcEnd:
@@ -596,15 +588,20 @@ namespace Welding_Recorder
                         break;
                     case SignalType.SolderEnd:
                         currentSerials = solderScatterSeries;
-                        MessageBox.Show(this, "焊接完成，你现在可以点击主界面上的“保存记录”，把本次焊接的数据保存到数据库。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     case SignalType.Acceleration:
                         currentSerials = accScatterSeries;
-                        currentSpeed += signal.Step;
+                        currentSpeed = signal.Step;
                         break;
                     case SignalType.Deceleration:
                         currentSerials = deaccScatterSeries;
-                        currentSpeed -= signal.Step; // TODO: Fixme, should be minus while reverse rotate.
+                        currentSpeed = signal.Step; // TODO: Fixme, should be minus while reverse rotate.
+                        break;
+                    case SignalType.RotateStart:
+                        currentSerials = rotateScatterSeries;
+                        break;
+                    case SignalType.RotateEnd:
+                        currentSerials = rotateScatterSeries;
                         break;
                     case SignalType.RevolveStart:
                         currentSerials = reverseRotateScatterSeries;
@@ -620,7 +617,7 @@ namespace Welding_Recorder
                         break;
                 }
 
-                WriteToLogBox(signal.ToString());
+                WriteToLogBox("- " + signal.ToString());
 
                 Plot.Model.InvalidatePlot(true);
                 var signals = signalCache;
@@ -639,11 +636,12 @@ namespace Welding_Recorder
                     TimeSpan span = currentSignal.Timestamp - previousSignal.Timestamp;
                     currentTime += span.TotalSeconds;
                     var point = new ScatterPoint(currentTime, currentSpeed, 3);
-                    currentSerials.Points.Add(point);
-                    if (currentTime >= 10)
+                    Console.WriteLine("CurrentTime: " + currentTime);
+                    if (Math.Ceiling(currentTime) >= 10)
                     {
                         axis1.Maximum = Math.Floor(currentTime + 5);
                     }
+                    currentSerials.Points.Add(point);
                 }
                 // Create Line series
             });
@@ -759,7 +757,25 @@ namespace Welding_Recorder
 
         private void ForceStopButton_Click(object sender, EventArgs e)
         {
-            if (isRecording)
+            if (signalCache.Count == 0) // Nothing recorded, just do nothing...
+            {
+                return;
+            }
+            if (signalCache.Last().Type == SignalType.SolderEnd) // If this is one of the solder end.
+            {
+                if (signalCache.Count != 0) // Valid record
+                {
+                    // Enable Save Record button.
+                    var result = MessageBox.Show(this, "焊接停止信号已发送，你现在可以完成数据采集。\r\n\r\n是否停止数据采集？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Yes)
+                    {
+                        isRecording = false;
+                        SaveRecordButton.Enabled = true;
+                        MessageBox.Show(this, "焊接完成，你现在可以点击主界面上的“保存记录”，把本次焊接的数据保存到数据库。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            else // Prevent stop.
             {
                 var result = MessageBox.Show(this, "数据采集正在进行中。如果现在停止，您将丢失所有已采集的数据。\r\n\r\n是否停止采集？", "数据采集中...", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 if (result == DialogResult.Yes)
