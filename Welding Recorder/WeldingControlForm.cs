@@ -27,6 +27,7 @@ namespace Welding_Recorder
         private LinearAxis axis1 = new LinearAxis();
         private Signal currentSentSignal;
         private SerialPort currentSerialPort;
+        private List<Timer> timerCache = new List<Timer>();
 
         public WeldingControlForm()
         {
@@ -164,19 +165,27 @@ namespace Welding_Recorder
                     {
                         if (signal.Type != currentSentSignal.Type) // Currently only check signal type
                         {
-                            var message = string.Format("信号传输错误：\r\n\r\n发送的信号是：{0}\r\n收到的信号是：{1}.", currentSentSignal.ToString(), signal.ToString());
+                            var message = string.Format("信号传输错误：\r\n\r\n发送的信号是：{0}\r\n收到的信号是：{1}.\r\n\r\n是否开始手工操作？", currentSentSignal.ToString(), signal.ToString());
                             this.UIThread(() =>
                             {
-                                MessageBox.Show(this, message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                if (MessageBox.Show(this, message, "错误", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                                { // Manual override.
+                                    timerCache.ForEach((t) => {
+                                        t.Stop();
+                                    });
+                                }
                             });
                             // TODO: Do more with this critical error.
                         } // TODO: Maybe check timestamp later.
                           // process received data for debug
                         SignalProcess(signal);
                     }
-                    catch (Exception)
+                    catch (Exception exp)
                     {
                         // Ignore
+#if DEBUG
+                        Console.WriteLine(exp.StackTrace);
+#endif
                     }
                     this.UIThread(() =>
                     {
@@ -608,6 +617,7 @@ namespace Welding_Recorder
                 else
                 {
                     Timer timer = new Timer();
+                    timerCache.Add(timer);
                     timer.Interval = sig.Delta;
                     var data = sig.RawBytes;
                     var k = i;
