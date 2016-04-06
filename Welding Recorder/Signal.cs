@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 
 namespace Welding_Recorder
 {
@@ -14,14 +11,17 @@ namespace Welding_Recorder
         SolderEnd,
         Acceleration,
         Deceleration,
-        RevolveStart,
+        RotateStart, //正转
+        RotateEnd,
+        RevolveStart, //反转
         RevolveEnd,
-        Unknown = Int32.MaxValue
+        Unknown = -1 // -1 is much simpler than int.MaxValue
     }
 
     // Signal reading from chip
     public class Signal
     {
+        public static int LENGTH = 7;
         public long? Id { get; set; }
         private DateTime timestamp;
         private byte[] rawBytes;
@@ -47,16 +47,28 @@ namespace Welding_Recorder
                     case 0x10:
                         t = SignalType.ArcEnd;
                         break;
-                    case 0x04:
-                        t = (rawBytes[4] == 0x00) ? SignalType.SolderStart : SignalType.Acceleration;
-                        break;
-                    case 0x02:
-                        t = (rawBytes[4] == 0x00) ? SignalType.SolderEnd : SignalType.Deceleration;
-                        break;
                     case 0x40:
-                        t = SignalType.RevolveStart;
+                        t = SignalType.SolderStart;
                         break;
                     case 0x20:
+                        t = SignalType.SolderEnd;
+                        break;
+                    case 0x04:
+                        t = SignalType.Acceleration;
+                        break;
+                    case 0x02:
+                        t = SignalType.Deceleration;
+                        break;
+                    case 0x90:
+                        t = SignalType.RotateStart;
+                        break;
+                    case 0x60:
+                        t = SignalType.RotateEnd;
+                        break;
+                    case 0x80:
+                        t = SignalType.RevolveStart;
+                        break;
+                    case 0x70:
                         t = SignalType.RevolveEnd;
                         break;
                     default:
@@ -77,7 +89,7 @@ namespace Welding_Recorder
                 }
                 else
                 {
-                    return int.MinValue;
+                    return 0;
                 }
             }
         }
@@ -115,18 +127,28 @@ namespace Welding_Recorder
                     bytes.Add(0x10);
                     break;
                 case SignalType.SolderStart:
+                    bytes.Add(0x40);
+                    break;
+                case SignalType.SolderEnd:
+                    bytes.Add(0x20);
+                    break;
                 case SignalType.Acceleration:
                     bytes.Add(0x04);
                     break;
-                case SignalType.SolderEnd:
                 case SignalType.Deceleration:
                     bytes.Add(0x02);
                     break;
+                case SignalType.RotateStart:
+                    bytes.Add(0x90);
+                    break;
+                case SignalType.RotateEnd:
+                    bytes.Add(0x60);
+                    break;
                 case SignalType.RevolveStart:
-                    bytes.Add(0x40);
+                    bytes.Add(0x80);
                     break;
                 case SignalType.RevolveEnd:
-                    bytes.Add(0x20);
+                    bytes.Add(0x70);
                     break;
                 default:
                     bytes.Add(0x00); // ??
@@ -140,8 +162,9 @@ namespace Welding_Recorder
             {
                 bytes.Add(0x00);
             }
-            byte sixthByte = (byte)(bytes[1] ^ bytes[2] ^ bytes[3] ^ bytes[4]);
-            bytes.Add(sixthByte);
+            bytes.Add(0x00); // Reserved byte
+            byte seventhByte = (byte)(bytes[1] ^ bytes[2] ^ bytes[3] ^ bytes[4] ^ bytes[5]);
+            bytes.Add(seventhByte);
 
             rawBytes = bytes.ToArray();
             timestamp = ts;
@@ -149,7 +172,7 @@ namespace Welding_Recorder
 
         public bool isValid()
         {
-            if ((rawBytes[1] ^ rawBytes[2] ^ rawBytes[3] ^ rawBytes[4]) == rawBytes[5])
+            if ((rawBytes[1] ^ rawBytes[2] ^ rawBytes[3] ^ rawBytes[4] ^ rawBytes[5]) == rawBytes[6])
             {
                 return true;
             }
@@ -174,10 +197,16 @@ namespace Welding_Recorder
                     name = "焊接停止";
                     break;
                 case SignalType.Acceleration:
-                    name = "加速" + Step + "档";
+                    name = "加速至" + Step + "档";
                     break;
                 case SignalType.Deceleration:
-                    name = "减速" + Step + "档";
+                    name = "减速至" + Step + "档";
+                    break;
+                case SignalType.RotateStart:
+                    name = "正转";
+                    break;
+                case SignalType.RotateEnd:
+                    name = "正转停止";
                     break;
                 case SignalType.RevolveStart:
                     name = "反转";

@@ -38,29 +38,19 @@ namespace Welding_Recorder
         {
             get
             {
-                bool arcStarted = false;
                 var signalCount = Signals.Count;
                 List<List<Signal>> signalGroups = new List<List<Signal>>();
                 List<Signal> currentGroup = new List<Signal>();
                 for (int i = 0; i < signalCount; i++)
                 {
                     var sig = Signals[i];
-
-                    if (arcStarted && sig.Type == SignalType.SolderStart)
-                    {
-                        currentGroup = new List<Signal>();
-                    }
-
+                    
                     currentGroup.Add(sig);
-
-                    if (!arcStarted && sig.Type == SignalType.SolderStart)
-                    {
-                        arcStarted = true;
-                    }
-
+                    
                     if (sig.Type == SignalType.SolderEnd)
                     {
                         signalGroups.Add(currentGroup);
+                        currentGroup = new List<Signal>();
                     }
                 }
                 return signalGroups;
@@ -85,29 +75,24 @@ namespace Welding_Recorder
             if (Id == null)
             {
                 Id = db.saveHistory(this);
-                var startSignal = signals[0]; // First start signal.
-                bool arcStarted = false;
-                for (int i = 0; i < Signals.Count; i++)
+
+                foreach (var group in SignalGroups)
                 {
-                    var sig = Signals[i];
-
-                    if (arcStarted && sig.Type == SignalType.SolderStart)
+                    for (int i = 0; i < group.Count; i++)
                     {
-                        startSignal = sig;
+                        var sig = group[i];
                         sig.Delta = 0;
-                    }
 
-                    var interval = Signals[i].Timestamp - startSignal.Timestamp;
-                    var delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
-                    sig.Delta = delta;
-                    
-                    if (!arcStarted && sig.Type == SignalType.SolderStart)
-                    {
-                        arcStarted = true;
+                        if (i != 0)
+                        {
+                            var interval = group[i].Timestamp - group[0].Timestamp;
+                            var delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
+                            sig.Delta = delta;
+                        }
+                        
+                        sig.History = this;
+                        sig.Save();
                     }
-
-                    sig.History = this;
-                    sig.Save();
                 }
             }
             else

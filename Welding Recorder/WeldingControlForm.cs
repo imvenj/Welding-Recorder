@@ -25,6 +25,8 @@ namespace Welding_Recorder
         private bool isControlling = false;
         private PlotView Plot = new PlotView();
         private LinearAxis axis1 = new LinearAxis();
+        private Signal currentSentSignal;
+        private SerialPort currentSerialPort;
 
         public WeldingControlForm()
         {
@@ -108,6 +110,8 @@ namespace Welding_Recorder
         {
 #if (DEBUG)
             Console.WriteLine("Serial Port Data Receivered.");
+
+#endif
             SerialPort port = (SerialPort)sender;
             bool isBase64 = base64CheckBox.Checked;
 
@@ -120,7 +124,6 @@ namespace Welding_Recorder
             }
             catch (TimeoutException)
             {
-
                 MessageBox.Show(this, "数据读取超时。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (InvalidOperationException)
@@ -146,19 +149,42 @@ namespace Welding_Recorder
 
                 signalBuffer.Add(b);
 
-                if (signalBuffer.Count == 6) // Signal catch finished.
+                if (signalBuffer.Count == Signal.LENGTH) // Signal catch finished.
                 {
+#if (DEBUG)
                     Console.Write("Signal content: ");
                     for (int j = 0; j < signalBuffer.Count; j++)
                     {
                         Console.Write("{0}", signalBuffer[j]);
                     }
                     Console.WriteLine();
+#endif
                     Signal signal = new Signal(signalBuffer.ToArray(), timestamp);
-                    // process received data for debug
+                    try
+                    {
+                        if (signal.Type != currentSentSignal.Type) // Currently only check signal type
+                        {
+                            var message = string.Format("信号传输错误：\r\n\r\n发送的信号是：{0}\r\n收到的信号是：{1}.", currentSentSignal.ToString(), signal.ToString());
+                            this.UIThread(() =>
+                            {
+                                MessageBox.Show(this, message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            });
+                            // TODO: Do more with this critical error.
+                        } // TODO: Maybe check timestamp later.
+                          // process received data for debug
+                        SignalProcess(signal);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore
+                    }
+                    this.UIThread(() =>
+                    {
+                        var message = string.Format(" - 收到响应信号“{0}”", signal.ToString());
+                        WriteToLogBox(message);
+                    });
                 }
             }
-#endif
         }
 
         /***************************************************************************
@@ -454,23 +480,19 @@ namespace Welding_Recorder
             Plot.Model.Series.Add(reverseRotateScatterSeries);
 
             var signals = History.Signals;
-            var deltas = (from sig in signals select sig.Delta).ToList();
             var signalCount = signals.Count;
             
             Plot.Model.InvalidatePlot(true); // Invalidate it.
-
-            var deltaSum = deltas.Sum();
-            axis1.Maximum = Math.Floor(deltaSum / 1000.0 + 5);
+            
+            var totalTime = (int)((signals.Last().Timestamp - signals.First().Timestamp).TotalMilliseconds); // Ignore time less tham 1ms.
+            axis1.Maximum = Math.Floor(totalTime / 1000.0 + 5);
 
             for (int i = 0; i < signalCount; i++)
             {
                 var signal = signals[i];
-                var total = 0;
                 var currentSpeed = 0;
-                for (int j = 0; j <= i; j++)
-                {
-                    total += deltas[j];
-                }
+
+                var delta = (int)((signals[i].Timestamp - signals.First().Timestamp).TotalMilliseconds);
 
                 ScatterSeries currentSerials = null;
                 switch (signal.Type)
@@ -489,11 +511,11 @@ namespace Welding_Recorder
                         break;
                     case SignalType.Acceleration:
                         currentSerials = accScatterSeries;
-                        currentSpeed += signal.Step;
+                        currentSpeed = signal.Step;
                         break;
                     case SignalType.Deceleration:
                         currentSerials = deaccScatterSeries;
-                        currentSpeed -= signal.Step; // TODO: Fixme, should be minus while reverse rotate.
+                        currentSpeed = signal.Step; // TODO: Fixme, should be minus while reverse rotate.
                         break;
                     case SignalType.RevolveStart:
                         currentSerials = reverseRotateScatterSeries;
@@ -508,7 +530,7 @@ namespace Welding_Recorder
                         currentSerials = rotateScatterSeries; // TODO: Fix it.
                         break;
                 }
-                var point = new ScatterPoint(total / 1000.0, currentSpeed, 3);
+                var point = new ScatterPoint(delta / 1000.0, currentSpeed, 3);
                 currentSerials.Points.Add(point);
             }
         }
@@ -556,47 +578,61 @@ namespace Welding_Recorder
             WriteToLogBox("焊接开始...\r\n");
 
             var signals = History.Signals;
-            var totalTime = signals.Sum(sig => sig.Delta);
+            var totalTime = History.SignalGroups.Sum(g => g.Last().Delta );
             weldingProgressBar.Minimum = 0;
             weldingProgressBar.Maximum = totalTime;
             weldingProgressBar.Value = 0;
-            
-            foreach (var group in History.SignalGroups)
-            {
 
-            }
+            currentSerialPort = p;
+            executeSignalGroup(0);
+        }
 
-            var deltas = (from sig in signals select sig.Delta).ToList();
-            var signalCount = signals.Count;
+        private void executeSignalGroup(int currentIndex)
+        {
+            var p = currentSerialPort;
+            var group = History.SignalGroups[currentIndex];
+            WriteToLogBox(string.Format("执行第{0}组子过程", currentIndex + 1));
+            var signalCount = group.Count;
+            var progressBarStart = weldingProgressBar.Value;
+
             for (int i = 0; i < signalCount; i++)
             {
-                var total = 0;
-                for (int j = 0; j <= i; j++)
+                var sig = group[i];
+                if (sig.Delta == 0)
                 {
-                    total += deltas[j];
-                }
-                if (total == 0)
-                {
-                    var sig = signals[i];
                     var data = sig.RawBytes;
                     WriteToLogBox(string.Format("发送指令({0}/{1}): {2}", i + 1, signalCount, sig.ToString()));
                     p.Write(data, 0, data.Count());
+                    currentSentSignal = sig;
                 }
                 else
                 {
                     Timer timer = new Timer();
-                    timer.Interval = total;
-                    var sig = signals[i];
+                    timer.Interval = sig.Delta;
                     var data = sig.RawBytes;
                     var k = i;
-                    var ttl = total;
-                    timer.Tick += new EventHandler((s, evt) => {
-                        weldingProgressBar.Value = ttl;
+                    var ttl = sig.Delta;
+                    timer.Tick += new EventHandler((s, evt) =>
+                    {
+                        weldingProgressBar.Value = progressBarStart + ttl;
                         WriteToLogBox(string.Format("发送指令({0}/{1}): {2}", k + 1, signalCount, sig.ToString()));
                         p.Write(data, 0, data.Count());
+                        this.currentSentSignal = sig;
                         if (k == signalCount - 1) // last order
                         {
-                            FinishUpWelding();
+                            currentIndex += 1;
+                            if (currentIndex < History.SignalGroups.Count)
+                            {
+                                var message = string.Format("第{0}阶段焊接完成。是否需要更换焊材？\r\n\r\n如果是，请在更换完成后点击“确定”继续焊接；\r\n否则请直接点击“确定”继续焊接。", currentIndex);
+                                if (MessageBox.Show(this, message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                                {
+                                    executeSignalGroup(currentIndex);
+                                }
+                            }
+                            else
+                            {
+                                FinishUpWelding();
+                            }
                         }
                         timer.Stop();
                     });
@@ -614,9 +650,12 @@ namespace Welding_Recorder
 
         private void FinishUpWelding()
         {
-            WriteToLogBox("\r\n焊接完成。\r\n");
             StartWeldingButton.Enabled = true;
-            MessageBox.Show(this, "焊接完成。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (MessageBox.Show(this, "焊接完成。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+            {
+                WriteToLogBox("\r\n焊接完成。\r\n");
+            }
+            
         }
 
         /***************************************************************************
