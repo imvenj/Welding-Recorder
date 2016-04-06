@@ -600,11 +600,11 @@ namespace Welding_Recorder
                         break;
                     case SignalType.Acceleration:
                         currentSerials = accScatterSeries;
-                        currentSpeed += signal.Step;
+                        currentSpeed = signal.Step;
                         break;
                     case SignalType.Deceleration:
                         currentSerials = deaccScatterSeries;
-                        currentSpeed -= signal.Step; // TODO: Fixme, should be minus while reverse rotate.
+                        currentSpeed = signal.Step; // TODO: Fixme, should be minus while reverse rotate.
                         break;
                     case SignalType.RevolveStart:
                         currentSerials = reverseRotateScatterSeries;
@@ -712,7 +712,6 @@ namespace Welding_Recorder
             var result = inputBox.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                
                 try
                 {
                     dict["name"] = inputBox.InputResult;

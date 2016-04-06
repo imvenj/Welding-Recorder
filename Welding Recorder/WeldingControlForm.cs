@@ -560,6 +560,11 @@ namespace Welding_Recorder
             weldingProgressBar.Minimum = 0;
             weldingProgressBar.Maximum = totalTime;
             weldingProgressBar.Value = 0;
+            
+            foreach (var group in History.SignalGroups)
+            {
+
+            }
 
             var deltas = (from sig in signals select sig.Delta).ToList();
             var signalCount = signals.Count;

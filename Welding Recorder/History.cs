@@ -34,6 +34,38 @@ namespace Welding_Recorder
                 signals = value;
             }
         }
+        public List<List<Signal>> SignalGroups //grouping
+        {
+            get
+            {
+                bool arcStarted = false;
+                var signalCount = Signals.Count;
+                List<List<Signal>> signalGroups = new List<List<Signal>>();
+                List<Signal> currentGroup = new List<Signal>();
+                for (int i = 0; i < signalCount; i++)
+                {
+                    var sig = Signals[i];
+
+                    if (arcStarted && sig.Type == SignalType.SolderStart)
+                    {
+                        currentGroup = new List<Signal>();
+                    }
+
+                    currentGroup.Add(sig);
+
+                    if (!arcStarted && sig.Type == SignalType.SolderStart)
+                    {
+                        arcStarted = true;
+                    }
+
+                    if (sig.Type == SignalType.SolderEnd)
+                    {
+                        signalGroups.Add(currentGroup);
+                    }
+                }
+                return signalGroups;
+            }
+        }
 
         public History(Dictionary<string, object> meta)
         {
@@ -53,16 +85,27 @@ namespace Welding_Recorder
             if (Id == null)
             {
                 Id = db.saveHistory(this);
+                var startSignal = signals[0]; // First start signal.
+                bool arcStarted = false;
                 for (int i = 0; i < Signals.Count; i++)
                 {
                     var sig = Signals[i];
-                    var delta = 0;
-                    if (i != 0) //first
+
+                    if (arcStarted && sig.Type == SignalType.SolderStart)
                     {
-                        var interval = Signals[i].Timestamp - Signals[i - 1].Timestamp;
-                        delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
+                        startSignal = sig;
+                        sig.Delta = 0;
                     }
+
+                    var interval = Signals[i].Timestamp - startSignal.Timestamp;
+                    var delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
                     sig.Delta = delta;
+                    
+                    if (!arcStarted && sig.Type == SignalType.SolderStart)
+                    {
+                        arcStarted = true;
+                    }
+
                     sig.History = this;
                     sig.Save();
                 }
@@ -92,14 +135,20 @@ namespace Welding_Recorder
             message += string.Format(formatString, "室内温度：", RoomTemperature + "℃");
             message += string.Format(formatString, "氩气流量：", ArFlow + "L/min");
             message += "\r\n";
-            message += "焊接流程：\r\n";
+            message += string.Format("焊接流程：（{0}个子过程）\r\n", SignalGroups.Count);
             message += "\r\n";
 
-            for (int i = 0; i < signals.Count; i++)
+            for (int n = 0; n < SignalGroups.Count; n++)
             {
-                var signal = signals[i];
-                message += string.Format("{0}. {1}, 开始于 {2:N3} 秒后\r\n", i + 1, signal.ToString(), signal.Delta / 1000.0);
+                message += string.Format("子过程{0}:\r\n", n + 1);
+                var group = SignalGroups[n];
+                for (int i = 0; i < group.Count; i++)
+                {
+                    var signal = group[i];
+                    message += string.Format("{0}. {1}, 开始于 {2:N3} 秒后\r\n", i + 1, signal.ToString(), signal.Delta / 1000.0);
+                }
             }
+            
             return message;
         }
     }
