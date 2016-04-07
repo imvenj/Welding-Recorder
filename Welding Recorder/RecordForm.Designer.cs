@@ -488,9 +488,11 @@
             this.Controls.Add(this.sendMessageInfoLabel);
             this.Controls.Add(this.sendMessageButton);
             this.Controls.Add(this.clearLogButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "RecordForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "焊接数据采集";
             this.Load += new System.EventHandler(this.RecordForm_Load);
             this.groupBox1.ResumeLayout(false);

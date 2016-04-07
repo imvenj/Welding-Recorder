@@ -516,7 +516,9 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.CancelFormButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "WeldingControlForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "焊接控制";
             this.Load += new System.EventHandler(this.WeldingControlForm_Load);
             this.groupBox1.ResumeLayout(false);

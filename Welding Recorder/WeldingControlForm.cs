@@ -624,6 +624,7 @@ namespace Welding_Recorder
                     var ttl = sig.Delta;
                     timer.Tick += new EventHandler((s, evt) =>
                     {
+                        timer.Stop();
                         weldingProgressBar.Value = progressBarStart + ttl;
                         WriteToLogBox(string.Format("发送指令({0}/{1}): {2}", k + 1, signalCount, sig.ToString()));
                         p.Write(data, 0, data.Count());
@@ -644,7 +645,6 @@ namespace Welding_Recorder
                                 FinishUpWelding();
                             }
                         }
-                        timer.Stop();
                     });
                     timer.Start();
                 }
