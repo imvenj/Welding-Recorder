@@ -69,11 +69,17 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.WeldingDetailsTextBox = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.SignalSelectionComboBox = new System.Windows.Forms.ComboBox();
+            this.SendSignalButton = new System.Windows.Forms.Button();
+            this.signalDebugTextBox = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // OpenCloseButton
@@ -503,12 +509,64 @@
             this.WeldingDetailsTextBox.TabIndex = 0;
             this.WeldingDetailsTextBox.TabStop = false;
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label16);
+            this.groupBox5.Controls.Add(this.signalDebugTextBox);
+            this.groupBox5.Controls.Add(this.SendSignalButton);
+            this.groupBox5.Controls.Add(this.SignalSelectionComboBox);
+            this.groupBox5.Location = new System.Drawing.Point(811, 13);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(200, 575);
+            this.groupBox5.TabIndex = 63;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Debug";
+            // 
+            // SignalSelectionComboBox
+            // 
+            this.SignalSelectionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SignalSelectionComboBox.FormattingEnabled = true;
+            this.SignalSelectionComboBox.Location = new System.Drawing.Point(8, 37);
+            this.SignalSelectionComboBox.Name = "SignalSelectionComboBox";
+            this.SignalSelectionComboBox.Size = new System.Drawing.Size(187, 20);
+            this.SignalSelectionComboBox.TabIndex = 0;
+            // 
+            // SendSignalButton
+            // 
+            this.SendSignalButton.Location = new System.Drawing.Point(7, 65);
+            this.SendSignalButton.Name = "SendSignalButton";
+            this.SendSignalButton.Size = new System.Drawing.Size(187, 23);
+            this.SendSignalButton.TabIndex = 1;
+            this.SendSignalButton.Text = "发送信号";
+            this.SendSignalButton.UseVisualStyleBackColor = true;
+            this.SendSignalButton.Click += new System.EventHandler(this.SendSignalButton_Click);
+            // 
+            // signalDebugTextBox
+            // 
+            this.signalDebugTextBox.Location = new System.Drawing.Point(7, 94);
+            this.signalDebugTextBox.Multiline = true;
+            this.signalDebugTextBox.Name = "signalDebugTextBox";
+            this.signalDebugTextBox.ReadOnly = true;
+            this.signalDebugTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.signalDebugTextBox.Size = new System.Drawing.Size(186, 475);
+            this.signalDebugTextBox.TabIndex = 2;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 22);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(77, 12);
+            this.label16.TabIndex = 3;
+            this.label16.Text = "选择一个信号";
+            // 
             // WeldingControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(814, 600);
+            this.ClientSize = new System.Drawing.Size(1020, 600);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.PlotBox);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -530,6 +588,8 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -577,5 +637,10 @@
         private System.Windows.Forms.TextBox WeldingDetailsTextBox;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox signalDebugTextBox;
+        private System.Windows.Forms.Button SendSignalButton;
+        private System.Windows.Forms.ComboBox SignalSelectionComboBox;
     }
 }

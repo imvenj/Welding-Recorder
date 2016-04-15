@@ -28,6 +28,21 @@ namespace Welding_Recorder
         private Signal currentSentSignal;
         private SerialPort currentSerialPort;
         private List<Timer> timerCache = new List<Timer>();
+#if DEBUG
+        private int currentStep = 0;
+        private Signal[] debugSignals = {
+                new Signal(SignalType.ArcStart),
+                new Signal(SignalType.ArcEnd),
+                new Signal(SignalType.SolderStart),
+                new Signal(SignalType.SolderEnd),
+                new Signal(SignalType.Acceleration),
+                new Signal(SignalType.Deceleration),
+                new Signal(SignalType.RotateStart),
+                new Signal(SignalType.RotateEnd),
+                new Signal(SignalType.RevolveStart),
+                new Signal(SignalType.RevolveEnd)
+            };
+#endif
 
         public WeldingControlForm()
         {
@@ -109,12 +124,7 @@ namespace Welding_Recorder
 
         private void serialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-#if (DEBUG)
-            Console.WriteLine("Serial Port Data Receivered.");
-
-#endif
             SerialPort port = (SerialPort)sender;
-            bool isBase64 = base64CheckBox.Checked;
 
             int bytesInBuffer = port.BytesToRead;
 
@@ -129,7 +139,6 @@ namespace Welding_Recorder
             }
             catch (InvalidOperationException)
             {
-
                 MessageBox.Show(this, "非法操作。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
@@ -138,6 +147,16 @@ namespace Welding_Recorder
                 MessageBox.Show(this, "未知错误。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+#if (DEBUG)
+            var result = "";
+            for (int i = 0; i < readBytes.Length; i++)
+            {
+                result += string.Format("{0:X}", readBytes[i]);
+            }
+
+            WriteToDebugBox(string.Format("Serial Port Data Receivered: {0}", result));
+#endif
+            /*
             for (int i = 0; i < bytesInBuffer; i++)
             {
                 var b = readBytes[i];
@@ -193,7 +212,7 @@ namespace Welding_Recorder
                         WriteToLogBox(message);
                     });
                 }
-            }
+            }*/
         }
 
         /***************************************************************************
@@ -415,7 +434,47 @@ namespace Welding_Recorder
             loadPortList();
             loadWeldingDataLists();
             InitializeOtherUI();
+#if DEBUG
+            PopSignalCombo();
+#endif
         }
+
+#if DEBUG
+        private void PopSignalCombo()
+        {
+            SignalSelectionComboBox.Items.Clear();
+            debugSignals.ToList().ForEach((s) => {
+                SignalSelectionComboBox.Items.Add(s);
+            });
+        }
+        
+        private void SendSignalButton_Click(object sender, EventArgs e)
+        {
+            SerialPort p = getPortWithPortName(PortsBox.Text.ToUpper());
+            if (p == null)
+            {
+                WriteToDebugBox("端口未打开。");
+                return;
+            }
+            if (SignalSelectionComboBox.SelectedIndex < 0 || SignalSelectionComboBox.SelectedIndex >= debugSignals.Length)
+            {
+                return;
+            }
+            var combo = SignalSelectionComboBox;
+            var signal = debugSignals[SignalSelectionComboBox.SelectedIndex];
+            var data = signal.RawBytes;
+            WriteToDebugBox(string.Format("发送指令:{0}, raw: {1}", signal.ToString(), signal.ToHexString()));
+            p.Write(data, 0, data.Count());
+        }
+
+        private void WriteToDebugBox(string content)
+        {
+            this.UIThread(() =>
+            {
+                signalDebugTextBox.AppendText(content + "\r\n");
+            });
+        }
+#endif
 
         private void InitializeOtherUI()
         {

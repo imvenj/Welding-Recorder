@@ -170,6 +170,12 @@ namespace Welding_Recorder
             timestamp = ts;
         }
 
+        public Signal(int typeRaw, int step) : this(typeRaw, step, DateTime.Now) { }
+        public Signal(int typeRaw) : this(typeRaw, 0x00, DateTime.Now) { }
+        public Signal(SignalType type, int step, DateTime ts) : this((int)type, step, ts) { }
+        public Signal(SignalType type, int step) : this((int)type, step, DateTime.Now) { }
+        public Signal(SignalType type) : this((int)type, 0x00, DateTime.Now) { }
+
         public bool isValid()
         {
             if ((rawBytes[1] ^ rawBytes[2] ^ rawBytes[3] ^ rawBytes[4] ^ rawBytes[5]) == rawBytes[6])
@@ -197,10 +203,18 @@ namespace Welding_Recorder
                     name = "焊接停止";
                     break;
                 case SignalType.Acceleration:
-                    name = "加速至" + Step + "档";
+                    name = "加速";
+                    if (Step > 0)
+                    {
+                        name += "至" + Step + "档";
+                    }
                     break;
                 case SignalType.Deceleration:
-                    name = "减速至" + Step + "档";
+                    name = "减速";
+                    if (Step > 0)
+                    {
+                        name += "至" + Step + "档";
+                    }
                     break;
                 case SignalType.RotateStart:
                     name = "正转";
@@ -219,6 +233,17 @@ namespace Welding_Recorder
                     break;
             }
             return name;
+        }
+
+        public string ToHexString()
+        {
+            var result = "";
+            for (int i = 0; i < rawBytes.Length; i++)
+            {
+                result += string.Format("{0:X}", rawBytes[i]);
+            }
+
+            return result;
         }
 
         public Signal Save()
