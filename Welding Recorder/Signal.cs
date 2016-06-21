@@ -237,13 +237,7 @@ namespace Welding_Recorder
 
         public string ToHexString()
         {
-            var result = "";
-            for (int i = 0; i < rawBytes.Length; i++)
-            {
-                result += string.Format("{0:X}", rawBytes[i]);
-            }
-
-            return result;
+            return BitConverter.ToString(rawBytes);
         }
 
         public Signal Save()

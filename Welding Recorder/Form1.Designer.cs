@@ -175,6 +175,7 @@
             this.historiesList.Size = new System.Drawing.Size(158, 304);
             this.historiesList.TabIndex = 1;
             this.historiesList.SelectedIndexChanged += new System.EventHandler(this.historiesList_SelectedIndexChanged);
+            this.historiesList.DoubleClick += new System.EventHandler(this.historiesList_DoubleClick);
             // 
             // historiesLabel
             // 

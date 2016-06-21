@@ -70,10 +70,10 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.WeldingDetailsTextBox = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.SignalSelectionComboBox = new System.Windows.Forms.ComboBox();
-            this.SendSignalButton = new System.Windows.Forms.Button();
-            this.signalDebugTextBox = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
+            this.signalDebugTextBox = new System.Windows.Forms.TextBox();
+            this.SendSignalButton = new System.Windows.Forms.Button();
+            this.SignalSelectionComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
@@ -522,24 +522,14 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Debug";
             // 
-            // SignalSelectionComboBox
+            // label16
             // 
-            this.SignalSelectionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SignalSelectionComboBox.FormattingEnabled = true;
-            this.SignalSelectionComboBox.Location = new System.Drawing.Point(8, 37);
-            this.SignalSelectionComboBox.Name = "SignalSelectionComboBox";
-            this.SignalSelectionComboBox.Size = new System.Drawing.Size(187, 20);
-            this.SignalSelectionComboBox.TabIndex = 0;
-            // 
-            // SendSignalButton
-            // 
-            this.SendSignalButton.Location = new System.Drawing.Point(7, 65);
-            this.SendSignalButton.Name = "SendSignalButton";
-            this.SendSignalButton.Size = new System.Drawing.Size(187, 23);
-            this.SendSignalButton.TabIndex = 1;
-            this.SendSignalButton.Text = "发送信号";
-            this.SendSignalButton.UseVisualStyleBackColor = true;
-            this.SendSignalButton.Click += new System.EventHandler(this.SendSignalButton_Click);
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 22);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(77, 12);
+            this.label16.TabIndex = 3;
+            this.label16.Text = "选择一个信号";
             // 
             // signalDebugTextBox
             // 
@@ -551,14 +541,24 @@
             this.signalDebugTextBox.Size = new System.Drawing.Size(186, 475);
             this.signalDebugTextBox.TabIndex = 2;
             // 
-            // label16
+            // SendSignalButton
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(6, 22);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(77, 12);
-            this.label16.TabIndex = 3;
-            this.label16.Text = "选择一个信号";
+            this.SendSignalButton.Location = new System.Drawing.Point(7, 65);
+            this.SendSignalButton.Name = "SendSignalButton";
+            this.SendSignalButton.Size = new System.Drawing.Size(187, 23);
+            this.SendSignalButton.TabIndex = 1;
+            this.SendSignalButton.Text = "发送信号";
+            this.SendSignalButton.UseVisualStyleBackColor = true;
+            this.SendSignalButton.Click += new System.EventHandler(this.SendSignalButton_Click);
+            // 
+            // SignalSelectionComboBox
+            // 
+            this.SignalSelectionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SignalSelectionComboBox.FormattingEnabled = true;
+            this.SignalSelectionComboBox.Location = new System.Drawing.Point(8, 37);
+            this.SignalSelectionComboBox.Name = "SignalSelectionComboBox";
+            this.SignalSelectionComboBox.Size = new System.Drawing.Size(187, 20);
+            this.SignalSelectionComboBox.TabIndex = 0;
             // 
             // WeldingControlForm
             // 

@@ -100,6 +100,9 @@ namespace Welding_Recorder
         private void clearLogButton_Click(object sender, EventArgs e)
         {
             logBox.Text = "";
+#if DEBUG
+            signalDebugTextBox.Text = "";
+#endif
         }
 
         private void portsBox_DropDown(object sender, EventArgs e)
@@ -148,14 +151,14 @@ namespace Welding_Recorder
             }
 
 #if (DEBUG)
-            var result = "";
-            for (int i = 0; i < readBytes.Length; i++)
-            {
-                result += string.Format("{0:X}", readBytes[i]);
-            }
-
-            WriteToDebugBox(string.Format("Serial Port Data Receivered: {0}", result));
+            WriteToDebugBox(string.Format("Serial Port Data Receivered: {0}", BitConverter.ToString(readBytes)));
 #endif
+            this.UIThread(() =>
+            {
+                var message = string.Format(" - 收到应答信号");
+                WriteToLogBox(message);
+            });
+
             /*
             for (int i = 0; i < bytesInBuffer; i++)
             {
@@ -462,9 +465,15 @@ namespace Welding_Recorder
             }
             var combo = SignalSelectionComboBox;
             var signal = debugSignals[SignalSelectionComboBox.SelectedIndex];
+            if (signal.Type == SignalType.Acceleration || signal.Type == SignalType.Deceleration)
+            {
+                currentStep = signal.Type == SignalType.Acceleration ? currentStep + 1 : currentStep - 1;
+                signal = new Signal(signal.Type, currentStep);
+            }
+
             var data = signal.RawBytes;
             WriteToDebugBox(string.Format("发送指令:{0}, raw: {1}", signal.ToString(), signal.ToHexString()));
-            p.Write(data, 0, data.Count());
+            p.Write(data, 0, data.Length);
         }
 
         private void WriteToDebugBox(string content)
@@ -480,6 +489,24 @@ namespace Welding_Recorder
         {
             //Detail box
             WeldingDetailsTextBox.Text = History.ToString();
+            var timer = new Timer();
+            timer.Interval = 250;
+            timer.Tick += new EventHandler((s, evt) => {
+                if (isControlling && currentSentSignal.Type != SignalType.SolderEnd)
+                {
+                    var value = weldingProgressBar.Value;
+                    try
+                    {
+                        weldingProgressBar.Value += 250;
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine(string.Format("Progress bar restore to previous value: {0}", value));
+                        weldingProgressBar.Value = value;
+                    }
+                }
+            });
+            timer.Start();
         }
 
         // Load static data from database to UI.
@@ -672,6 +699,7 @@ namespace Welding_Recorder
                     WriteToLogBox(string.Format("发送指令({0}/{1}): {2}", i + 1, signalCount, sig.ToString()));
                     p.Write(data, 0, data.Count());
                     currentSentSignal = sig;
+                    isControlling = true;
                 }
                 else
                 {
@@ -701,6 +729,7 @@ namespace Welding_Recorder
                             }
                             else
                             {
+                                isControlling = false;
                                 FinishUpWelding();
                             }
                         }

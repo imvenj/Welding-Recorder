@@ -86,5 +86,10 @@ namespace Welding_Recorder
                 historyDetailTextBox.Text = history.ToString();
             }
         }
+
+        private void historiesList_DoubleClick(object sender, EventArgs e)
+        {
+            newRecordButton_Click(null, e);
+        }
     }
 }
