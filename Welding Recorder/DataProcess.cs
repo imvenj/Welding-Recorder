@@ -307,6 +307,22 @@ namespace Welding_Recorder
                 }
             }
         }
+
+        public void deleteSignal(Signal sig)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    command.CommandText = "DELETE FROM Signal WHERE `id` = @sid";
+                    var sIdParam = SQLiteHelper.CreateStringParameter("@sid", sig.Id);
+                    command.Parameters.Add(sIdParam);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+               
         
         public long saveHistory(History history)
         {

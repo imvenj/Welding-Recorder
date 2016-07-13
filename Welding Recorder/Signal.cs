@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Welding_Recorder
 {
@@ -240,6 +241,19 @@ namespace Welding_Recorder
             return BitConverter.ToString(rawBytes);
         }
 
+        public ListViewItem ToListItem()
+        {
+            string timeString = string.Format("{0}-{1}-{2} {3}:{4}:{5}.{6}", Timestamp.Year, Timestamp.Month, Timestamp.Day, Timestamp.Hour, Timestamp.Minute, Timestamp.Second, Timestamp.Millisecond);
+            var row = new ListViewItem();
+            row.SubItems.Add(Id.ToString());
+            row.SubItems.Add(this.ToString());
+            row.SubItems.Add(Step.ToString());
+            row.SubItems.Add(timeString);
+            row.SubItems.Add(Delta.ToString());
+
+            return row;
+        }
+
         public Signal Save()
         {
             var db = new DataProcess();
@@ -258,6 +272,15 @@ namespace Welding_Recorder
                     db.updateSignal(this);
                 }
                 return this;
+            }
+        }
+
+        public void Delete()
+        {
+            var db = new DataProcess();
+            if (Id != null)
+            {
+                db.deleteSignal(this);
             }
         }
     }

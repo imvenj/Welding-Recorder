@@ -768,9 +768,14 @@ namespace Welding_Recorder
                 closeAllPorts();
                 DialogResult = DialogResult.Cancel;
             }
-            else // Prevent form close while recording.
+            else // Prompt before close while welding.
             {
-                MessageBox.Show(this, "不能在焊接时关闭这个窗口。", "焊接中...", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                var result = MessageBox.Show(this, "焊接时退出焊接控制窗口将导致焊接中的产品报废，请勿在实际焊接时停止自动控制!!!\r\n\r\n是否停止焊接控制？", "焊接中...", MessageBoxButtons.OKCancel, MessageBoxIcon.Stop);
+                if (result == DialogResult.OK)
+                {
+                    closeAllPorts();
+                    DialogResult = DialogResult.Cancel;
+                }
             }
         }
 

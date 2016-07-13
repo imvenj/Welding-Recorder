@@ -45,6 +45,8 @@
             this.historyDetailTextBox = new System.Windows.Forms.TextBox();
             this.newRecordButton = new System.Windows.Forms.Button();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.EditHistoryMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.EditHistoryButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -85,30 +87,30 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.settingsToolStripMenuItem.Text = "程序设置";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(139, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
             // 
             // 缸套规格管理ToolStripMenuItem
             // 
             this.缸套规格管理ToolStripMenuItem.Name = "缸套规格管理ToolStripMenuItem";
-            this.缸套规格管理ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.缸套规格管理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.缸套规格管理ToolStripMenuItem.Text = "缸套规格管理";
             // 
             // 用户管理ToolStripMenuItem
             // 
             this.用户管理ToolStripMenuItem.Name = "用户管理ToolStripMenuItem";
-            this.用户管理ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.用户管理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.用户管理ToolStripMenuItem.Text = "焊接项目管理";
             // 
             // 操作人员管理ToolStripMenuItem
             // 
             this.操作人员管理ToolStripMenuItem.Name = "操作人员管理ToolStripMenuItem";
-            this.操作人员管理ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.操作人员管理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.操作人员管理ToolStripMenuItem.Text = "操作人员管理";
             // 
             // menuStrip1
@@ -126,6 +128,8 @@
             // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EditHistoryMenu});
             this.editToolStripMenuItem.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
@@ -147,6 +151,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.EditHistoryButton);
             this.splitContainer1.Panel2.Controls.Add(this.historyDetailTextBox);
             this.splitContainer1.Panel2.Controls.Add(this.newRecordButton);
             this.splitContainer1.Size = new System.Drawing.Size(638, 356);
@@ -219,6 +224,24 @@
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
+            // EditHistoryMenu
+            // 
+            this.EditHistoryMenu.Name = "EditHistoryMenu";
+            this.EditHistoryMenu.Size = new System.Drawing.Size(152, 22);
+            this.EditHistoryMenu.Text = "编辑焊接程序";
+            this.EditHistoryMenu.Click += new System.EventHandler(this.EditHistoryMenu_Click);
+            // 
+            // EditHistoryButton
+            // 
+            this.EditHistoryButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.EditHistoryButton.Location = new System.Drawing.Point(277, 330);
+            this.EditHistoryButton.Name = "EditHistoryButton";
+            this.EditHistoryButton.Size = new System.Drawing.Size(86, 23);
+            this.EditHistoryButton.TabIndex = 4;
+            this.EditHistoryButton.Text = "编辑焊接信号";
+            this.EditHistoryButton.UseVisualStyleBackColor = true;
+            this.EditHistoryButton.Click += new System.EventHandler(this.EditHistoryButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -262,6 +285,8 @@
         private System.Windows.Forms.Button deleteHistoryButton;
         private System.Windows.Forms.TextBox historyDetailTextBox;
         private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.ToolStripMenuItem EditHistoryMenu;
+        private System.Windows.Forms.Button EditHistoryButton;
     }
 }
 

@@ -103,6 +103,11 @@ namespace Welding_Recorder
             return this;
         }
 
+        public void ReloadSignals()
+        {
+            signals = null;
+        }
+
         public override string ToString()
         {
             var signals = Signals;

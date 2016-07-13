@@ -91,5 +91,25 @@ namespace Welding_Recorder
         {
             newRecordButton_Click(null, e);
         }
+
+        private void EditHistoryMenu_Click(object sender, EventArgs e)
+        {
+            int index = historiesList.SelectedIndex;
+            if (index != -1 && historiesList.SelectedIndices.Count == 1)
+            {
+                var history = Histories[index];
+                var editForm = new EditHistoryForm(history);
+                editForm.ShowDialog(this);
+            }
+            else
+            {
+                MessageBox.Show(this, "请选择一条焊接记录。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void EditHistoryButton_Click(object sender, EventArgs e)
+        {
+            EditHistoryMenu_Click(sender, e);
+        }
     }
 }
