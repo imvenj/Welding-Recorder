@@ -16,6 +16,11 @@ namespace Welding_Recorder
         RotateEnd,
         RevolveStart, //反转
         RevolveEnd,
+        CollectStart,
+        CollectEnd,
+        AutoControlStart,
+        AutoControlEnd,
+        ChooseTemplate,
         Unknown = -1 // -1 is much simpler than int.MaxValue
     }
 
@@ -71,6 +76,21 @@ namespace Welding_Recorder
                         break;
                     case 0x70:
                         t = SignalType.RevolveEnd;
+                        break;
+                    case 0x50:
+                        t = SignalType.CollectStart;
+                        break;
+                    case 0x30:
+                        t = SignalType.CollectEnd;
+                        break;
+                    case 0x07:
+                        t = SignalType.AutoControlStart;
+                        break;
+                    case 0x06:
+                        t = SignalType.AutoControlEnd;
+                        break;
+                    case 0x03:
+                        t = SignalType.ChooseTemplate;
                         break;
                     default:
                         t = SignalType.Unknown;
@@ -151,6 +171,21 @@ namespace Welding_Recorder
                 case SignalType.RevolveEnd:
                     bytes.Add(0x70);
                     break;
+                case SignalType.CollectStart:
+                    bytes.Add(0x50);
+                    break;
+                case SignalType.CollectEnd:
+                    bytes.Add(0x30);
+                    break;
+                case SignalType.AutoControlStart:
+                    bytes.Add(0x07);
+                    break;
+                case SignalType.AutoControlEnd:
+                    bytes.Add(0x06);
+                    break;
+                case SignalType.ChooseTemplate:
+                    bytes.Add(0x03);
+                    break;
                 default:
                     bytes.Add(0x00); // ??
                     break;
@@ -228,6 +263,21 @@ namespace Welding_Recorder
                     break;
                 case SignalType.RevolveEnd:
                     name = "反转停止";
+                    break;
+                case SignalType.CollectStart:
+                    name = "数据采集开始";
+                    break;
+                case SignalType.CollectEnd:
+                    name = "数据采集停止";
+                    break;
+                case SignalType.AutoControlStart:
+                    name = "自动控制开始";
+                    break;
+                case SignalType.AutoControlEnd:
+                    name = "自动控制停止";
+                    break;
+                case SignalType.ChooseTemplate:
+                    name = "选择控制模板";
                     break;
                 case SignalType.Unknown:
                 default:
