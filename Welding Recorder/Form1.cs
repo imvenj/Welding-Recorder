@@ -34,7 +34,7 @@ namespace Welding_Recorder
 
         private void startNewDataRecordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = new RecordForm();
+            var form = new RecordForm(null);
             var result = form.ShowDialog(this);
             if (result == DialogResult.OK)
             {

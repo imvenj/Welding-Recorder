@@ -152,8 +152,20 @@
     <Compile Include="RecordForm.Designer.cs">
       <DependentUpon>RecordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SerialPortSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SerialPortSettingsForm.Designer.cs">
+      <DependentUpon>SerialPortSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Signal.cs" />
     <Compile Include="SQLiteHelper.cs" />
+    <Compile Include="StartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartForm.Designer.cs">
+      <DependentUpon>StartForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WeldingControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +196,12 @@
     </Compile>
     <EmbeddedResource Include="RecordForm.resx">
       <DependentUpon>RecordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialPortSettingsForm.resx">
+      <DependentUpon>SerialPortSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StartForm.resx">
+      <DependentUpon>StartForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WeldingControlForm.resx">
       <DependentUpon>WeldingControlForm.cs</DependentUpon>

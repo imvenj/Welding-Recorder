@@ -31,24 +31,19 @@ namespace Welding_Recorder
         private ScatterSeries deaccScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0x55, 0x88, 0xAA) };
         private ScatterSeries rotateScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0x33, 0xAA, 0xDD) };
         private ScatterSeries reverseRotateScatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerFill = OxyColor.FromRgb(0x55, 0x99, 0x11) };
+        
+        private SerialPort CurrentSerialPort { get; set; }
+
+        private SerialDataReceivedEventHandler dataReceivedEventHandler;
 
         private Random r = new Random(384739);
 
-        public RecordForm()
+        public RecordForm(SerialPort p)
         {
             InitializeComponent();
-
-            PortsBox.SelectedIndexChanged += new EventHandler(portsBox_SelectedIndexChanged);
-            PortsBox.DropDown += new EventHandler(portsBox_DropDown);
-
-            // 波特率默认选择9600。 // BaudRate
-            rateBox.SelectedIndex = 6;
-            // 校验位默认选择None。 // Parity
-            parityBox.SelectedIndex = 2;
-            // 数据位默认选8。      // DataBit
-            dataBitsBox.SelectedIndex = 3;
-            // 停止位              // StopBits
-            stopBitsBox.SelectedIndex = 0;
+            CurrentSerialPort = p;
+            dataReceivedEventHandler = new SerialDataReceivedEventHandler(serialPortDataReceived);
+            p.DataReceived += dataReceivedEventHandler;
         }
 
         /***************************************************************************
@@ -63,39 +58,15 @@ namespace Welding_Recorder
 
         private void RecordForm_Closing(object sender, EventArgs e)
         {
-            string portName = PortsBox.Text.ToUpper();
-            SerialPort port = getPortWithPortName(portName);
-            if (port != null && port.IsOpen)
-            {
-                port.Close();
-            }
+            // Do nothing for now.
+            // Maybe flush serial port cache?
+            CurrentSerialPort.DataReceived -= dataReceivedEventHandler;
         }
-
+        
         /***************************************************************************
                                Serial port event handlers start
         ****************************************************************************/
-
-        private void openCloseButton_Click(object sender, EventArgs e)
-        {
-            if (isRecording)
-            {
-                MessageBox.Show(this, "正在采集数据，此时不允许关闭串口。", "数据采集中...", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
-            else
-            {
-                string portName = PortsBox.Text.ToUpper();
-                SerialPort port = getPortWithPortName(portName);
-                if (port != null && port.IsOpen)
-                {
-                    closePortWithName(portName);
-                }
-                else
-                {
-                    openPortWithName(portName);
-                }
-            }
-        }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
             logBox.Text = "";
@@ -103,8 +74,9 @@ namespace Welding_Recorder
         
         private void sendMessageButton_Click(object sender, EventArgs e)
         {
-            SerialPort p = getPortWithPortName(PortsBox.Text.ToUpper());
-            if (p == null)
+            var p = CurrentSerialPort;
+
+            if (!p.IsOpen)
             {
                 logBox.AppendText("端口未打开。\r\n");
                 return;
@@ -114,34 +86,13 @@ namespace Welding_Recorder
                 sendMessage(p, p, 1024);
             }
         }
-
-        private void portsBox_DropDown(object sender, EventArgs e)
-        {
-            loadPortList();
-        }
-
-        private void portsBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox pb = (ComboBox)sender;
-            string selectedPortName = ((string)pb.SelectedItem).ToUpper();
-            SerialPort port = getPortWithPortName(selectedPortName);
-            if (port != null && port.IsOpen)
-            {
-                OpenCloseButton.Text = "关闭";
-            }
-            else
-            {
-                OpenCloseButton.Text = "打开";
-            }
-        }
-
+        
         private void serialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
 #if (DEBUG)
             Console.WriteLine("Serial Port Data Receivered.");
 #endif
             SerialPort port = (SerialPort)sender;
-            bool isBase64 = base64CheckBox.Checked;
 
             int bytesInBuffer = port.BytesToRead;
 
@@ -193,195 +144,7 @@ namespace Welding_Recorder
                 }
             }
         }
-
-        /***************************************************************************
-                               Serial port helper methods start
-        ****************************************************************************/
-
-        private void loadPortList()
-        {
-            // 初始化端口列表
-            string[] ports = SerialPort.GetPortNames();
-            PortsBox.Items.Clear();
-            foreach (var port in ports)
-            {
-                PortsBox.Items.Add(port);
-            }
-            if (PortsBox.Items.Count > 0)
-            {
-                PortsBox.SelectedIndex = 0;
-            }
-        }
-
-        private void updateUIWithPort(string portName)
-        {
-            var port = getPortWithPortName(portName);
-            if (port.IsOpen)
-            {
-                PortStatusImageBox.Image = Properties.Resources.Green_Ball;
-                OpenCloseButton.Text = "关闭";
-            }
-            else
-            {
-                PortStatusImageBox.Image = Properties.Resources.Red_Ball;
-                OpenCloseButton.Text = "打开";
-            }
-        }
-
-        private void openPortWithName(string portName)
-        {
-            if (String.IsNullOrEmpty(portName))
-            {
-                MessageBox.Show(this, "请选择一个串口或输入串口名称。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            else if (!isPortNameValid(portName.ToUpper()))
-            {
-                MessageBox.Show(this, "串口名不合法或串口不存在。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            SerialPort p = getPortWithPortName(portName);
-            if (p != null)
-            {
-                if (!portsList.Contains(p))
-                {
-                    portsList.Add(p);
-                }
-                return;
-            }
-            else
-            {
-                p = new SerialPort(portName);
-                p.BaudRate = Convert.ToInt32(rateBox.Text);
-                p.Parity = translateStringToParity(parityBox.Text);
-                p.DataBits = Convert.ToInt32(dataBitsBox.Text);
-                p.StopBits = translateStringToStopBits(stopBitsBox.Text);
-                p.DataReceived += new SerialDataReceivedEventHandler(serialPortDataReceived);
-                p.ErrorReceived += new SerialErrorReceivedEventHandler((sender, e) => {
-                    var evt = e;
-                    Console.WriteLine(e.EventType);
-                });
-
-                try
-                {
-                    p.Open();
-                    // Disable PortsBox after port opened.
-                    PortsBox.Enabled = false;
-                    PortStatusImageBox.Image = Properties.Resources.Green_Ball;
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    MessageBox.Show(this, "端口被占用。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                    //throw;
-                }
-                portsList.Add(p);
-                logBox.AppendText(portName + "已打开。" + "共打开了" + portsList.Count + "个串口。\r\n");
-                OpenCloseButton.Text = "关闭";
-            }
-        }
-
-        private void closePortWithName(string portName)
-        {
-            SerialPort p = getPortWithPortName(portName);
-            if (p != null)
-            {
-                p.Close();
-                if (!p.IsOpen)
-                {
-                    portsList.Remove(p);
-                    logBox.AppendText(portName + "已关闭。" + "共打开了" + portsList.Count + "个串口。\r\n");
-                    OpenCloseButton.Text = "打开";
-                    // Re-enable PortsBox after port closed.
-                    PortsBox.Enabled = true;
-                    PortStatusImageBox.Image = Properties.Resources.Red_Ball;
-                }
-                else
-                {
-                    logBox.AppendText("端口" + portName + "关闭失败。\r\n");
-                }
-            }
-        }
-
-        private SerialPort getPortWithPortName(string portname)
-        {
-            foreach (var p in portsList)
-            {
-                if (p.PortName == portname)
-                {
-                    return p;
-                }
-            }
-
-            return null;
-        }
-
-        private void closeAllPorts()
-        {
-            var ports = SerialPort.GetPortNames();
-
-            foreach (var port in ports)
-            {
-                closePortWithName(port);
-            }
-        }
-
-        private Parity translateStringToParity(string str)
-        {
-            Parity p = Parity.None;
-            switch (str)
-            {
-                case "Even":
-                    p = Parity.Even;
-                    break;
-                case "Mark":
-                    p = Parity.Mark;
-                    break;
-                case "Space":
-                    p = Parity.Space;
-                    break;
-                case "Odd":
-                    p = Parity.Odd;
-                    break;
-                case "None":
-                default:
-                    p = Parity.None;
-                    break;
-            }
-            return p;
-        }
-
-        private StopBits translateStringToStopBits(string str)
-        {
-            StopBits p = StopBits.One;
-            switch (str)
-            {
-                case "2":
-                    p = StopBits.Two;
-                    break;
-                case "1":
-                default:
-                    p = StopBits.One;
-                    break;
-            }
-            return p;
-        }
-
-        private bool isPortNameValid(string portName)
-        {
-            bool result = false;
-            var names = SerialPort.GetPortNames();
-            foreach (var name in names)
-            {
-                if (name == portName)
-                {
-                    result = true;
-                    break;
-                }
-            }
-            return result;
-        }
-
+        
         private void sendMessage(SerialPort from, SerialPort to, object obj)
         {
             /* Simulate timing */
@@ -430,7 +193,6 @@ namespace Welding_Recorder
         // Form initialization
         private void InitialRecordingUI()
         {
-            loadPortList();
             loadWeldingDataLists();
         }
 
@@ -673,7 +435,6 @@ namespace Welding_Recorder
                     }
                     // ignore data and quit.
                 }
-                closeAllPorts();
                 DialogResult = DialogResult.Cancel;
             }
             else // Prevent form close while recording.
@@ -729,7 +490,6 @@ namespace Welding_Recorder
 
                 if (MessageBox.Show(this, "已保存。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                 {
-                    closeAllPorts();
                     DialogResult = DialogResult.OK;
                 }
             }

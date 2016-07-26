@@ -38,9 +38,9 @@ namespace Welding_Recorder.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9600")]
-        public int Baudrate {
+        public string Baudrate {
             get {
-                return ((int)(this["Baudrate"]));
+                return ((string)(this["Baudrate"]));
             }
             set {
                 this["Baudrate"] = value;
@@ -50,9 +50,9 @@ namespace Welding_Recorder.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int DataBits {
+        public string DataBits {
             get {
-                return ((int)(this["DataBits"]));
+                return ((string)(this["DataBits"]));
             }
             set {
                 this["DataBits"] = value;

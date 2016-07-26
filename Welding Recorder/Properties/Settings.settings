@@ -5,10 +5,10 @@
     <Setting Name="SerialPortName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Baudrate" Type="System.Int32" Scope="User">
+    <Setting Name="Baudrate" Type="System.String" Scope="User">
       <Value Profile="(Default)">9600</Value>
     </Setting>
-    <Setting Name="DataBits" Type="System.Int32" Scope="User">
+    <Setting Name="DataBits" Type="System.String" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="StopBit" Type="System.String" Scope="User">
