@@ -195,7 +195,7 @@ namespace Welding_Recorder
             if (signal.Type == SignalType.CollectStart)
             {
                 this.UIThread(() => {
-                    DataCollectButton_Click(null, null);
+                    DataCollectButton.PerformClick();
                 });
             }
             else
