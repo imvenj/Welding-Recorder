@@ -63,6 +63,10 @@ namespace Welding_Recorder
                 openPortWithName(portName);
             }
 #if DEBUG
+            if (currentSerialPort == null)
+            {
+                return;
+            }
             // Simulate a start collect signal:
             Timer timer = new Timer();
             timer.Interval = 5000;
@@ -342,5 +346,10 @@ namespace Welding_Recorder
             return result;
         }
 
+        private void EditHistoryMenuItem_Click(object sender, EventArgs e)
+        {
+            var historyForm = new MainForm();
+            historyForm.ShowDialog(this);
+        }
     }
 }

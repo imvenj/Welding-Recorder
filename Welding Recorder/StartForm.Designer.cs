@@ -36,14 +36,14 @@
             this.SelectTemplateButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.操作ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExportDataBaseMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.编辑ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EditHistoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SerialPortSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EditWorkerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ManageTemplatesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SerialPortSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
-            this.ExportDataBaseMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
             this.SuspendLayout();
@@ -125,6 +125,12 @@
             this.操作ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.操作ToolStripMenuItem.Text = "文件";
             // 
+            // ExportDataBaseMenuItem
+            // 
+            this.ExportDataBaseMenuItem.Name = "ExportDataBaseMenuItem";
+            this.ExportDataBaseMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.ExportDataBaseMenuItem.Text = "导出数据库文件";
+            // 
             // 编辑ToolStripMenuItem
             // 
             this.编辑ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -135,26 +141,12 @@
             this.编辑ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.编辑ToolStripMenuItem.Text = "编辑";
             // 
-            // 设置ToolStripMenuItem
-            // 
-            this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.SerialPortSettingsMenuItem});
-            this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
-            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.设置ToolStripMenuItem.Text = "设置";
-            // 
             // EditHistoryMenuItem
             // 
             this.EditHistoryMenuItem.Name = "EditHistoryMenuItem";
             this.EditHistoryMenuItem.Size = new System.Drawing.Size(152, 22);
             this.EditHistoryMenuItem.Text = "编辑焊接历史";
-            // 
-            // SerialPortSettingsMenuItem
-            // 
-            this.SerialPortSettingsMenuItem.Name = "SerialPortSettingsMenuItem";
-            this.SerialPortSettingsMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.SerialPortSettingsMenuItem.Text = "串口设置";
-            this.SerialPortSettingsMenuItem.Click += new System.EventHandler(this.SerialPortSettingsMenuItem_Click);
+            this.EditHistoryMenuItem.Click += new System.EventHandler(this.EditHistoryMenuItem_Click);
             // 
             // EditWorkerMenuItem
             // 
@@ -168,6 +160,21 @@
             this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ManageTemplatesMenuItem.Text = "管理焊接模版";
             // 
+            // 设置ToolStripMenuItem
+            // 
+            this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SerialPortSettingsMenuItem});
+            this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
+            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.设置ToolStripMenuItem.Text = "设置";
+            // 
+            // SerialPortSettingsMenuItem
+            // 
+            this.SerialPortSettingsMenuItem.Name = "SerialPortSettingsMenuItem";
+            this.SerialPortSettingsMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.SerialPortSettingsMenuItem.Text = "串口设置";
+            this.SerialPortSettingsMenuItem.Click += new System.EventHandler(this.SerialPortSettingsMenuItem_Click);
+            // 
             // PortStatusImageBox
             // 
             this.PortStatusImageBox.Image = global::Welding_Recorder.Properties.Resources.Red_Ball;
@@ -176,12 +183,6 @@
             this.PortStatusImageBox.Size = new System.Drawing.Size(24, 24);
             this.PortStatusImageBox.TabIndex = 35;
             this.PortStatusImageBox.TabStop = false;
-            // 
-            // ExportDataBaseMenuItem
-            // 
-            this.ExportDataBaseMenuItem.Name = "ExportDataBaseMenuItem";
-            this.ExportDataBaseMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.ExportDataBaseMenuItem.Text = "导出数据库文件";
             // 
             // StartForm
             // 
