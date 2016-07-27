@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Welding_Recorder
@@ -47,27 +41,7 @@ namespace Welding_Recorder
             // Currently only support single selection.
             ShowHistory();
         }
-
-        private void newRecordButton_Click(object sender, EventArgs e)
-        {
-            if (historiesList.SelectedIndices.Count == 0)
-            {
-                MessageBox.Show(this, "要开始自动焊接，请首先选择一条历史记录。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                // TODO: Start Control.
-                var index = historiesList.SelectedIndex;
-                var history = Histories[index];
-                var weldingForm = new WeldingControlForm(history);
-                var result = weldingForm.ShowDialog(this);
-                if (result == DialogResult.OK)
-                {
-                    // Do more
-                }
-            }
-        }
-
+        
         private void ShowHistory()
         {
             if (historiesList.SelectedIndices.Count == 0)
@@ -87,12 +61,7 @@ namespace Welding_Recorder
             }
         }
 
-        private void historiesList_DoubleClick(object sender, EventArgs e)
-        {
-            newRecordButton_Click(null, e);
-        }
-
-        private void EditHistoryMenu_Click(object sender, EventArgs e)
+        private void EditHistoryButton_Click(object sender, EventArgs e)
         {
             int index = historiesList.SelectedIndex;
             if (index != -1 && historiesList.SelectedIndices.Count == 1)
@@ -107,9 +76,28 @@ namespace Welding_Recorder
             }
         }
 
-        private void EditHistoryButton_Click(object sender, EventArgs e)
+        private void CloseButton_Click(object sender, EventArgs e)
         {
-            EditHistoryMenu_Click(sender, e);
+            Close();
+        }
+
+        private void deleteHistoryButton_Click(object sender, EventArgs e)
+        {
+            int index = historiesList.SelectedIndex;
+            if (index != -1 && historiesList.SelectedIndices.Count == 1)
+            {
+                var result = MessageBox.Show(this, "即将删除本条焊接记录，是否继续？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.OK)
+                {
+                    var history = Histories[index];
+                    history.Delete();
+                    UpdateUI();
+                }
+            }
+            else
+            {
+                MessageBox.Show(this, "请选择一条焊接记录。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

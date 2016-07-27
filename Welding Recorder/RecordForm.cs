@@ -17,7 +17,7 @@ namespace Welding_Recorder
         private List<SerialPort> portsList = new List<SerialPort>();
         private List<byte> signalBuffer = new List<byte>(6);
         private DateTime timestamp = DateTime.Now;
-        private bool isRecording = false;
+        private bool isRecording = true;
         private List<Signal> signalCache = new List<Signal>(); // Signal cache to save recording process.
         private int currentSpeed = 0;
         private double currentTime = 0.0;
@@ -167,6 +167,7 @@ namespace Welding_Recorder
                 new byte[] { 0xFF, 0x01, 0x00, 0x04, 0x02, 0x00, 0x07 }, // Acc step 2
                 new byte[] { 0xFF, 0x01, 0x00, 0x60, 0x00, 0x00, 0x61 }, // Rotate Stop
                 new byte[] { 0xFF, 0x01, 0x00, 0x20, 0x00, 0x00, 0x21 }, // Solder End (Second round)
+                new byte[] { 0xFF, 0x01, 0x00, 0x30, 0x00, 0x00, 0x31 }, // Solder End (Second round)
             };
 
             int counter = 0;
@@ -304,6 +305,12 @@ namespace Welding_Recorder
 #endif
             if (signal.isValid())
             {
+                if (signal.Type == SignalType.CollectEnd)
+                {
+                    isRecording = false;
+                    StopRecordAndSaveData();
+                    return;
+                }
                 signalCache.Add(signal);
 #if DEBUG
                 if (signal.Step != int.MaxValue)
@@ -315,11 +322,6 @@ namespace Welding_Recorder
                     message = signal.Type.ToString() + " detected.\r\n";
                 }
 #endif
-                if (signal.Type == SignalType.ArcStart)
-                {
-                    isRecording = true;
-                }
-
                 updatePlotWithSignal(signal);
             }
 #if DEBUG
@@ -427,25 +429,36 @@ namespace Welding_Recorder
             { // Not recording...
                 if (signalCache.Count > 0) // Data exist.
                 {
-                    var result = MessageBox.Show(this, "你还没有保存本次焊接的数据。是否关闭数据采集窗口并忽略焊接数据？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-                    if (result != DialogResult.OK) 
+                    SaveSignalDataAndClose();
+                }
+                else
+                {
+                    DialogResult = DialogResult.Cancel;
+                }
+            }
+            else // Prevent form close while recording.
+            {
+                if (signalCache.Count > 0) {
+                    var result = MessageBox.Show(this, "你正在记录焊接数据，退出窗口将中断数据记录。推荐你通过发送停止记录信号来关闭本对话框。\r\n\r\n真的要退出本窗口吗？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    if (result != DialogResult.OK)
                     {
                         // Do nothing.
                         return;
                     }
-                    // ignore data and quit.
+                    else
+                    {
+                        SaveSignalDataAndClose();
+                    }
                 }
-                DialogResult = DialogResult.Cancel;
-            }
-            else // Prevent form close while recording.
-            {
-                MessageBox.Show(this, "不能在数据采集时关闭这个窗口。", "数据采集中...", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                else
+                {
+                    DialogResult = DialogResult.Cancel;
+                }
             }
         }
 
-        private void SaveRecordButton_Click(object sender, EventArgs e)
+        private void SaveSignalDataAndClose()
         {
-            SaveRecordButton.Enabled = false; // Disable it.
             var dict = new Dictionary<string, object>();
             dict["gangtao_type"] = GangTaoTypeComboBox.Text.Trim();
             dict["welding_item"] = WeldingItemComboBox.Text.Trim();
@@ -468,31 +481,25 @@ namespace Welding_Recorder
             // If all OK, close.
             DateTime dt = DateTime.Now;
             dict["created_at"] = dt;
-            var inputBox = new InputBox("请输入焊接记录标题", "提示", "记录 - " + dt.ToLongDateString() + " " + dt.ToLongTimeString());
-            var result = inputBox.ShowDialog(this);
-            if (result == DialogResult.OK)
+            try
             {
-                try
-                {
-                    dict["name"] = inputBox.InputResult;
-                    var history = new History(dict);
-                    history.Signals = signalCache;
-                    history.Save();
-                }
-                catch (Exception excp)
-                {
-                    //TODO: Save Result and crash.
-#if DEBUG
-                    Console.WriteLine(excp.StackTrace);
-#endif
-                    throw;
-                }
-
-                if (MessageBox.Show(this, "已保存。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
-                {
-                    DialogResult = DialogResult.OK;
-                }
+                //Fixme: Generate a meaningful name.
+                dict["name"] = "";
+                var history = new History(dict);
+                history.Signals = signalCache;
+                history.Save();
+                Console.WriteLine("Signal history saved.");
             }
+            catch (Exception excp)
+            {
+                //TODO: Save Result and crash.
+#if DEBUG
+                Console.WriteLine(excp.StackTrace);
+#endif
+                throw;
+            }
+
+            DialogResult = DialogResult.OK;
         }
 
         private void GangTaoTypeComboBox_TextChanged(object sender, EventArgs e)
@@ -515,36 +522,20 @@ namespace Welding_Recorder
             UpdateControlColor((TextBox)sender, true);
         }
 
-        private void ForceStopButton_Click(object sender, EventArgs e)
+        private void StopRecordAndSaveData()
         {
+            // Remove event handler when record stop
+            CurrentSerialPort.DataReceived -= dataReceivedEventHandler;
             if (signalCache.Count == 0) // Nothing recorded, just do nothing...
             {
-                return;
+                DialogResult = DialogResult.Cancel;
             }
-            if (signalCache.Last().Type == SignalType.SolderEnd) // If this is one of the solder end.
+            else
             {
-                if (signalCache.Count != 0) // Valid record
-                {
-                    // Enable Save Record button.
-                    var result = MessageBox.Show(this, "焊接停止信号已发送，你现在可以完成数据采集。\r\n\r\n是否停止数据采集？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                    if (result == DialogResult.Yes)
-                    {
-                        isRecording = false;
-                        SaveRecordButton.Enabled = true;
-                        MessageBox.Show(this, "焊接完成，你现在可以点击主界面上的“保存记录”，把本次焊接的数据保存到数据库。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        WriteToLogBox("\r\n本次焊接完成！请保存焊接数据。\r\n");
-                        ForceStopButton.Visible = false;
-                    }
-                }
-            }
-            else // Prevent stop.
-            {
-                var result = MessageBox.Show(this, "数据采集正在进行中。如果现在停止，您将丢失所有已采集的数据。\r\n\r\n是否停止采集？", "数据采集中...", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Yes)
-                {
-                    isRecording = false; // Stop recording
-                    CancelButton_Click(CancelButton, e); // Quit and close 
-                }
+                WriteToLogBox("\r\n本次焊接数据记录完成！正在保存焊接数据...\r\n");
+                this.UIThread(() => {
+                    SaveSignalDataAndClose();
+                });
             }
         }
     }

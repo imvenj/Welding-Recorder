@@ -144,20 +144,20 @@
             // EditHistoryMenuItem
             // 
             this.EditHistoryMenuItem.Name = "EditHistoryMenuItem";
-            this.EditHistoryMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.EditHistoryMenuItem.Size = new System.Drawing.Size(148, 22);
             this.EditHistoryMenuItem.Text = "编辑焊接历史";
             this.EditHistoryMenuItem.Click += new System.EventHandler(this.EditHistoryMenuItem_Click);
             // 
             // EditWorkerMenuItem
             // 
             this.EditWorkerMenuItem.Name = "EditWorkerMenuItem";
-            this.EditWorkerMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.EditWorkerMenuItem.Size = new System.Drawing.Size(148, 22);
             this.EditWorkerMenuItem.Text = "编辑操作人员";
             // 
             // ManageTemplatesMenuItem
             // 
             this.ManageTemplatesMenuItem.Name = "ManageTemplatesMenuItem";
-            this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(148, 22);
             this.ManageTemplatesMenuItem.Text = "管理焊接模版";
             // 
             // 设置ToolStripMenuItem

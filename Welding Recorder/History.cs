@@ -34,28 +34,6 @@ namespace Welding_Recorder
                 signals = value;
             }
         }
-        public List<List<Signal>> SignalGroups //grouping
-        {
-            get
-            {
-                var signalCount = Signals.Count;
-                List<List<Signal>> signalGroups = new List<List<Signal>>();
-                List<Signal> currentGroup = new List<Signal>();
-                for (int i = 0; i < signalCount; i++)
-                {
-                    var sig = Signals[i];
-                    
-                    currentGroup.Add(sig);
-                    
-                    if (sig.Type == SignalType.SolderEnd)
-                    {
-                        signalGroups.Add(currentGroup);
-                        currentGroup = new List<Signal>();
-                    }
-                }
-                return signalGroups;
-            }
-        }
 
         public History(Dictionary<string, object> meta)
         {
@@ -76,23 +54,15 @@ namespace Welding_Recorder
             {
                 Id = db.saveHistory(this);
 
-                foreach (var group in SignalGroups)
+                foreach (var sig in Signals)
                 {
-                    for (int i = 0; i < group.Count; i++)
-                    {
-                        var sig = group[i];
-                        sig.Delta = 0;
+                    sig.Delta = 0;
 
-                        if (i != 0)
-                        {
-                            var interval = group[i].Timestamp - group[0].Timestamp;
-                            var delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
-                            sig.Delta = delta;
-                        }
-                        
-                        sig.History = this;
-                        sig.Save();
-                    }
+                    var interval = sig.Timestamp - Signals[0].Timestamp;
+                    var delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
+                    sig.Delta = delta;
+                    sig.History = this;
+                    sig.Save();
                 }
             }
             else
@@ -106,6 +76,12 @@ namespace Welding_Recorder
         public void ReloadSignals()
         {
             signals = null;
+        }
+
+        public void Delete()
+        {
+            var db = new DataProcess();
+            db.deleteHistory(this);
         }
 
         public override string ToString()
@@ -125,21 +101,22 @@ namespace Welding_Recorder
             message += string.Format(formatString, "室内温度：", RoomTemperature + "℃");
             message += string.Format(formatString, "氩气流量：", ArFlow + "L/min");
             message += "\r\n";
-            message += string.Format("焊接流程：（{0}个子过程）\r\n", SignalGroups.Count);
-            message += "\r\n";
 
-            for (int n = 0; n < SignalGroups.Count; n++)
+            for (int n = 0; n < Signals.Count; n++)
             {
-                message += string.Format("子过程{0}:\r\n", n + 1);
-                var group = SignalGroups[n];
-                for (int i = 0; i < group.Count; i++)
-                {
-                    var signal = group[i];
-                    message += string.Format("{0}. {1}, 开始于 {2:N3} 秒后\r\n", i + 1, signal.ToString(), signal.Delta / 1000.0);
-                }
+                var signal = Signals[n];
+                message += string.Format("{0}. {1}, 开始于 {2:N3} 秒后\r\n", n + 1, signal.ToString(), signal.Delta / 1000.0);
             }
             
             return message;
+        }
+        
+        public static History LatestHistory()
+        {
+            var db = new DataProcess();
+            var histories = db.HistoryList();
+            var sortedHistories = from h in histories where true orderby h.CreatedAt descending select h;
+            return sortedHistories.First();
         }
     }
 }

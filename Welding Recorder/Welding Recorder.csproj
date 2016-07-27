@@ -123,6 +123,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoClosingMessageBox.cs" />
     <Compile Include="ControlExtension.cs" />
     <Compile Include="DataProcess.cs" />
     <Compile Include="EditHistoryForm.cs">

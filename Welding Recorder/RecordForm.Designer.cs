@@ -49,9 +49,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.CancelFormButton = new System.Windows.Forms.Button();
-            this.SaveRecordButton = new System.Windows.Forms.Button();
             this.PlotBox = new System.Windows.Forms.GroupBox();
-            this.ForceStopButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -263,17 +261,6 @@
             this.CancelFormButton.UseVisualStyleBackColor = true;
             this.CancelFormButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // SaveRecordButton
-            // 
-            this.SaveRecordButton.Enabled = false;
-            this.SaveRecordButton.Location = new System.Drawing.Point(677, 425);
-            this.SaveRecordButton.Name = "SaveRecordButton";
-            this.SaveRecordButton.Size = new System.Drawing.Size(75, 23);
-            this.SaveRecordButton.TabIndex = 15;
-            this.SaveRecordButton.Text = "保存记录";
-            this.SaveRecordButton.UseVisualStyleBackColor = true;
-            this.SaveRecordButton.Click += new System.EventHandler(this.SaveRecordButton_Click);
-            // 
             // PlotBox
             // 
             this.PlotBox.Location = new System.Drawing.Point(12, 131);
@@ -283,17 +270,6 @@
             this.PlotBox.TabStop = false;
             this.PlotBox.Text = "监控图";
             // 
-            // ForceStopButton
-            // 
-            this.ForceStopButton.ForeColor = System.Drawing.Color.Red;
-            this.ForceStopButton.Location = new System.Drawing.Point(596, 425);
-            this.ForceStopButton.Name = "ForceStopButton";
-            this.ForceStopButton.Size = new System.Drawing.Size(75, 23);
-            this.ForceStopButton.TabIndex = 16;
-            this.ForceStopButton.Text = "停止记录";
-            this.ForceStopButton.UseVisualStyleBackColor = true;
-            this.ForceStopButton.Click += new System.EventHandler(this.ForceStopButton_Click);
-            // 
             // RecordForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -301,9 +277,7 @@
             this.ClientSize = new System.Drawing.Size(845, 459);
             this.ControlBox = false;
             this.Controls.Add(this.logBox);
-            this.Controls.Add(this.ForceStopButton);
             this.Controls.Add(this.PlotBox);
-            this.Controls.Add(this.SaveRecordButton);
             this.Controls.Add(this.CancelFormButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.sendMessageInfoLabel);
@@ -346,8 +320,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox OperatorNameComboBox;
         private System.Windows.Forms.Button CancelFormButton;
-        private System.Windows.Forms.Button SaveRecordButton;
         private System.Windows.Forms.GroupBox PlotBox;
-        private System.Windows.Forms.Button ForceStopButton;
     }
 }

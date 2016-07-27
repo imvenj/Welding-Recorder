@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Welding_Recorder
@@ -34,6 +29,7 @@ namespace Welding_Recorder
 
         void InitializeUI()
         {
+            dataReceivedEventHandler = new SerialDataReceivedEventHandler(serialPortDataReceived);
             string portName = Properties.Settings.Default.SerialPortName;
 
             string[] ports = SerialPort.GetPortNames();
@@ -104,13 +100,48 @@ namespace Welding_Recorder
                 MessageBox.Show("请选择一个端口并打开。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            // 在显示对话框前删除事件监听器
+            serialPort.DataReceived -= dataReceivedEventHandler;
             var form = new RecordForm(serialPort);
-            form.ShowDialog(this);
+            var result = form.ShowDialog(this);
+            if (result == DialogResult.OK || result == DialogResult.Cancel)
+            {
+                // 对话框完成后继续事件监听
+                serialPort.DataReceived += dataReceivedEventHandler;
+            }
         }
 
         private void AutoControlButton_Click(object sender, EventArgs e)
         {
-
+            var history = History.LatestHistory();
+            if (history == null)
+            {
+                AutoClosingMessageBox.Show("尚未记录任何焊接数据，请记录几次焊接流程后再尝试自动控制。\r\n\r\n本对话框将在5秒内自动关闭", "提示", 5000);
+                return;
+            }
+            else if (history.Signals.Count == 0)
+            {
+                AutoClosingMessageBox.Show("无效的焊接记录：不包含任何信号数据。请你选择一个模板进行自动焊接。\r\n\r\n本对话框将在5秒内自动关闭", "提示", 5000);
+                return;
+            }
+            else
+            {
+                var serialPort = currentSerialPort;
+                if (serialPort == null)
+                {
+                    MessageBox.Show("请选择一个端口并打开。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                // 在显示对话框前删除事件监听器
+                serialPort.DataReceived -= dataReceivedEventHandler;
+                var form = new WeldingControlForm(serialPort, history);
+                var result = form.ShowDialog(this);
+                if (result == DialogResult.OK || result == DialogResult.Cancel)
+                {
+                    // 对话框完成后继续事件监听
+                    serialPort.DataReceived += dataReceivedEventHandler;
+                }
+            }
         }
 
         private void SelectTemplateButton_Click(object sender, EventArgs e)
@@ -202,6 +233,12 @@ namespace Welding_Recorder
                     DataCollectButton.PerformClick();
                 });
             }
+            else if (signal.Type == SignalType.AutoControlStart)
+            {
+                this.UIThread(() => {
+                    AutoControlButton.PerformClick();
+                });
+            }
             else
             {
                 Console.WriteLine("SerialPort signal received in StartForm: {0}", signal.ToString());
@@ -230,7 +267,7 @@ namespace Welding_Recorder
             p.Parity = translateStringToParity(Properties.Settings.Default.Parity);
             p.DataBits = Convert.ToInt32(Properties.Settings.Default.DataBits);
             p.StopBits = translateStringToStopBits(Properties.Settings.Default.StopBit);
-            p.DataReceived += new SerialDataReceivedEventHandler(serialPortDataReceived);
+            p.DataReceived += dataReceivedEventHandler;
             p.ErrorReceived += new SerialErrorReceivedEventHandler((sender, e) => {
                 var evt = e;
                 Console.WriteLine(e.EventType);

@@ -134,8 +134,6 @@ namespace Welding_Recorder
                 MessageBox.Show("保存失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.Cancel;
             }
-            // Right now, do nothing...
-            Close();
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
