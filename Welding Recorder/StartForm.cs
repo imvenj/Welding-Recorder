@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
 
@@ -402,6 +403,29 @@ namespace Welding_Recorder
         {
             var historyForm = new MainForm();
             historyForm.ShowDialog(this);
+        }
+
+        private void ExportDataBaseMenuItem_Click(object sender, EventArgs e)
+        {
+            var dbPath = DataProcess.DBPATH;
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "数据库文件 (*.db)|*.db";
+            saveFileDialog.FilterIndex = 0;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.Title = "导出数据库文件";
+            saveFileDialog.FileName = "data";
+            var result = saveFileDialog.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                string destinationPath = saveFileDialog.FileName;
+                if (File.Exists(destinationPath))
+                {
+                    File.Delete(destinationPath);
+                }
+                File.Copy(dbPath, destinationPath);
+                MessageBox.Show("数据库文件导出成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

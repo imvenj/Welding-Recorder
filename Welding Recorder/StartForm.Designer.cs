@@ -130,6 +130,7 @@
             this.ExportDataBaseMenuItem.Name = "ExportDataBaseMenuItem";
             this.ExportDataBaseMenuItem.Size = new System.Drawing.Size(160, 22);
             this.ExportDataBaseMenuItem.Text = "导出数据库文件";
+            this.ExportDataBaseMenuItem.Click += new System.EventHandler(this.ExportDataBaseMenuItem_Click);
             // 
             // 编辑ToolStripMenuItem
             // 
