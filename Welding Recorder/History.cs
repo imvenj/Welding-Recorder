@@ -116,7 +116,14 @@ namespace Welding_Recorder
             var db = new DataProcess();
             var histories = db.HistoryList();
             var sortedHistories = from h in histories where true orderby h.CreatedAt descending select h;
-            return sortedHistories.First();
+            if (sortedHistories.Count() == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return sortedHistories.First();
+            }
         }
     }
 }

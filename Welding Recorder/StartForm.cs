@@ -17,6 +17,7 @@ namespace Welding_Recorder
         private List<byte> signalBuffer = new List<byte>(6);
         private DateTime timestamp = DateTime.Now;
 
+        private bool manualControl = true;
         /***************************************************************************
                                     Form Initlaization
         ****************************************************************************/
@@ -69,7 +70,8 @@ namespace Welding_Recorder
             timer.Tick += new EventHandler((s, evt) =>
             {
                 timer.Stop();
-                var signal = new Signal(SignalType.CollectStart);
+                //var signal = new Signal(SignalType.CollectStart);
+                var signal = new Signal(SignalType.AutoControlStart);
                 var data = signal.RawBytes;
                 Console.WriteLine(string.Format("发送指令:{0}, raw: {1}", signal.ToString(), signal.ToHexString()));
                 currentSerialPort.Write(data, 0, data.Length);
@@ -121,7 +123,7 @@ namespace Welding_Recorder
             }
             else if (history.Signals.Count == 0)
             {
-                AutoClosingMessageBox.Show("无效的焊接记录：不包含任何信号数据。请你选择一个模板进行自动焊接。\r\n\r\n本对话框将在5秒内自动关闭", "提示", 5000);
+                AutoClosingMessageBox.Show("无效的焊接记录：不包含任何信号数据。请你选择一个模板，或采集一次焊接数据后再进行自动焊接。\r\n\r\n本对话框将在5秒内自动关闭", "提示", 5000);
                 return;
             }
             else
@@ -135,6 +137,8 @@ namespace Welding_Recorder
                 // 在显示对话框前删除事件监听器
                 serialPort.DataReceived -= dataReceivedEventHandler;
                 var form = new WeldingControlForm(serialPort, history);
+                form.AutoControl = !manualControl; // Start auto control if event comes from signal!
+                manualControl = true; // revert it back to manual control.
                 var result = form.ShowDialog(this);
                 if (result == DialogResult.OK || result == DialogResult.Cancel)
                 {
@@ -236,6 +240,7 @@ namespace Welding_Recorder
             else if (signal.Type == SignalType.AutoControlStart)
             {
                 this.UIThread(() => {
+                    manualControl = false; // set auto control
                     AutoControlButton.PerformClick();
                 });
             }
@@ -288,6 +293,16 @@ namespace Welding_Recorder
             }
             Console.Write(portName + "已打开。\r\n");
             OpenCloseButton.Text = "关闭";
+            // Save portname as default port.
+            Properties.Settings.Default.SerialPortName = portName;
+            try
+            {
+                Properties.Settings.Default.Save();
+            }
+            catch (Exception excp)
+            {
+                Console.WriteLine(excp.Message);
+            }
         }
 
         private void closePortWithName(string portName)

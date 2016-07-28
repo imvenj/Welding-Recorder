@@ -27,10 +27,12 @@ namespace Welding_Recorder
         private Signal currentSentSignal;
         private SerialPort currentSerialPort;
         private List<Timer> timerCache = new List<Timer>();
+        private Timer counterdownTimer = null;
 
         private SerialPort CurrentSerialPort { get; set; }
         private SerialDataReceivedEventHandler dataReceivedEventHandler;
-
+        public bool AutoControl { get; set; }
+        private bool hardStop = false; // Disconnect with signal.
 #if DEBUG
         private int currentStep = 0;
         private Signal[] debugSignals = {
@@ -43,7 +45,11 @@ namespace Welding_Recorder
                 new Signal(SignalType.RotateStart),
                 new Signal(SignalType.RotateEnd),
                 new Signal(SignalType.RevolveStart),
-                new Signal(SignalType.RevolveEnd)
+                new Signal(SignalType.AutoControlStart),
+                new Signal(SignalType.AutoControlEnd),
+                new Signal(SignalType.CollectStart),
+                new Signal(SignalType.CollectEnd),
+                new Signal(SignalType.ChooseTemplate),
             };
 #endif
 
@@ -65,6 +71,11 @@ namespace Welding_Recorder
         {
             InitialWeldingControlUI();
             InitializePlot();
+            
+            if (AutoControl)
+            {
+                CountDownToWeiding();
+            }
         }
 
         /***************************************************************************
@@ -107,13 +118,7 @@ namespace Welding_Recorder
 #if (DEBUG)
             WriteToDebugBox(string.Format("Serial Port Data Receivered: {0}", BitConverter.ToString(readBytes)));
 #endif
-            this.UIThread(() =>
-            {
-                var message = string.Format(" - 收到应答信号");
-                WriteToLogBox(message);
-            });
 
-            /*
             for (int i = 0; i < bytesInBuffer; i++)
             {
                 var b = readBytes[i];
@@ -137,24 +142,18 @@ namespace Welding_Recorder
                     Console.WriteLine();
 #endif
                     Signal signal = new Signal(signalBuffer.ToArray(), timestamp);
+                    
                     try
                     {
                         if (signal.Type != currentSentSignal.Type) // Currently only check signal type
                         {
-                            var message = string.Format("信号传输错误：\r\n\r\n发送的信号是：{0}\r\n收到的信号是：{1}.\r\n\r\n是否开始手工操作？", currentSentSignal.ToString(), signal.ToString());
+                            var message = string.Format("信号传输错误：\r\n\r\n发送的信号是：{0}\r\n收到的信号是：{1}.\r\n", currentSentSignal.ToString(), signal.ToString());
+                            //Ignore error.
                             this.UIThread(() =>
                             {
-                                if (MessageBox.Show(this, message, "错误", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-                                { // Manual override.
-                                    timerCache.ForEach((t) => {
-                                        t.Stop();
-                                    });
-                                }
+                                WriteToLogBox(message);
                             });
-                            // TODO: Do more with this critical error.
-                        } // TODO: Maybe check timestamp later.
-                          // process received data for debug
-                        SignalProcess(signal);
+                        }
                     }
                     catch (Exception exp)
                     {
@@ -163,25 +162,31 @@ namespace Welding_Recorder
                         Console.WriteLine(exp.StackTrace);
 #endif
                     }
+                    
                     this.UIThread(() =>
                     {
                         var message = string.Format(" - 收到响应信号“{0}”", signal.ToString());
                         WriteToLogBox(message);
                     });
+
+                    SignalProcess(signal);
                 }
-            }*/
+            }
         }
 
         /***************************************************************************
                                Serial port helper methods start
         ****************************************************************************/
 
-#if (DEBUG)
+
         private void SignalProcess(Signal signal)
         {
+#if (DEBUG)
             string message = "";
+#endif
             if (signal.isValid())
             {
+#if (DEBUG)
                 //signalCache.Add(signal);
                 if (signal.Step != int.MaxValue)
                 {
@@ -191,16 +196,49 @@ namespace Welding_Recorder
                 {
                     message = signal.Type.ToString() + " detected.\r\n";
                 }
+#endif
+                if (signal.Type == SignalType.AutoControlEnd)
+                {
+                    if (!isControlling)
+                    {
+                        if (counterdownTimer != null)
+                        {
+                            counterdownTimer.Stop();
+                        }
+                    }
+                    else
+                    {
+                        timerCache.ForEach((t) => { t.Stop(); });
+                        hardStop = true; // stop from signal.
+                        isControlling = false; // not controlling.
+                        AutoControl = false; // Auto control is over.
+                        this.UIThread(() =>
+                        {
+                            StartWeldingButton.Enabled = true;
+                            WriteToLogBox("焊接被手动终止！");
+                        });
+                    }
+                }
+                if (signal.Type == SignalType.AutoControlStart && isControlling == false)
+                {
+                    AutoControl = true;
+                    this.UIThread(() =>
+                    {
+                        CountDownToWeiding();
+                    });
+                }
             }
+#if (DEBUG)
             else
             {
                 message = "Invalid signal: " + signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
             }
 
             Console.WriteLine(message);
-        }
 #endif
-        
+        }
+
+
         // Form initialization
         private void InitialWeldingControlUI()
         {
@@ -218,6 +256,7 @@ namespace Welding_Recorder
             debugSignals.ToList().ForEach((s) => {
                 SignalSelectionComboBox.Items.Add(s);
             });
+            SignalSelectionComboBox.SelectedIndex = 10;
         }
         
         private void SendSignalButton_Click(object sender, EventArgs e)
@@ -243,6 +282,7 @@ namespace Welding_Recorder
             var data = signal.RawBytes;
             WriteToDebugBox(string.Format("发送指令:{0}, raw: {1}", signal.ToString(), signal.ToHexString()));
             p.Write(data, 0, data.Length);
+            currentSentSignal = signal;
         }
 
         private void WriteToDebugBox(string content)
@@ -457,6 +497,7 @@ namespace Welding_Recorder
             var progressBarStart = weldingProgressBar.Value;
             var signals = History.Signals;
             var signalCount = signals.Count;
+            timerCache.Clear();
             for (int i = 0; i < signals.Count; i++)
             {
                 var sig = signals[i];
@@ -504,10 +545,37 @@ namespace Welding_Recorder
         private void FinishUpWelding()
         {
             StartWeldingButton.Enabled = true;
-            if (MessageBox.Show(this, "焊接完成。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+            //TODO: The chance to save welding control
+            //
+            isControlling = false;
+            if (AutoControl)
             {
-                WriteToLogBox("\r\n焊接完成。\r\n");
+                DialogResult = DialogResult.OK;
             }
+        }
+
+        private void CountDownToWeiding()
+        {
+            WriteToLogBox("即将开始自动焊接...");
+            Timer timer = new Timer();
+            counterdownTimer = timer;
+            timer.Interval = 1000;
+            int counter = 5;
+            timer.Tick += new EventHandler((s, evt) =>
+            {
+                if (counter < 1)
+                {
+                    // Start welding control.
+                    timer.Stop();
+                    StartWeldingButton.PerformClick();
+                }
+                else
+                {
+                    WriteToLogBox(string.Format("{0}...", counter));
+                }
+                counter--;
+            });
+            timer.Start();
         }
 
         /***************************************************************************
@@ -516,18 +584,30 @@ namespace Welding_Recorder
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            if (!isControlling)
-            { // Not recording...
-                //TODO: The chance to save welding control
-                DialogResult = DialogResult.Cancel;
-            }
-            else // Prompt before close while welding.
-            {
-                var result = MessageBox.Show(this, "焊接时退出焊接控制窗口将导致焊接中的产品报废，请勿在实际焊接时停止自动控制!!!\r\n\r\n是否停止焊接控制？", "焊接中...", MessageBoxButtons.OKCancel, MessageBoxIcon.Stop);
-                if (result == DialogResult.OK)
+            // Remove event handler when close.
+            currentSerialPort.DataReceived -= dataReceivedEventHandler;
+            if (isControlling) { // not controlling will never be executed. 
+                if (hardStop)
                 {
+                    hardStop = false; // reset to default value.
                     DialogResult = DialogResult.Cancel;
                 }
+                else  // Prompt before close while welding.
+                {
+                    var result = MessageBox.Show(this, "焊接时退出焊接控制窗口将导致焊接中的产品报废，请勿在实际焊接时停止自动控制!!!\r\n\r\n是否停止焊接控制？", "焊接中...", MessageBoxButtons.OKCancel, MessageBoxIcon.Stop);
+                    if (result == DialogResult.OK)
+                    {
+                        // Stop signals
+                        timerCache.ForEach((t) => { t.Stop(); });
+                        isControlling = false;
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
+            }
+            else
+            {
+                WriteToLogBox("\r\n焊接完成。");
+                DialogResult = DialogResult.OK;
             }
         }
 
@@ -613,16 +693,7 @@ namespace Welding_Recorder
                 logBox.AppendText("端口未打开。\r\n");
                 return;
             }
-            // TODO: if signalCache not empty, this is another chance to save data.
-            var result = MessageBox.Show(this, "即将用此程序开始控制焊接。\r\n\r\n是否开始？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-            {
-                startWelding(p);
-            }
-            else
-            {
-                return;
-            }
+            startWelding(p);
         }
     }
 }

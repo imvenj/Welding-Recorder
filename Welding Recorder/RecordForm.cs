@@ -108,7 +108,6 @@ namespace Welding_Recorder
             }
             catch (InvalidOperationException)
             {
-
                 MessageBox.Show(this, "非法操作。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
