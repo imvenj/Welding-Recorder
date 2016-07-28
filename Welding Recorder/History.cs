@@ -10,6 +10,7 @@ namespace Welding_Recorder
     {
         public long? Id { get; set; }
         public string Name { get; set; }
+        public string TaskName { get; set; }
         public string GangtaoType { get; set; }
         public string WeldingItem { get; set; }
         public string WeldingCurrent { get; set; }
@@ -38,6 +39,7 @@ namespace Welding_Recorder
         public History(Dictionary<string, object> meta)
         {
             Name = (string)meta["name"];
+            TaskName = (string)meta["task_name"];
             GangtaoType = (string)meta["gangtao_type"];
             WeldingItem = (string)meta["welding_item"];
             WeldingCurrent = (string)meta["welding_current"];
@@ -78,7 +80,7 @@ namespace Welding_Recorder
             signals = null;
         }
 
-        public void Delete()
+        public virtual void Delete()
         {
             var db = new DataProcess();
             db.deleteHistory(this);
@@ -92,6 +94,7 @@ namespace Welding_Recorder
 
             var formatString = "{0} {1} \r\n";
             message += string.Format(formatString, "  记录名：", Name);
+            message += string.Format(formatString, "任务书号：", TaskName);
             message += string.Format(formatString, "  操作人：", OperatorName);
             var timeString = CreatedAt.ToLongDateString() + CreatedAt.ToLongTimeString();
             message += string.Format(formatString, "焊接时间：", timeString);
@@ -109,6 +112,13 @@ namespace Welding_Recorder
             }
             
             return message;
+        }
+
+        public static History Find(long history_id)
+        {
+            var db = new DataProcess();
+            var history = db.historyOfId(history_id);
+            return history;
         }
         
         public static History LatestHistory()

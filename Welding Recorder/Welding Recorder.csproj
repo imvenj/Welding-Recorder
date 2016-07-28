@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoClosingMessageBox.cs" />
+    <Compile Include="AutoWeldHistory.cs" />
     <Compile Include="ControlExtension.cs" />
     <Compile Include="DataProcess.cs" />
     <Compile Include="EditHistoryForm.cs">

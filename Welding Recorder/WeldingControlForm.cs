@@ -25,7 +25,6 @@ namespace Welding_Recorder
         private PlotView Plot = new PlotView();
         private LinearAxis axis1 = new LinearAxis();
         private Signal currentSentSignal;
-        private SerialPort currentSerialPort;
         private List<Timer> timerCache = new List<Timer>();
         private Timer counterdownTimer = null;
 
@@ -334,11 +333,6 @@ namespace Welding_Recorder
             weldingItemList.ForEach((item) => {
                 WeldingItemComboBox.Items.Add(item);
             });
-
-            if (WeldingItemComboBox.Items.Count > 0)
-            {
-                WeldingItemComboBox.SelectedIndex = 0;
-            }
         }
 
         private void InitializePlot()
@@ -487,13 +481,13 @@ namespace Welding_Recorder
             weldingProgressBar.Maximum = totalTime;
             weldingProgressBar.Value = 0;
 
-            currentSerialPort = p;
+            CurrentSerialPort = p;
             executeSignalGroup(0);
         }
 
         private void executeSignalGroup(int currentIndex)
         {
-            var p = currentSerialPort;
+            var p = CurrentSerialPort;
             var progressBarStart = weldingProgressBar.Value;
             var signals = History.Signals;
             var signalCount = signals.Count;
@@ -545,8 +539,7 @@ namespace Welding_Recorder
         private void FinishUpWelding()
         {
             StartWeldingButton.Enabled = true;
-            //TODO: The chance to save welding control
-            //
+            SaveAutoWeldHistory();
             isControlling = false;
             if (AutoControl)
             {
@@ -585,7 +578,7 @@ namespace Welding_Recorder
         private void CancelButton_Click(object sender, EventArgs e)
         {
             // Remove event handler when close.
-            currentSerialPort.DataReceived -= dataReceivedEventHandler;
+            CurrentSerialPort.DataReceived -= dataReceivedEventHandler;
             if (isControlling) { // not controlling will never be executed. 
                 if (hardStop)
                 {
@@ -610,12 +603,12 @@ namespace Welding_Recorder
                 DialogResult = DialogResult.OK;
             }
         }
-
-        // TODO: Fixme: Always save welding control result!!!
-        private void SaveRecordButton_Click(object sender, EventArgs e)
+        
+        private void SaveAutoWeldHistory()
         {
             //SaveRecordButton.Enabled = false; // Disable it.
             var dict = new Dictionary<string, object>();
+            dict["task_name"] = TaskNameTextBox.Text.Trim();
             dict["gangtao_type"] = GangTaoTypeComboBox.Text.Trim();
             dict["welding_item"] = WeldingItemComboBox.Text.Trim();
             dict["welding_current"] = WeldingCurrentTextBox.Text.Trim();
@@ -623,6 +616,7 @@ namespace Welding_Recorder
             dict["room_temperature"] = RoomTempTextBox.Text.Trim();
             var op = OperatorNameComboBox.Text.Trim();
             dict["operator"] = op;
+            dict["history_id"] = History.Id;
 
             if (op != "") // Valid op.
             {
@@ -637,30 +631,18 @@ namespace Welding_Recorder
             // If all OK, close.
             DateTime dt = DateTime.Now;
             dict["created_at"] = dt;
-            var inputBox = new InputBox("请输入焊接记录标题", "提示", "记录 - " + dt.ToLongDateString() + " " + dt.ToLongTimeString());
-            var result = inputBox.ShowDialog(this);
-            if (result == DialogResult.OK)
+            try
             {
-                try
-                {
-                    dict["name"] = inputBox.InputResult;
-                    var history = new History(dict);
-                    //history.Signals = signalCache;
-                    history.Save();
-                }
-                catch (Exception excp)
-                {
-                    //TODO: Save Result and crash.
+                dict["name"] = "";
+                var history = new AutoWeldHistory(dict);
+                history.Save();
+            }
+            catch (Exception excp)
+            {
 #if DEBUG
-                    Console.WriteLine(excp.StackTrace);
+                Console.WriteLine(excp.StackTrace);
 #endif
-                    throw;
-                }
-
-                if (MessageBox.Show(this, "已保存。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
-                {
-                    DialogResult = DialogResult.OK;
-                }
+                throw;
             }
         }
 

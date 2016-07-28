@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.TaskNameTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.OperatorNameComboBox = new System.Windows.Forms.ComboBox();
@@ -68,7 +68,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.TaskNameTextBox);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.OperatorNameComboBox);
@@ -92,12 +92,12 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "焊接信息";
             // 
-            // textBox1
+            // TaskNameTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(68, 20);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(295, 21);
-            this.textBox1.TabIndex = 50;
+            this.TaskNameTextBox.Location = new System.Drawing.Point(68, 20);
+            this.TaskNameTextBox.Name = "TaskNameTextBox";
+            this.TaskNameTextBox.Size = new System.Drawing.Size(295, 21);
+            this.TaskNameTextBox.TabIndex = 50;
             // 
             // label6
             // 
@@ -438,7 +438,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.TextBox WeldingDetailsTextBox;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox TaskNameTextBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label16;

@@ -50,6 +50,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.CancelFormButton = new System.Windows.Forms.Button();
             this.PlotBox = new System.Windows.Forms.GroupBox();
+            this.TaskNameTextBox = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -98,7 +100,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(20, 23);
+            this.label7.Location = new System.Drawing.Point(20, 47);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 12);
             this.label7.TabIndex = 34;
@@ -108,7 +110,7 @@
             // 
             this.GangTaoTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GangTaoTypeComboBox.FormattingEnabled = true;
-            this.GangTaoTypeComboBox.Location = new System.Drawing.Point(79, 20);
+            this.GangTaoTypeComboBox.Location = new System.Drawing.Point(79, 44);
             this.GangTaoTypeComboBox.Name = "GangTaoTypeComboBox";
             this.GangTaoTypeComboBox.Size = new System.Drawing.Size(108, 20);
             this.GangTaoTypeComboBox.TabIndex = 1;
@@ -118,7 +120,7 @@
             // 
             this.WeldingItemComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.WeldingItemComboBox.FormattingEnabled = true;
-            this.WeldingItemComboBox.Location = new System.Drawing.Point(271, 20);
+            this.WeldingItemComboBox.Location = new System.Drawing.Point(271, 44);
             this.WeldingItemComboBox.Name = "WeldingItemComboBox";
             this.WeldingItemComboBox.Size = new System.Drawing.Size(108, 20);
             this.WeldingItemComboBox.TabIndex = 2;
@@ -126,7 +128,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(212, 23);
+            this.label8.Location = new System.Drawing.Point(212, 47);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 12);
             this.label8.TabIndex = 36;
@@ -135,7 +137,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(20, 49);
+            this.label9.Location = new System.Drawing.Point(20, 73);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(53, 12);
             this.label9.TabIndex = 38;
@@ -143,7 +145,7 @@
             // 
             // WeldingCurrentTextBox
             // 
-            this.WeldingCurrentTextBox.Location = new System.Drawing.Point(79, 46);
+            this.WeldingCurrentTextBox.Location = new System.Drawing.Point(79, 70);
             this.WeldingCurrentTextBox.Name = "WeldingCurrentTextBox";
             this.WeldingCurrentTextBox.Size = new System.Drawing.Size(89, 21);
             this.WeldingCurrentTextBox.TabIndex = 3;
@@ -151,6 +153,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.TaskNameTextBox);
+            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.OperatorNameComboBox);
             this.groupBox1.Controls.Add(this.label13);
@@ -168,7 +172,7 @@
             this.groupBox1.Controls.Add(this.WeldingItemComboBox);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(415, 113);
+            this.groupBox1.Size = new System.Drawing.Size(415, 129);
             this.groupBox1.TabIndex = 40;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "焊接信息";
@@ -176,7 +180,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(212, 78);
+            this.label15.Location = new System.Drawing.Point(212, 102);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(53, 12);
             this.label15.TabIndex = 47;
@@ -185,7 +189,7 @@
             // OperatorNameComboBox
             // 
             this.OperatorNameComboBox.FormattingEnabled = true;
-            this.OperatorNameComboBox.Location = new System.Drawing.Point(271, 75);
+            this.OperatorNameComboBox.Location = new System.Drawing.Point(271, 99);
             this.OperatorNameComboBox.Name = "OperatorNameComboBox";
             this.OperatorNameComboBox.Size = new System.Drawing.Size(108, 20);
             this.OperatorNameComboBox.TabIndex = 6;
@@ -193,7 +197,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(351, 51);
+            this.label13.Location = new System.Drawing.Point(351, 75);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(35, 12);
             this.label13.TabIndex = 46;
@@ -201,7 +205,7 @@
             // 
             // ArGasFlowTextBox
             // 
-            this.ArGasFlowTextBox.Location = new System.Drawing.Point(271, 46);
+            this.ArGasFlowTextBox.Location = new System.Drawing.Point(271, 70);
             this.ArGasFlowTextBox.Name = "ArGasFlowTextBox";
             this.ArGasFlowTextBox.Size = new System.Drawing.Size(74, 21);
             this.ArGasFlowTextBox.TabIndex = 4;
@@ -210,7 +214,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(212, 49);
+            this.label14.Location = new System.Drawing.Point(212, 73);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 12);
             this.label14.TabIndex = 44;
@@ -219,7 +223,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(172, 78);
+            this.label11.Location = new System.Drawing.Point(172, 102);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(17, 12);
             this.label11.TabIndex = 43;
@@ -227,7 +231,7 @@
             // 
             // RoomTempTextBox
             // 
-            this.RoomTempTextBox.Location = new System.Drawing.Point(79, 73);
+            this.RoomTempTextBox.Location = new System.Drawing.Point(79, 97);
             this.RoomTempTextBox.Name = "RoomTempTextBox";
             this.RoomTempTextBox.Size = new System.Drawing.Size(89, 21);
             this.RoomTempTextBox.TabIndex = 5;
@@ -236,7 +240,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(20, 76);
+            this.label12.Location = new System.Drawing.Point(20, 100);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(53, 12);
             this.label12.TabIndex = 41;
@@ -245,7 +249,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(176, 51);
+            this.label10.Location = new System.Drawing.Point(176, 75);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(11, 12);
             this.label10.TabIndex = 40;
@@ -263,12 +267,28 @@
             // 
             // PlotBox
             // 
-            this.PlotBox.Location = new System.Drawing.Point(12, 131);
+            this.PlotBox.Location = new System.Drawing.Point(12, 147);
             this.PlotBox.Name = "PlotBox";
-            this.PlotBox.Size = new System.Drawing.Size(415, 259);
+            this.PlotBox.Size = new System.Drawing.Size(415, 243);
             this.PlotBox.TabIndex = 45;
             this.PlotBox.TabStop = false;
             this.PlotBox.Text = "监控图";
+            // 
+            // TaskNameTextBox
+            // 
+            this.TaskNameTextBox.Location = new System.Drawing.Point(79, 17);
+            this.TaskNameTextBox.Name = "TaskNameTextBox";
+            this.TaskNameTextBox.Size = new System.Drawing.Size(300, 21);
+            this.TaskNameTextBox.TabIndex = 52;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(20, 20);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(53, 12);
+            this.label6.TabIndex = 51;
+            this.label6.Text = "任务书号";
             // 
             // RecordForm
             // 
@@ -321,5 +341,7 @@
         private System.Windows.Forms.ComboBox OperatorNameComboBox;
         private System.Windows.Forms.Button CancelFormButton;
         private System.Windows.Forms.GroupBox PlotBox;
+        private System.Windows.Forms.TextBox TaskNameTextBox;
+        private System.Windows.Forms.Label label6;
     }
 }

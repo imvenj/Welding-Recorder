@@ -34,7 +34,9 @@ namespace Welding_Recorder
                 conn.Open();
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
-                    command.CommandText = "CREATE TABLE Histories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, gangtao_type string, welding_item string, welding_current string, ar_flow string, room_temperature string, operator string, created_at timestamp)";
+                    command.CommandText = "CREATE TABLE Histories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, task_name string, gangtao_type string, welding_item string, welding_current string, ar_flow string, room_temperature string, operator string, created_at timestamp)";
+                    command.ExecuteNonQuery();
+                    command.CommandText = "CREATE TABLE AutoWeldHistories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, task_name string, gangtao_type string, welding_item string, welding_current string, ar_flow string, room_temperature string, operator string, history_id integer, created_at timestamp)";
                     command.ExecuteNonQuery();
                     command.CommandText = "CREATE TABLE GangTao(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type string UNIQUE)";
                     command.ExecuteNonQuery();
@@ -147,18 +149,56 @@ namespace Welding_Recorder
                     {
                         var dict = new Dictionary<string, object>();
                         dict["name"] = reader.GetValue(1);
-                        dict["gangtao_type"] = reader.GetValue(2);
-                        dict["welding_item"] =  reader.GetValue(3);
-                        dict["welding_current"] = reader.GetValue(4);
-                        dict["ar_flow"] = reader.GetValue(5);
-                        dict["room_temperature"] = reader.GetValue(6);
-                        dict["operator"] = reader.GetValue(7);
-                        dict["created_at"] = reader.GetValue(8);
+                        dict["task_name"] = reader.GetValue(2);
+                        dict["gangtao_type"] = reader.GetValue(3);
+                        dict["welding_item"] =  reader.GetValue(4);
+                        dict["welding_current"] = reader.GetValue(5);
+                        dict["ar_flow"] = reader.GetValue(6);
+                        dict["room_temperature"] = reader.GetValue(7);
+                        dict["operator"] = reader.GetValue(8);
+                        dict["created_at"] = reader.GetValue(9);
 
                         var history = new History(dict);
                         history.Id = reader.GetInt64(0);
 
                         historyList.Add(history);
+                    }
+                }
+            }
+
+            return historyList;
+        }
+
+        public List<AutoWeldHistory> AutoWeldHistoryList()
+        {
+            var historyList = new List<AutoWeldHistory>();
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    var sql = "SELECT * FROM AutoWeldHistories ORDER BY `created_at` DESC";
+                    command.CommandText = sql;
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        var dict = new Dictionary<string, object>();
+                        dict["name"] = reader.GetValue(1);
+                        dict["task_name"] = reader.GetValue(2);
+                        dict["gangtao_type"] = reader.GetValue(3);
+                        dict["welding_item"] = reader.GetValue(4);
+                        dict["welding_current"] = reader.GetValue(5);
+                        dict["ar_flow"] = reader.GetValue(6);
+                        dict["room_temperature"] = reader.GetValue(7);
+                        dict["operator"] = reader.GetValue(8);
+                        dict["history_id"] = reader.GetValue(9);
+                        dict["created_at"] = reader.GetValue(10);
+
+                        var autoWeldHistory = new AutoWeldHistory(dict);
+                        autoWeldHistory.Id = reader.GetInt64(0);
+
+                        historyList.Add(autoWeldHistory);
                     }
                 }
             }
@@ -322,7 +362,6 @@ namespace Welding_Recorder
                 }
             }
         }
-               
         
         public long saveHistory(History history)
         {
@@ -332,8 +371,9 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     // history
-                    command.CommandText = "INSERT INTO Histories ('name', 'gangtao_type', 'welding_item', 'welding_current', 'ar_flow', 'room_temperature', 'operator', 'created_at') values (@name, @gangtao_type, @welding_item, @welding_current, @ar_flow, @room_temperature, @operator, @created_at)";
+                    command.CommandText = "INSERT INTO Histories ('name', 'task_name', 'gangtao_type', 'welding_item', 'welding_current', 'ar_flow', 'room_temperature', 'operator', 'created_at') values (@name, @task_name, @gangtao_type, @welding_item, @welding_current, @ar_flow, @room_temperature, @operator, @created_at)";
                     var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
+                    var taskNameParam = SQLiteHelper.CreateStringParameter("@task_name", history.TaskName);
                     var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
                     var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", history.WeldingItem);
                     var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", history.WeldingCurrent);
@@ -342,6 +382,7 @@ namespace Welding_Recorder
                     var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
                     var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
                     command.Parameters.Add(nameParam);
+                    command.Parameters.Add(taskNameParam);
                     command.Parameters.Add(gangtaoTypeParam);
                     command.Parameters.Add(WeldingItemParam);
                     command.Parameters.Add(WeldingCurrentParam);
@@ -375,8 +416,9 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     // history
-                    command.CommandText = "UPDATE Histories SET `name` = @name, `welding_item` = @welding_item, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
+                    command.CommandText = "UPDATE Histories SET `name` = @name, `task_name` = @task_name, `welding_item` = @welding_item, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
                     var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
+                    var taskNameParam = SQLiteHelper.CreateStringParameter("@task_name", history.TaskName);
                     var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
                     var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", history.WeldingItem);
                     var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", history.WeldingCurrent);
@@ -386,6 +428,7 @@ namespace Welding_Recorder
                     var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
                     var hIdParam = SQLiteHelper.CreateParameter("@hid", history.Id, DbType.DateTime);
                     command.Parameters.Add(nameParam);
+                    command.Parameters.Add(taskNameParam);
                     command.Parameters.Add(gangtaoTypeParam);
                     command.Parameters.Add(WeldingItemParam);
                     command.Parameters.Add(WeldingCurrentParam);
@@ -415,6 +458,176 @@ namespace Welding_Recorder
                     command.CommandText = "DELETE FROM Signal WHERE `history_id` = @hid";
                     command.Parameters.Add(hIdParam);
                     command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public History historyOfId(long history_id)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    var sql = "SELECT * FROM Histories WHERE `id` = @hid";
+                    command.CommandText = sql;
+                    var hIdParam = SQLiteHelper.CreateStringParameter("@hid", history_id);
+                    command.Parameters.Add(hIdParam);
+
+                    var reader = command.ExecuteReader();
+                    History history = null;
+                    while (reader.Read())
+                    {
+                        var dict = new Dictionary<string, object>();
+                        dict["name"] = reader.GetValue(1);
+                        dict["task_name"] = reader.GetValue(2);
+                        dict["gangtao_type"] = reader.GetValue(3);
+                        dict["welding_item"] = reader.GetValue(4);
+                        dict["welding_current"] = reader.GetValue(5);
+                        dict["ar_flow"] = reader.GetValue(6);
+                        dict["room_temperature"] = reader.GetValue(7);
+                        dict["operator"] = reader.GetValue(8);
+                        dict["created_at"] = reader.GetValue(9);
+
+                        history = new History(dict);
+                        history.Id = reader.GetInt64(0);
+                    }
+
+                    return history;
+                }
+            }
+        }
+
+        public long saveAutoWeldHistory(AutoWeldHistory history)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    // history
+                    command.CommandText = "INSERT INTO AutoWeldHistories ('name', 'task_name', 'gangtao_type', 'welding_item', 'welding_current', 'ar_flow', 'room_temperature', 'operator', 'history_id', 'created_at') values (@name, @task_name, @gangtao_type, @welding_item, @welding_current, @ar_flow, @room_temperature, @operator, @history_id, @created_at)";
+                    var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
+                    var taskNameParam = SQLiteHelper.CreateStringParameter("@task_name", history.TaskName);
+                    var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
+                    var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", history.WeldingItem);
+                    var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", history.WeldingCurrent);
+                    var ARFlowParam = SQLiteHelper.CreateStringParameter("@ar_flow", history.ArFlow);
+                    var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", history.RoomTemperature);
+                    var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
+                    var HistoryIdParam = SQLiteHelper.CreateStringParameter("@history_id", history.OperatorName);
+                    var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
+                    command.Parameters.Add(nameParam);
+                    command.Parameters.Add(taskNameParam);
+                    command.Parameters.Add(gangtaoTypeParam);
+                    command.Parameters.Add(WeldingItemParam);
+                    command.Parameters.Add(WeldingCurrentParam);
+                    command.Parameters.Add(ARFlowParam);
+                    command.Parameters.Add(RoomTemperatureParam);
+                    command.Parameters.Add(OperatorParam);
+                    command.Parameters.Add(HistoryIdParam);
+                    command.Parameters.Add(CreatedAtParam);
+                    command.ExecuteNonQuery();
+
+                    // history id
+                    long historyId = -1;
+
+                    var sql = "SELECT * FROM AutoWeldHistories ORDER BY `created_at` DESC LIMIT 1"; // Not thread safe.
+                    command.CommandText = sql;
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        historyId = reader.GetInt64(0);
+                    }
+                    reader.Close();
+                    return historyId;
+                }
+            }
+        }
+
+        public void updateAutoWeldHistory(AutoWeldHistory history)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    // history
+                    command.CommandText = "UPDATE AutoWeldHistories SET `name` = @name, `task_name` = @task_name, `welding_item` = @welding_item, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
+                    var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
+                    var taskNameParam = SQLiteHelper.CreateStringParameter("@task_name", history.TaskName);
+                    var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
+                    var WeldingItemParam = SQLiteHelper.CreateStringParameter("@welding_item", history.WeldingItem);
+                    var WeldingCurrentParam = SQLiteHelper.CreateStringParameter("@welding_current", history.WeldingCurrent);
+                    var ARFlowParam = SQLiteHelper.CreateStringParameter("@ar_flow", history.ArFlow);
+                    var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", history.RoomTemperature);
+                    var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
+                    var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
+                    var hIdParam = SQLiteHelper.CreateParameter("@hid", history.Id, DbType.DateTime);
+                    command.Parameters.Add(nameParam);
+                    command.Parameters.Add(taskNameParam);
+                    command.Parameters.Add(gangtaoTypeParam);
+                    command.Parameters.Add(WeldingItemParam);
+                    command.Parameters.Add(WeldingCurrentParam);
+                    command.Parameters.Add(ARFlowParam);
+                    command.Parameters.Add(RoomTemperatureParam);
+                    command.Parameters.Add(OperatorParam);
+                    command.Parameters.Add(CreatedAtParam);
+                    command.Parameters.Add(hIdParam);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void deleteAutoWeldHistory(AutoWeldHistory history)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    // history
+                    command.CommandText = "DELETE FROM AutoWeldHistories WHERE `id` = @hid";
+                    var hIdParam = SQLiteHelper.CreateStringParameter("@hid", history.Id);
+                    command.Parameters.Add(hIdParam);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public AutoWeldHistory autoWeldHistoryOfId(long history_id)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    var sql = "SELECT * FROM AutoWeldHistories ORDER BY `created_at` DESC WHERE id=@hid";
+                    command.CommandText = sql;
+                    var hIdParam = SQLiteHelper.CreateStringParameter("@hid", history_id);
+                    command.Parameters.Add(hIdParam);
+
+                    var reader = command.ExecuteReader();
+                    AutoWeldHistory history = null;
+                    while (reader.Read())
+                    {
+                        var dict = new Dictionary<string, object>();
+                        dict["name"] = reader.GetValue(1);
+                        dict["task_name"] = reader.GetValue(2);
+                        dict["gangtao_type"] = reader.GetValue(3);
+                        dict["welding_item"] = reader.GetValue(4);
+                        dict["welding_current"] = reader.GetValue(5);
+                        dict["ar_flow"] = reader.GetValue(6);
+                        dict["room_temperature"] = reader.GetValue(7);
+                        dict["operator"] = reader.GetValue(8);
+                        dict["history_id"] = reader.GetValue(9);
+                        dict["created_at"] = reader.GetValue(10);
+
+                        history = new AutoWeldHistory(dict);
+                        history.Id = reader.GetInt64(0);
+                    }
+
+                    return history;
                 }
             }
         }

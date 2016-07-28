@@ -219,11 +219,6 @@ namespace Welding_Recorder
             weldingItemList.ForEach((item) => {
                 WeldingItemComboBox.Items.Add(item);
             });
-
-            if (WeldingItemComboBox.Items.Count > 0)
-            {
-                WeldingItemComboBox.SelectedIndex = 0;
-            }
         }
         
         private void InitializePlot()
@@ -459,6 +454,7 @@ namespace Welding_Recorder
         private void SaveSignalDataAndClose()
         {
             var dict = new Dictionary<string, object>();
+            dict["task_name"] = TaskNameTextBox.Text.Trim();
             dict["gangtao_type"] = GangTaoTypeComboBox.Text.Trim();
             dict["welding_item"] = WeldingItemComboBox.Text.Trim();
             dict["welding_current"] = WeldingCurrentTextBox.Text.Trim();
