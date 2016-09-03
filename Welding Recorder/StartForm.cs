@@ -432,5 +432,11 @@ namespace Welding_Recorder
         {
             loadPortList();
         }
+
+        private void EditWorkerMenuItem_Click(object sender, EventArgs e)
+        {
+            var operatorsForm = new OperatorsForm();
+            operatorsForm.ShowDialog(this);
+        }
     }
 }

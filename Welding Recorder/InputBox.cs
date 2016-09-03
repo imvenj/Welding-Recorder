@@ -30,6 +30,7 @@ namespace Welding_Recorder
         public InputBox()
         {
             InitializeComponent();
+            contentBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckEnter);
         }
         
         private void InputBox_FormClosing(object sender, FormClosingEventArgs e)
@@ -43,6 +44,14 @@ namespace Welding_Recorder
         private void InputBox_Load(object sender, EventArgs e)
         {
             contentBox.SelectAll();
+        }
+
+        private void CheckEnter(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                DialogResult = DialogResult.OK;
+            }
         }
     }
 }

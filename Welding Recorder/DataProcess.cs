@@ -362,7 +362,22 @@ namespace Welding_Recorder
                 }
             }
         }
-        
+
+        public void deleteOperator(string name)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    command.CommandText = "DELETE FROM Operator WHERE `name` = @name";
+                    var nameParam = SQLiteHelper.CreateStringParameter("@name", name);
+                    command.Parameters.Add(nameParam);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public long saveHistory(History history)
         {
             using (var conn = new SQLiteConnection(DataSource))
@@ -553,7 +568,7 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     // history
-                    command.CommandText = "UPDATE AutoWeldHistories SET `name` = @name, `task_name` = @task_name, `welding_item` = @welding_item, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
+                    command.CommandText = "UPDATE AutoWeldHistories SET `name` = @name, `task_name` = @task_name, `gangtao_type` = @gangtao_type, `welding_item` = @welding_item, `welding_current` = @welding_current, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
                     var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
                     var taskNameParam = SQLiteHelper.CreateStringParameter("@task_name", history.TaskName);
                     var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
