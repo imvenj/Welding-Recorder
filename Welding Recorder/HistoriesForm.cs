@@ -59,7 +59,11 @@ namespace Welding_Recorder
             {
                 var history = Histories[index];
                 var editForm = new EditHistoryForm(history);
-                editForm.ShowDialog(this);
+                var result = editForm.ShowDialog(this);
+                if (result == DialogResult.OK)
+                {
+                    ShowHistory();
+                }
             }
             else
             {

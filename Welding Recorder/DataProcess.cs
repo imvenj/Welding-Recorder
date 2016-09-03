@@ -416,7 +416,7 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     // history
-                    command.CommandText = "UPDATE Histories SET `name` = @name, `task_name` = @task_name, `welding_item` = @welding_item, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
+                    command.CommandText = "UPDATE Histories SET `name` = @name, `task_name` = @task_name, `gangtao_type` = @gangtao_type, `welding_item` = @welding_item, `welding_current` = @welding_current, `ar_flow` = @ar_flow, `room_temperature` = @room_temperature, `operator` = @operator, `created_at` = @created_at WHERE `id` = @hid";
                     var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
                     var taskNameParam = SQLiteHelper.CreateStringParameter("@task_name", history.TaskName);
                     var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);

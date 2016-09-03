@@ -36,6 +36,8 @@ namespace Welding_Recorder
             SignalsListView.CheckBoxes = true;
 
             PopulateData();
+            loadWeldingDataLists();
+            FillWeldingHistoryData();
         }
 
         private void DoOtherUIInitialization()
@@ -55,6 +57,35 @@ namespace Welding_Recorder
             {
                 SignalsListView.Items.Add(signal.ToListItem());
             }
+        }
+
+        // Load static data from database to UI.
+        private void loadWeldingDataLists()
+        {
+            var db = new DataProcess();
+            var gangtaoList = db.GangTaoList();
+            gangtaoList.ForEach((item) => {
+                GangTaoTypeComboBox.Items.Add(item);
+            });
+            var operatorList = db.OperatorList();
+            operatorList.ForEach((item) => {
+                OperatorNameComboBox.Items.Add(item);
+            });
+            var weldingItemList = db.WeldingItemList();
+            weldingItemList.ForEach((item) => {
+                WeldingItemComboBox.Items.Add(item);
+            });
+        }
+
+        private void FillWeldingHistoryData()
+        {
+            TaskNameTextBox.Text = History.TaskName;
+            WeldingCurrentTextBox.Text = History.WeldingCurrent;
+            ArGasFlowTextBox.Text = History.ArFlow;
+            GangTaoTypeComboBox.Text = History.GangtaoType;
+            WeldingItemComboBox.Text = History.WeldingItem;
+            RoomTempTextBox.Text = History.RoomTemperature;
+            OperatorNameComboBox.Text = History.OperatorName;
         }
 
         private void DeleteSelectedItemsButton_Click(object sender, EventArgs e)
@@ -85,6 +116,16 @@ namespace Welding_Recorder
 
         private void DoneButton_Click(object sender, EventArgs e)
         {
+
+            History.TaskName = TaskNameTextBox.Text.Trim();
+            History.WeldingCurrent = WeldingCurrentTextBox.Text.Trim();
+            History.ArFlow = ArGasFlowTextBox.Text.Trim();
+            History.GangtaoType = GangTaoTypeComboBox.Text.Trim();
+            History.WeldingItem = WeldingItemComboBox.Text.Trim();
+            History.RoomTemperature = RoomTempTextBox.Text.Trim();
+            History.OperatorName = OperatorNameComboBox.Text.Trim();
+            History.Save();
+
             DialogResult = DialogResult.OK;
         }
 
@@ -95,6 +136,11 @@ namespace Welding_Recorder
                 var listItem = SignalsListView.Items[int.Parse(index.ToString())];
                 listItem.Checked = false;
             }
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }
