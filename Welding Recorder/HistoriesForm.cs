@@ -4,11 +4,11 @@ using System.Windows.Forms;
 
 namespace Welding_Recorder
 {
-    public partial class MainForm : Form
+    public partial class HistoriesForm : Form
     {
         private List<History> Histories { get; set; }
 
-        public MainForm()
+        public HistoriesForm()
         {
             InitializeComponent();
             UpdateUI();
@@ -25,16 +25,7 @@ namespace Welding_Recorder
             });
             ShowHistory();
         }
-
-        private void startNewDataRecordToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var form = new RecordForm(null);
-            var result = form.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                UpdateUI();
-            }
-        }
+        
 
         private void historiesList_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -94,9 +85,23 @@ namespace Welding_Recorder
                     UpdateUI();
                 }
             }
-            else
+        }
+
+        private void RenameButton_Click(object sender, EventArgs e)
+        {
+            int index = historiesList.SelectedIndex;
+            if (index != -1 && historiesList.SelectedIndices.Count == 1)
             {
-                MessageBox.Show(this, "请选择一条焊接记录。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var history = Histories[index];
+                var inputBox = new InputBox("请输入新的记录名", "重命名焊接记录", history.Name);
+                var result = inputBox.ShowDialog(this);
+                if (result == DialogResult.OK)
+                {
+                    history.Name = inputBox.InputResult;
+                    history.Save();
+                    historiesList.Items[index] = history.Name;
+                    ShowHistory();
+                }
             }
         }
     }

@@ -401,7 +401,7 @@ namespace Welding_Recorder
 
         private void EditHistoryMenuItem_Click(object sender, EventArgs e)
         {
-            var historyForm = new MainForm();
+            var historyForm = new HistoriesForm();
             historyForm.ShowDialog(this);
         }
 
@@ -426,6 +426,11 @@ namespace Welding_Recorder
                 File.Copy(dbPath, destinationPath);
                 MessageBox.Show("数据库文件导出成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void SerialPortLabel_DoubleClick(object sender, EventArgs e)
+        {
+            loadPortList();
         }
     }
 }

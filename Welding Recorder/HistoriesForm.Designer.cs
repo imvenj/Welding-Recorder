@@ -1,6 +1,6 @@
 ﻿namespace Welding_Recorder
 {
-    partial class MainForm
+    partial class HistoriesForm
     {
         /// <summary>
         /// Required designer variable.
@@ -36,6 +36,7 @@
             this.EditHistoryButton = new System.Windows.Forms.Button();
             this.historyDetailTextBox = new System.Windows.Forms.TextBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.RenameButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -52,6 +53,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.RenameButton);
             this.splitContainer1.Panel1.Controls.Add(this.deleteHistoryButton);
             this.splitContainer1.Panel1.Controls.Add(this.historiesList);
             this.splitContainer1.Panel1.Controls.Add(this.historiesLabel);
@@ -68,7 +70,7 @@
             // deleteHistoryButton
             // 
             this.deleteHistoryButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.deleteHistoryButton.Location = new System.Drawing.Point(3, 337);
+            this.deleteHistoryButton.Location = new System.Drawing.Point(87, 337);
             this.deleteHistoryButton.Name = "deleteHistoryButton";
             this.deleteHistoryButton.Size = new System.Drawing.Size(75, 23);
             this.deleteHistoryButton.TabIndex = 2;
@@ -141,7 +143,18 @@
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
-            // MainForm
+            // RenameButton
+            // 
+            this.RenameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.RenameButton.Location = new System.Drawing.Point(4, 337);
+            this.RenameButton.Name = "RenameButton";
+            this.RenameButton.Size = new System.Drawing.Size(75, 23);
+            this.RenameButton.TabIndex = 3;
+            this.RenameButton.Text = "重命名";
+            this.RenameButton.UseVisualStyleBackColor = true;
+            this.RenameButton.Click += new System.EventHandler(this.RenameButton_Click);
+            // 
+            // HistoriesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -149,8 +162,8 @@
             this.ControlBox = false;
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.splitContainer1);
-            this.Name = "MainForm";
-            this.Text = "编辑焊接历史";
+            this.Name = "HistoriesForm";
+            this.Text = "焊接历史";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -170,6 +183,7 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.Button EditHistoryButton;
         private System.Windows.Forms.Button CloseButton;
+        private System.Windows.Forms.Button RenameButton;
     }
 }
 

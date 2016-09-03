@@ -426,7 +426,7 @@ namespace Welding_Recorder
                     var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", history.RoomTemperature);
                     var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
                     var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
-                    var hIdParam = SQLiteHelper.CreateParameter("@hid", history.Id, DbType.DateTime);
+                    var hIdParam = SQLiteHelper.CreateParameter("@hid", history.Id, DbType.Int64);
                     command.Parameters.Add(nameParam);
                     command.Parameters.Add(taskNameParam);
                     command.Parameters.Add(gangtaoTypeParam);

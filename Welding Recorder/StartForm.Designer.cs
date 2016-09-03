@@ -30,7 +30,7 @@
         {
             this.OpenCloseButton = new System.Windows.Forms.Button();
             this.portsBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.SerialPortLabel = new System.Windows.Forms.Label();
             this.DataCollectButton = new System.Windows.Forms.Button();
             this.AutoControlButton = new System.Windows.Forms.Button();
             this.SelectTemplateButton = new System.Windows.Forms.Button();
@@ -66,14 +66,15 @@
             this.portsBox.Size = new System.Drawing.Size(125, 20);
             this.portsBox.TabIndex = 36;
             // 
-            // label1
+            // SerialPortLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
-            this.label1.TabIndex = 37;
-            this.label1.Text = "串口";
+            this.SerialPortLabel.AutoSize = true;
+            this.SerialPortLabel.Location = new System.Drawing.Point(13, 33);
+            this.SerialPortLabel.Name = "SerialPortLabel";
+            this.SerialPortLabel.Size = new System.Drawing.Size(29, 12);
+            this.SerialPortLabel.TabIndex = 37;
+            this.SerialPortLabel.Text = "串口";
+            this.SerialPortLabel.DoubleClick += new System.EventHandler(this.SerialPortLabel_DoubleClick);
             // 
             // DataCollectButton
             // 
@@ -194,7 +195,7 @@
             this.Controls.Add(this.AutoControlButton);
             this.Controls.Add(this.DataCollectButton);
             this.Controls.Add(this.portsBox);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.SerialPortLabel);
             this.Controls.Add(this.PortStatusImageBox);
             this.Controls.Add(this.OpenCloseButton);
             this.Controls.Add(this.menuStrip1);
@@ -216,7 +217,7 @@
         private System.Windows.Forms.PictureBox PortStatusImageBox;
         private System.Windows.Forms.Button OpenCloseButton;
         private System.Windows.Forms.ComboBox portsBox;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label SerialPortLabel;
         private System.Windows.Forms.Button DataCollectButton;
         private System.Windows.Forms.Button AutoControlButton;
         private System.Windows.Forms.Button SelectTemplateButton;
