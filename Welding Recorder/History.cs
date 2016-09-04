@@ -114,6 +114,16 @@ namespace Welding_Recorder
             return message;
         }
 
+        public string ShortDescription()
+        {
+            var timeString = CreatedAt.ToLongDateString() + CreatedAt.ToLongTimeString();
+            var name = (Name == "") ? "(未命名)" : Name;
+            var item = (WeldingItem == "") ? "未知项目" : WeldingItem;
+            var type = (GangtaoType == "") ? "?" : GangtaoType;
+            var task = (TaskName == "") ? "无" : TaskName;
+            return string.Format("{0}: {1}({2}), 任务书号：{3}, 记录于：{4}", name, item, type, task, timeString);
+        }
+
         public static History Find(long history_id)
         {
             var db = new DataProcess();

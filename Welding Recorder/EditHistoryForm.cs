@@ -17,11 +17,11 @@ namespace Welding_Recorder
         {
             History = history;
             InitializeComponent();
-            PopulateColumnHeaders();
+            PopulateListViewContent();
             DoOtherUIInitialization();
         }
 
-        private void PopulateColumnHeaders()
+        private void PopulateListViewContent()
         {
             SignalsListView.Columns.Add("", 30);
             SignalsListView.Columns.Add("ID", 40);

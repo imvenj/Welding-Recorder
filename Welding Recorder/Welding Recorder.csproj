@@ -26,8 +26,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>10</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>41</ApplicationRevision>
+    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -123,8 +123,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppController.cs" />
     <Compile Include="AutoClosingMessageBox.cs" />
     <Compile Include="AutoWeldHistory.cs" />
+    <Compile Include="ChooseTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChooseTemplate.Designer.cs">
+      <DependentUpon>ChooseTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TemplateOptionsForm.Designer.cs">
+      <DependentUpon>TemplateOptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ControlExtension.cs" />
     <Compile Include="DataProcess.cs" />
     <Compile Include="EditHistoryForm.cs">
@@ -132,6 +145,12 @@
     </Compile>
     <Compile Include="EditHistoryForm.Designer.cs">
       <DependentUpon>EditHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditTemplateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditTemplateForm.Designer.cs">
+      <DependentUpon>EditTemplateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HistoriesForm.cs">
       <SubType>Form</SubType>
@@ -174,14 +193,24 @@
     <Compile Include="StartForm.Designer.cs">
       <DependentUpon>StartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Template.cs" />
     <Compile Include="WeldingControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WeldingControlForm.Designer.cs">
       <DependentUpon>WeldingControlForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ChooseTemplate.resx">
+      <DependentUpon>ChooseTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TemplateOptionsForm.resx">
+      <DependentUpon>TemplateOptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditHistoryForm.resx">
       <DependentUpon>EditHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditTemplateForm.resx">
+      <DependentUpon>EditTemplateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HistoriesForm.resx">
       <DependentUpon>HistoriesForm.cs</DependentUpon>

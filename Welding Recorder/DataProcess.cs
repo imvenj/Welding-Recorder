@@ -46,7 +46,9 @@ namespace Welding_Recorder
                     command.ExecuteNonQuery();
                     command.CommandText = "CREATE TABLE Signal(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type integer, step integer, at timestamp, delta integer, history_id integer)";
                     command.ExecuteNonQuery();
-                    command.CommandText = "INSERT INTO GangTao ('type') values ('270'), ('242'), ('215'), ('190'), ('170'), ('150'), ('130'), ('110'), ('90'), ('75'), ('60'), ('46')";
+                    command.CommandText = "CREATE TABLE Template(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type string, item string, history_id integer)";
+                    command.ExecuteNonQuery();
+                    command.CommandText = "INSERT INTO GangTao ('type') values ('270'), ('242'), ('215'), ('190'), ('170'), ('150'), ('130'), ('110'), ('90'), ('75'), ('60'), ('46'), ('30')";
                     command.ExecuteNonQuery();
                     command.CommandText = "INSERT INTO WeldingItem ('type') values ('瓦片'), ('活塞'), ('后盖')";
                     command.ExecuteNonQuery();
@@ -131,6 +133,105 @@ namespace Welding_Recorder
             }
 
             return operatorList;
+        }
+
+        public List<Template> TemplateList()
+        {
+            var templateList = new List<Template>();
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    var sql = "SELECT * FROM Template ORDER BY `id` DESC";
+                    command.CommandText = sql;
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        var dict = new Dictionary<string, object>();
+                        dict["type"] = reader.GetValue(1);
+                        dict["item"] = reader.GetValue(2);
+                        var history_id = reader.GetInt64(3);
+
+                        var history = historyOfId(history_id);
+                        var template = new Template(dict);
+                        template.Id = reader.GetInt64(0);
+                        template.History = history;
+
+                        templateList.Add(template);
+                    }
+                }
+            }
+
+            return templateList;
+        }
+
+        public long saveTemplate(Template tpl)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    command.CommandText = "INSERT INTO Template ('type', 'item', 'history_id') values (@type, @item, @history_id)";
+                    var typeParam = SQLiteHelper.CreateParameter("@type", tpl.Type, DbType.String);
+                    var itemParam = SQLiteHelper.CreateParameter("@item", tpl.Item, DbType.String);
+                    var historyIdParam = SQLiteHelper.CreateParameter("@history_id", tpl.History.Id, DbType.Int64);
+                    command.Parameters.Add(typeParam);
+                    command.Parameters.Add(itemParam);
+                    command.Parameters.Add(historyIdParam);
+                    command.ExecuteNonQuery();
+
+                    // signal id
+                    long tplId = -1;
+                    var sql = "SELECT * FROM Template ORDER BY `id` DESC LIMIT 1"; // Not thread safe.
+                    command.CommandText = sql;
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        tplId = reader.GetInt64(0);
+                    }
+                    reader.Close();
+                    return tplId;
+                }
+            }
+        }
+
+        public void updateTemplate(Template tpl)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    command.CommandText = "UPDATE Template SET `type` = @type, `item` = @item, `history_id` = @history_id WHERE `id` = @tid";
+                    var typeParam = SQLiteHelper.CreateParameter("@type", tpl.Type, DbType.String);
+                    var itemParam = SQLiteHelper.CreateParameter("@item", tpl.Item, DbType.String);
+                    var historyIdParam = SQLiteHelper.CreateParameter("@history_id", tpl.History.Id, DbType.Int64);
+                    var tIdParam = SQLiteHelper.CreateParameter("@tid", tpl.Id, DbType.Int64);
+                    command.Parameters.Add(typeParam);
+                    command.Parameters.Add(itemParam);
+                    command.Parameters.Add(historyIdParam);
+                    command.Parameters.Add(tIdParam);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void deleteTemplate(Template tpl)
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                conn.Open();
+                using (SQLiteCommand command = new SQLiteCommand(conn))
+                {
+                    command.CommandText = "DELETE FROM Template WHERE `id` = @tid";
+                    var tIdParam = SQLiteHelper.CreateStringParameter("@tid", tpl.Id);
+                    command.Parameters.Add(tIdParam);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public List<History> HistoryList()

@@ -79,7 +79,7 @@ namespace Welding_Recorder
 
         /***************************************************************************
                            Serial port event handlers start
-    ****************************************************************************/
+        ****************************************************************************/
     
         private void clearLogButton_Click(object sender, EventArgs e)
         {
@@ -288,7 +288,14 @@ namespace Welding_Recorder
         {
             this.UIThread(() =>
             {
-                signalDebugTextBox.AppendText(content + "\r\n");
+                try
+                {
+                    signalDebugTextBox.AppendText(content + "\r\n");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.StackTrace);
+                }
             });
         }
 #endif
@@ -532,7 +539,15 @@ namespace Welding_Recorder
         private void WriteToLogBox(string content)
         {
             this.UIThread(() => {
-                logBox.AppendText(content + "\r\n");
+                try
+                {
+                    logBox.AppendText(content + "\r\n");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.StackTrace);
+                }
+                
             });
         }
 

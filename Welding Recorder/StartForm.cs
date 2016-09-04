@@ -1,4 +1,5 @@
-﻿using System;
+﻿#undef DEBUG 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
@@ -60,6 +61,7 @@ namespace Welding_Recorder
                 portsBox.Text = portName;
                 openPortWithName(portName);
             }
+            UpdateTemplateLabel();
 #if DEBUG
             if (currentSerialPort == null)
             {
@@ -79,6 +81,11 @@ namespace Welding_Recorder
             });
             timer.Start();
 #endif
+        }
+
+        private void UpdateTemplateLabel()
+        {
+            TemplateLabel.Text = AppController.Shared.CurrentTemplate == null ? "无" : AppController.Shared.CurrentTemplate.ToString();
         }
         
         /***************************************************************************
@@ -117,6 +124,11 @@ namespace Welding_Recorder
         private void AutoControlButton_Click(object sender, EventArgs e)
         {
             var history = History.LatestHistory();
+            var template = AppController.Shared.CurrentTemplate;
+            if (template != null)
+            {
+                history = template.History;
+            }
             if (history == null)
             {
                 AutoClosingMessageBox.Show("尚未记录任何焊接数据，请记录几次焊接流程后再尝试自动控制。\r\n\r\n本对话框将在5秒内自动关闭", "提示", 5000);
@@ -151,7 +163,14 @@ namespace Welding_Recorder
 
         private void SelectTemplateButton_Click(object sender, EventArgs e)
         {
-
+            var choose = new ChooseTemplate();
+            var result = choose.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                AppController.Shared.CurrentTemplate = choose.ChosenTemplate;
+                UpdateTemplateLabel();
+            }
+            
         }
 
         private void OpenCloseButton_Click(object sender, EventArgs e)
@@ -408,7 +427,10 @@ namespace Welding_Recorder
         private void ExportDataBaseMenuItem_Click(object sender, EventArgs e)
         {
             var dbPath = DataProcess.DBPATH;
-
+            if (!File.Exists(dbPath))
+            {
+                return;
+            }
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "数据库文件 (*.db)|*.db";
             saveFileDialog.FilterIndex = 0;
@@ -437,6 +459,31 @@ namespace Welding_Recorder
         {
             var operatorsForm = new OperatorsForm();
             operatorsForm.ShowDialog(this);
+        }
+
+        private void ManageTemplatesMenuItem_Click(object sender, EventArgs e)
+        {
+            var editTemplates = new EditTemplateForm();
+            editTemplates.ShowDialog(this);
+        }
+
+        private void ClearTemplateButton_Click(object sender, EventArgs e)
+        {
+            AppController.Shared.CurrentTemplate = null;
+            UpdateTemplateLabel();
+        }
+
+        private void DeleteDatabaseFileMenu_Click(object sender, EventArgs e)
+        {
+            var dbPath = DataProcess.DBPATH;
+            if (File.Exists(dbPath))
+            {
+                var result = MessageBox.Show("删除数据库文件仅用作程序调试使用！\r\n\r\n删除数据库将会删除所有已记录的数据，是否真的要删除？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (result == DialogResult.Yes)
+                {
+                    File.Delete(dbPath);
+                }
+            }
         }
     }
 }

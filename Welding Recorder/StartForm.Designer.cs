@@ -43,7 +43,12 @@
             this.ManageTemplatesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SerialPortSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label2 = new System.Windows.Forms.Label();
+            this.TemplateLabel = new System.Windows.Forms.Label();
             this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
+            this.ClearTemplateButton = new System.Windows.Forms.Button();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.DeleteDatabaseFileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
             this.SuspendLayout();
@@ -162,11 +167,14 @@
             this.ManageTemplatesMenuItem.Name = "ManageTemplatesMenuItem";
             this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ManageTemplatesMenuItem.Text = "管理焊接模版";
+            this.ManageTemplatesMenuItem.Click += new System.EventHandler(this.ManageTemplatesMenuItem_Click);
             // 
             // 设置ToolStripMenuItem
             // 
             this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.SerialPortSettingsMenuItem});
+            this.SerialPortSettingsMenuItem,
+            this.toolStripMenuItem1,
+            this.DeleteDatabaseFileMenu});
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             this.设置ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.设置ToolStripMenuItem.Text = "设置";
@@ -174,9 +182,26 @@
             // SerialPortSettingsMenuItem
             // 
             this.SerialPortSettingsMenuItem.Name = "SerialPortSettingsMenuItem";
-            this.SerialPortSettingsMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.SerialPortSettingsMenuItem.Size = new System.Drawing.Size(152, 22);
             this.SerialPortSettingsMenuItem.Text = "串口设置";
             this.SerialPortSettingsMenuItem.Click += new System.EventHandler(this.SerialPortSettingsMenuItem_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(14, 145);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(59, 12);
+            this.label2.TabIndex = 43;
+            this.label2.Text = "当前模板:";
+            // 
+            // TemplateLabel
+            // 
+            this.TemplateLabel.AutoSize = true;
+            this.TemplateLabel.Location = new System.Drawing.Point(74, 145);
+            this.TemplateLabel.Name = "TemplateLabel";
+            this.TemplateLabel.Size = new System.Drawing.Size(0, 12);
+            this.TemplateLabel.TabIndex = 44;
             // 
             // PortStatusImageBox
             // 
@@ -187,11 +212,37 @@
             this.PortStatusImageBox.TabIndex = 35;
             this.PortStatusImageBox.TabStop = false;
             // 
+            // ClearTemplateButton
+            // 
+            this.ClearTemplateButton.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ClearTemplateButton.Location = new System.Drawing.Point(237, 143);
+            this.ClearTemplateButton.Name = "ClearTemplateButton";
+            this.ClearTemplateButton.Size = new System.Drawing.Size(44, 23);
+            this.ClearTemplateButton.TabIndex = 45;
+            this.ClearTemplateButton.Text = "清除";
+            this.ClearTemplateButton.UseVisualStyleBackColor = true;
+            this.ClearTemplateButton.Click += new System.EventHandler(this.ClearTemplateButton_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // DeleteDatabaseFileMenu
+            // 
+            this.DeleteDatabaseFileMenu.Name = "DeleteDatabaseFileMenu";
+            this.DeleteDatabaseFileMenu.Size = new System.Drawing.Size(152, 22);
+            this.DeleteDatabaseFileMenu.Text = "删除数据库";
+            this.DeleteDatabaseFileMenu.Click += new System.EventHandler(this.DeleteDatabaseFileMenu_Click);
+            // 
             // StartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 149);
+            this.ClientSize = new System.Drawing.Size(293, 173);
+            this.Controls.Add(this.ClearTemplateButton);
+            this.Controls.Add(this.TemplateLabel);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.SelectTemplateButton);
             this.Controls.Add(this.AutoControlButton);
             this.Controls.Add(this.DataCollectButton);
@@ -231,5 +282,10 @@
         private System.Windows.Forms.ToolStripMenuItem EditWorkerMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ManageTemplatesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExportDataBaseMenuItem;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label TemplateLabel;
+        private System.Windows.Forms.Button ClearTemplateButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem DeleteDatabaseFileMenu;
     }
 }
