@@ -78,7 +78,7 @@
             // DoneButton
             // 
             this.DoneButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DoneButton.Location = new System.Drawing.Point(575, 476);
+            this.DoneButton.Location = new System.Drawing.Point(576, 476);
             this.DoneButton.Name = "DoneButton";
             this.DoneButton.Size = new System.Drawing.Size(75, 23);
             this.DoneButton.TabIndex = 3;
@@ -99,7 +99,7 @@
             // DeSelectAllButton
             // 
             this.DeSelectAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DeSelectAllButton.Location = new System.Drawing.Point(185, 476);
+            this.DeSelectAllButton.Location = new System.Drawing.Point(178, 476);
             this.DeSelectAllButton.Name = "DeSelectAllButton";
             this.DeSelectAllButton.Size = new System.Drawing.Size(75, 23);
             this.DeSelectAllButton.TabIndex = 5;
@@ -252,7 +252,8 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(656, 475);
+            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CancelButton.Location = new System.Drawing.Point(657, 476);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 68;
@@ -294,7 +295,7 @@
             this.MinimumSize = new System.Drawing.Size(760, 550);
             this.Name = "EditHistoryForm";
             this.ShowIcon = false;
-            this.Text = "EditHistoryForm";
+            this.Text = "编辑焊接记录";
             this.ResumeLayout(false);
             this.PerformLayout();
 
