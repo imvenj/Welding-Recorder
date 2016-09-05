@@ -1,4 +1,4 @@
-﻿#undef DEBUG 
+﻿//#undef DEBUG 
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,8 +73,8 @@ namespace Welding_Recorder
             timer.Tick += new EventHandler((s, evt) =>
             {
                 timer.Stop();
-                //var signal = new Signal(SignalType.CollectStart);
-                var signal = new Signal(SignalType.AutoControlStart);
+                var signal = new Signal(SignalType.CollectStart);
+                //var signal = new Signal(SignalType.AutoControlStart);
                 var data = signal.RawBytes;
                 Console.WriteLine(string.Format("发送指令:{0}, raw: {1}", signal.ToString(), signal.ToHexString()));
                 currentSerialPort.Write(data, 0, data.Length);
@@ -195,6 +195,9 @@ namespace Welding_Recorder
         {
 #if (DEBUG)
             Console.WriteLine("Serial Port Data Receivered.");
+            this.UIThread(() => {
+                SignalLabel.Text = "收到数据...";
+            });
 #endif
             SerialPort port = (SerialPort)sender;
 
@@ -251,6 +254,9 @@ namespace Welding_Recorder
 
         void SignalProcess(Signal signal)
         {
+            this.UIThread(() => {
+                SignalLabel.Text = signal.ToString();
+            });
             if (signal.Type == SignalType.CollectStart)
             {
                 this.UIThread(() => {

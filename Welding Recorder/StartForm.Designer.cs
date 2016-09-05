@@ -43,12 +43,14 @@
             this.ManageTemplatesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SerialPortSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.DeleteDatabaseFileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
             this.TemplateLabel = new System.Windows.Forms.Label();
             this.PortStatusImageBox = new System.Windows.Forms.PictureBox();
             this.ClearTemplateButton = new System.Windows.Forms.Button();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.DeleteDatabaseFileMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.SignalLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
             this.SuspendLayout();
@@ -151,21 +153,21 @@
             // EditHistoryMenuItem
             // 
             this.EditHistoryMenuItem.Name = "EditHistoryMenuItem";
-            this.EditHistoryMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.EditHistoryMenuItem.Size = new System.Drawing.Size(148, 22);
             this.EditHistoryMenuItem.Text = "编辑焊接历史";
             this.EditHistoryMenuItem.Click += new System.EventHandler(this.EditHistoryMenuItem_Click);
             // 
             // EditWorkerMenuItem
             // 
             this.EditWorkerMenuItem.Name = "EditWorkerMenuItem";
-            this.EditWorkerMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.EditWorkerMenuItem.Size = new System.Drawing.Size(148, 22);
             this.EditWorkerMenuItem.Text = "编辑操作人员";
             this.EditWorkerMenuItem.Click += new System.EventHandler(this.EditWorkerMenuItem_Click);
             // 
             // ManageTemplatesMenuItem
             // 
             this.ManageTemplatesMenuItem.Name = "ManageTemplatesMenuItem";
-            this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(148, 22);
             this.ManageTemplatesMenuItem.Text = "管理焊接模版";
             this.ManageTemplatesMenuItem.Click += new System.EventHandler(this.ManageTemplatesMenuItem_Click);
             // 
@@ -182,9 +184,21 @@
             // SerialPortSettingsMenuItem
             // 
             this.SerialPortSettingsMenuItem.Name = "SerialPortSettingsMenuItem";
-            this.SerialPortSettingsMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.SerialPortSettingsMenuItem.Size = new System.Drawing.Size(136, 22);
             this.SerialPortSettingsMenuItem.Text = "串口设置";
             this.SerialPortSettingsMenuItem.Click += new System.EventHandler(this.SerialPortSettingsMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(133, 6);
+            // 
+            // DeleteDatabaseFileMenu
+            // 
+            this.DeleteDatabaseFileMenu.Name = "DeleteDatabaseFileMenu";
+            this.DeleteDatabaseFileMenu.Size = new System.Drawing.Size(136, 22);
+            this.DeleteDatabaseFileMenu.Text = "删除数据库";
+            this.DeleteDatabaseFileMenu.Click += new System.EventHandler(this.DeleteDatabaseFileMenu_Click);
             // 
             // label2
             // 
@@ -223,23 +237,30 @@
             this.ClearTemplateButton.UseVisualStyleBackColor = true;
             this.ClearTemplateButton.Click += new System.EventHandler(this.ClearTemplateButton_Click);
             // 
-            // toolStripMenuItem1
+            // label1
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 183);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(59, 12);
+            this.label1.TabIndex = 46;
+            this.label1.Text = "当前信号:";
             // 
-            // DeleteDatabaseFileMenu
+            // SignalLabel
             // 
-            this.DeleteDatabaseFileMenu.Name = "DeleteDatabaseFileMenu";
-            this.DeleteDatabaseFileMenu.Size = new System.Drawing.Size(152, 22);
-            this.DeleteDatabaseFileMenu.Text = "删除数据库";
-            this.DeleteDatabaseFileMenu.Click += new System.EventHandler(this.DeleteDatabaseFileMenu_Click);
+            this.SignalLabel.AutoSize = true;
+            this.SignalLabel.Location = new System.Drawing.Point(79, 183);
+            this.SignalLabel.Name = "SignalLabel";
+            this.SignalLabel.Size = new System.Drawing.Size(0, 12);
+            this.SignalLabel.TabIndex = 47;
             // 
             // StartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 173);
+            this.ClientSize = new System.Drawing.Size(293, 204);
+            this.Controls.Add(this.SignalLabel);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.ClearTemplateButton);
             this.Controls.Add(this.TemplateLabel);
             this.Controls.Add(this.label2);
@@ -287,5 +308,7 @@
         private System.Windows.Forms.Button ClearTemplateButton;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem DeleteDatabaseFileMenu;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label SignalLabel;
     }
 }
