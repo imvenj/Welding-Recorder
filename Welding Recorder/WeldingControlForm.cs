@@ -558,6 +558,8 @@ namespace Welding_Recorder
             isControlling = false;
             if (AutoControl)
             {
+                // Remove event handler when close.
+                CurrentSerialPort.DataReceived -= dataReceivedEventHandler;
                 DialogResult = DialogResult.OK;
             }
         }

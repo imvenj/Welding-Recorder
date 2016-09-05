@@ -67,22 +67,38 @@ namespace Welding_Recorder
             {
                 return;
             }
+            //SimulateSignal(1);
+#endif
+        }
+
+#if DEBUG
+        private void SimulateSignal(int i)
+        {
             // Simulate a start collect signal:
             Timer timer = new Timer();
             timer.Interval = 5000;
             timer.Tick += new EventHandler((s, evt) =>
             {
                 timer.Stop();
-                var signal = new Signal(SignalType.CollectStart);
-                //var signal = new Signal(SignalType.AutoControlStart);
+                Signal signal;
+                var signal1 = new Signal(SignalType.CollectStart);
+                var signal2 = new Signal(SignalType.AutoControlStart);
+                if (i == 0)
+                {
+                    signal = signal1;
+                }
+                else
+                {
+                    signal = signal2;
+                }
                 var data = signal.RawBytes;
                 Console.WriteLine(string.Format("发送指令:{0}, raw: {1}", signal.ToString(), signal.ToHexString()));
                 currentSerialPort.Write(data, 0, data.Length);
             });
             timer.Start();
-#endif
         }
-
+#endif
+        
         private void UpdateTemplateLabel()
         {
             TemplateLabel.Text = AppController.Shared.CurrentTemplate == null ? "无" : AppController.Shared.CurrentTemplate.ToString();
@@ -113,12 +129,10 @@ namespace Welding_Recorder
             // 在显示对话框前删除事件监听器
             serialPort.DataReceived -= dataReceivedEventHandler;
             var form = new RecordForm(serialPort);
-            var result = form.ShowDialog(this);
-            if (result == DialogResult.OK || result == DialogResult.Cancel)
-            {
-                // 对话框完成后继续事件监听
-                serialPort.DataReceived += dataReceivedEventHandler;
-            }
+            form.ShowDialog(this);
+            // 对话框完成后继续事件监听
+            serialPort.DataReceived += dataReceivedEventHandler;
+            //SimulateSignal(1);
         }
 
         private void AutoControlButton_Click(object sender, EventArgs e)
@@ -152,12 +166,10 @@ namespace Welding_Recorder
                 var form = new WeldingControlForm(serialPort, history);
                 form.AutoControl = !manualControl; // Start auto control if event comes from signal!
                 manualControl = true; // revert it back to manual control.
-                var result = form.ShowDialog(this);
-                if (result == DialogResult.OK || result == DialogResult.Cancel)
-                {
-                    // 对话框完成后继续事件监听
-                    serialPort.DataReceived += dataReceivedEventHandler;
-                }
+                form.ShowDialog(this);
+                // 对话框完成后继续事件监听
+                serialPort.DataReceived += dataReceivedEventHandler;
+                //SimulateSignal(0);
             }
         }
 
