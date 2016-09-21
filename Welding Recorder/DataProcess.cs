@@ -36,7 +36,7 @@ namespace Welding_Recorder
                 {
                     command.CommandText = "CREATE TABLE Histories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, task_name string, gangtao_type string, welding_item string, welding_current string, ar_flow string, room_temperature string, operator string, created_at timestamp)";
                     command.ExecuteNonQuery();
-                    command.CommandText = "CREATE TABLE AutoWeldHistories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, task_name string, gangtao_type string, welding_item string, welding_current string, ar_flow string, room_temperature string, operator string, history_id integer, created_at timestamp)";
+                    command.CommandText = "CREATE TABLE AutoWeldHistories(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string, task_name string, gangtao_type string, welding_item string, welding_current string, ar_flow string, room_temperature string, operator string, history_id integer, created_at timestamp, interupted boolean)";
                     command.ExecuteNonQuery();
                     command.CommandText = "CREATE TABLE GangTao(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type string UNIQUE)";
                     command.ExecuteNonQuery();
@@ -44,7 +44,7 @@ namespace Welding_Recorder
                     command.ExecuteNonQuery();
                     command.CommandText = "CREATE TABLE Operator(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name string UNIQUE)";
                     command.ExecuteNonQuery();
-                    command.CommandText = "CREATE TABLE Signal(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type integer, step integer, at timestamp, delta integer, history_id integer)";
+                    command.CommandText = "CREATE TABLE Signal(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type integer, step integer, at timestamp, delta integer, history_id integer, auto_weld boolean)";
                     command.ExecuteNonQuery();
                     command.CommandText = "CREATE TABLE Template(id integer NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, type string, item string, history_id integer)";
                     command.ExecuteNonQuery();
@@ -295,6 +295,7 @@ namespace Welding_Recorder
                         dict["operator"] = reader.GetValue(8);
                         dict["history_id"] = reader.GetValue(9);
                         dict["created_at"] = reader.GetValue(10);
+                        dict["auto_weld"] = reader.GetBoolean(11);
 
                         var autoWeldHistory = new AutoWeldHistory(dict);
                         autoWeldHistory.Id = reader.GetInt64(0);
@@ -307,7 +308,7 @@ namespace Welding_Recorder
             return historyList;
         }
 
-        public List<Signal> SignalListOfHistory(History history)
+        public List<Signal> SignalListOfHistory(History history, bool auto_weld = false)
         {
             var signals = new List<Signal>();
             using (var conn = new SQLiteConnection(DataSource))
@@ -315,10 +316,13 @@ namespace Welding_Recorder
                 conn.Open();
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
-                    var sql = "SELECT * FROM Signal WHERE `history_id` = @hid ORDER BY `at` ASC ";
+                    var autoweld_value = auto_weld ? 1 : 0;
+                    var sql = "SELECT * FROM Signal WHERE `history_id` = @hid and `auto_weld` = @autoweld ORDER BY `at` ASC ";
                     command.CommandText = sql;
                     var hIdParam = SQLiteHelper.CreateStringParameter("@hid", history.Id);
+                    var autoweldParam = SQLiteHelper.CreateStringParameter("@autoweld", autoweld_value);
                     command.Parameters.Add(hIdParam);
+                    command.Parameters.Add(autoweldParam);
                     var reader = command.ExecuteReader();
 
                     while (reader.Read())
@@ -396,17 +400,20 @@ namespace Welding_Recorder
                 conn.Open();
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
-                    command.CommandText = "INSERT INTO Signal ('type', 'at', 'step', 'delta', 'history_id') values (@type, @at, @step, @delta, @history_id)";
+                    var auto_weld = sig.AutoWeld == true ? true : false;
+                    command.CommandText = "INSERT INTO Signal ('type', 'at', 'step', 'delta', 'history_id', 'auto_weld') values (@type, @at, @step, @delta, @history_id, @auto_weld)";
                     var typeParam = SQLiteHelper.CreateParameter("@type", (int)sig.Type, DbType.Int32);
                     var atParam = SQLiteHelper.CreateParameter("@at", sig.Timestamp, DbType.DateTime);
                     var stepParam = SQLiteHelper.CreateParameter("@step", sig.Step, DbType.Int32);
                     var deltaParam = SQLiteHelper.CreateParameter("@delta", sig.Delta, DbType.Int32);
                     var historyIdParam = SQLiteHelper.CreateParameter("@history_id", sig.History.Id, DbType.Int64);
+                    var autoWeldParam = SQLiteHelper.CreateParameter("@auto_weld", auto_weld, DbType.Boolean);
                     command.Parameters.Add(typeParam);
                     command.Parameters.Add(atParam);
                     command.Parameters.Add(deltaParam);
                     command.Parameters.Add(stepParam);
                     command.Parameters.Add(historyIdParam);
+                    command.Parameters.Add(autoWeldParam);
                     command.ExecuteNonQuery();
 
                     // signal id
@@ -622,7 +629,8 @@ namespace Welding_Recorder
                 using (SQLiteCommand command = new SQLiteCommand(conn))
                 {
                     // history
-                    command.CommandText = "INSERT INTO AutoWeldHistories ('name', 'task_name', 'gangtao_type', 'welding_item', 'welding_current', 'ar_flow', 'room_temperature', 'operator', 'history_id', 'created_at') values (@name, @task_name, @gangtao_type, @welding_item, @welding_current, @ar_flow, @room_temperature, @operator, @history_id, @created_at)";
+                    var interupted = history.Interupted == false ? false : true;
+                    command.CommandText = "INSERT INTO AutoWeldHistories ('name', 'task_name', 'gangtao_type', 'welding_item', 'welding_current', 'ar_flow', 'room_temperature', 'operator', 'history_id', 'created_at', 'interupted') values (@name, @task_name, @gangtao_type, @welding_item, @welding_current, @ar_flow, @room_temperature, @operator, @history_id, @created_at, @interupted)";
                     var nameParam = SQLiteHelper.CreateStringParameter("@name", history.Name);
                     var taskNameParam = SQLiteHelper.CreateStringParameter("@task_name", history.TaskName);
                     var gangtaoTypeParam = SQLiteHelper.CreateStringParameter("@gangtao_type", history.GangtaoType);
@@ -633,6 +641,7 @@ namespace Welding_Recorder
                     var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
                     var HistoryIdParam = SQLiteHelper.CreateStringParameter("@history_id", history.OperatorName);
                     var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
+                    var InteruptedParam = SQLiteHelper.CreateParameter("@interupted", interupted, DbType.Boolean);
                     command.Parameters.Add(nameParam);
                     command.Parameters.Add(taskNameParam);
                     command.Parameters.Add(gangtaoTypeParam);
@@ -643,6 +652,7 @@ namespace Welding_Recorder
                     command.Parameters.Add(OperatorParam);
                     command.Parameters.Add(HistoryIdParam);
                     command.Parameters.Add(CreatedAtParam);
+                    command.Parameters.Add(InteruptedParam);
                     command.ExecuteNonQuery();
 
                     // history id
@@ -738,6 +748,7 @@ namespace Welding_Recorder
                         dict["operator"] = reader.GetValue(8);
                         dict["history_id"] = reader.GetValue(9);
                         dict["created_at"] = reader.GetValue(10);
+                        dict["auto_weld"] = reader.GetBoolean(11);
 
                         history = new AutoWeldHistory(dict);
                         history.Id = reader.GetInt64(0);

@@ -8,12 +8,33 @@ namespace Welding_Recorder
     public class AutoWeldHistory : History
     {
         public History Template { get; set; }
+        private List<Signal> signals;
+        override public List<Signal> Signals
+        {
+            get
+            {
+                if (signals == null)
+                {
+                    var db = new DataProcess();
+                    signals = db.SignalListOfHistory(this, true);
+                }
+
+                return signals;
+            }
+            set
+            {
+                signals = value;
+            }
+        }
 
         public AutoWeldHistory(Dictionary<string, object> meta) : base(meta)
         {
             long hid = (long)meta["history_id"];
+            bool interupted = (bool)meta["interupted"];
             Template = History.Find(hid);
         }
+
+        public bool Interupted { get; set; }
 
         public new AutoWeldHistory Save()
         {
@@ -21,6 +42,17 @@ namespace Welding_Recorder
             if (Id == null)
             {
                 Id = db.saveAutoWeldHistory(this);
+
+                foreach (var sig in Signals)
+                {
+                    sig.Delta = 0;
+
+                    var interval = sig.Timestamp - Signals[0].Timestamp;
+                    var delta = (int)interval.TotalMilliseconds; // Ignore time less tham 1ms.
+                    sig.Delta = delta;
+                    sig.History = this;
+                    sig.Save();
+                }
             }
             else
             {

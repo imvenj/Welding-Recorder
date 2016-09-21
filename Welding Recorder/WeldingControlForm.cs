@@ -27,6 +27,7 @@ namespace Welding_Recorder
         private Signal currentSentSignal;
         private List<Timer> timerCache = new List<Timer>();
         private Timer counterdownTimer = null;
+        private List<Signal> signalCache = new List<Signal>(); // Signal cache to save recording process.
 
         private SerialPort CurrentSerialPort { get; set; }
         private SerialDataReceivedEventHandler dataReceivedEventHandler;
@@ -141,7 +142,7 @@ namespace Welding_Recorder
                     Console.WriteLine();
 #endif
                     Signal signal = new Signal(signalBuffer.ToArray(), timestamp);
-                    
+                    signal.AutoWeld = true;
                     try
                     {
                         if (signal.Type != currentSentSignal.Type) // Currently only check signal type
@@ -186,7 +187,6 @@ namespace Welding_Recorder
             if (signal.isValid())
             {
 #if (DEBUG)
-                //signalCache.Add(signal);
                 if (signal.Step != int.MaxValue)
                 {
                     message = signal.Type.ToString() + " step " + signal.Step + " detected.\r\n";
@@ -215,8 +215,10 @@ namespace Welding_Recorder
                         {
                             StartWeldingButton.Enabled = true;
                             WriteToLogBox("焊接被手动终止！");
+                            SaveAutoWeldHistory(); // Save Signals anyway even interupted.
                         });
                     }
+                    return;
                 }
                 if (signal.Type == SignalType.AutoControlStart && isControlling == false)
                 {
@@ -225,7 +227,10 @@ namespace Welding_Recorder
                     {
                         CountDownToWeiding();
                     });
+                    signalCache.Clear();
+                    return;
                 }
+                signalCache.Add(signal);
             }
 #if (DEBUG)
             else
@@ -620,8 +625,8 @@ namespace Welding_Recorder
                 DialogResult = DialogResult.OK;
             }
         }
-        
-        private void SaveAutoWeldHistory()
+
+        private void SaveAutoWeldHistory(bool interupted = false)
         {
             //SaveRecordButton.Enabled = false; // Disable it.
             var dict = new Dictionary<string, object>();
@@ -652,6 +657,21 @@ namespace Welding_Recorder
             {
                 dict["name"] = "";
                 var history = new AutoWeldHistory(dict);
+                history.Signals = signalCache;
+                // Decide interupted by signal count.
+                // We can decide interupt by pass in argument.
+                // Fixme: Which is better? 
+                if (history.Template.Signals.Count() == signalCache.Count())
+                {
+                    history.Interupted = false;
+                }
+                else
+                {
+#if DEBUG
+                    Console.WriteLine("Control signals: {0}, received signals: {1}", history.Template.Signals.Count(), signalCache.Count());
+#endif
+                    history.Interupted = true;
+                }
                 history.Save();
             }
             catch (Exception excp)

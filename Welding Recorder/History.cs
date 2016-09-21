@@ -19,7 +19,7 @@ namespace Welding_Recorder
         public string OperatorName { get; set; }
         public DateTime CreatedAt { get; set; }
         private List<Signal> signals;
-        public List<Signal> Signals {
+        virtual public List<Signal> Signals {
             get
             {
                 if (signals == null)

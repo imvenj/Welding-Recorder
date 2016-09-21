@@ -125,6 +125,7 @@ namespace Welding_Recorder
 
         public History History { get; set; }
         public int Delta { get; set; }
+        public bool AutoWeld { get; set; }
 
         public Signal(byte[] rawBytes, DateTime timestamp)
         {

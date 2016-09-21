@@ -139,6 +139,7 @@ namespace Welding_Recorder
                     Console.WriteLine();
 #endif
                     Signal signal = new Signal(signalBuffer.ToArray(), timestamp);
+                    signal.AutoWeld = false;
                     SignalProcess(signal);
                 }
             }
