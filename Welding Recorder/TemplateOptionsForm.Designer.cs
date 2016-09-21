@@ -35,7 +35,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.HistoriesListBox = new System.Windows.Forms.ListBox();
             this.ChooseButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // WeldingItemComboBox
@@ -108,24 +108,24 @@
             this.ChooseButton.UseVisualStyleBackColor = true;
             this.ChooseButton.Click += new System.EventHandler(this.ChooseButton_Click);
             // 
-            // CancelButton
+            // cancelButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(380, 215);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 7;
-            this.CancelButton.Text = "取消";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.Location = new System.Drawing.Point(380, 215);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.TabIndex = 7;
+            this.cancelButton.Text = "取消";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // ChooseTemplateForm
+            // TemplateOptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(467, 250);
             this.ControlBox = false;
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.ChooseButton);
             this.Controls.Add(this.HistoriesListBox);
             this.Controls.Add(this.label3);
@@ -134,7 +134,7 @@
             this.Controls.Add(this.GangTaoTypeComboBox);
             this.Controls.Add(this.WeldingItemComboBox);
             this.MinimumSize = new System.Drawing.Size(410, 250);
-            this.Name = "ChooseTemplateForm";
+            this.Name = "TemplateOptionsForm";
             this.ShowIcon = false;
             this.Text = "选择焊接模板";
             this.ResumeLayout(false);
@@ -151,6 +151,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox HistoriesListBox;
         private System.Windows.Forms.Button ChooseButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button cancelButton;
     }
 }

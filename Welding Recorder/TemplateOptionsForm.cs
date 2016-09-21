@@ -77,7 +77,7 @@ namespace Welding_Recorder
             });
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }

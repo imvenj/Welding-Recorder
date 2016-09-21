@@ -295,7 +295,7 @@ namespace Welding_Recorder
                         dict["operator"] = reader.GetValue(8);
                         dict["history_id"] = reader.GetValue(9);
                         dict["created_at"] = reader.GetValue(10);
-                        dict["auto_weld"] = reader.GetBoolean(11);
+                        dict["interupted"] = reader.GetValue(11);
 
                         var autoWeldHistory = new AutoWeldHistory(dict);
                         autoWeldHistory.Id = reader.GetInt64(0);
@@ -639,7 +639,7 @@ namespace Welding_Recorder
                     var ARFlowParam = SQLiteHelper.CreateStringParameter("@ar_flow", history.ArFlow);
                     var RoomTemperatureParam = SQLiteHelper.CreateStringParameter("@room_temperature", history.RoomTemperature);
                     var OperatorParam = SQLiteHelper.CreateStringParameter("@operator", history.OperatorName);
-                    var HistoryIdParam = SQLiteHelper.CreateStringParameter("@history_id", history.OperatorName);
+                    var HistoryIdParam = SQLiteHelper.CreateStringParameter("@history_id", history.Template.Id);
                     var CreatedAtParam = SQLiteHelper.CreateParameter("@created_at", history.CreatedAt, DbType.DateTime);
                     var InteruptedParam = SQLiteHelper.CreateParameter("@interupted", interupted, DbType.Boolean);
                     command.Parameters.Add(nameParam);
@@ -748,7 +748,7 @@ namespace Welding_Recorder
                         dict["operator"] = reader.GetValue(8);
                         dict["history_id"] = reader.GetValue(9);
                         dict["created_at"] = reader.GetValue(10);
-                        dict["auto_weld"] = reader.GetBoolean(11);
+                        dict["interupted"] = reader.GetValue(11);
 
                         history = new AutoWeldHistory(dict);
                         history.Id = reader.GetInt64(0);

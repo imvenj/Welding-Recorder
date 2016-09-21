@@ -656,6 +656,7 @@ namespace Welding_Recorder
             try
             {
                 dict["name"] = "";
+                dict["interupted"] = false;
                 var history = new AutoWeldHistory(dict);
                 history.Signals = signalCache;
                 // Decide interupted by signal count.

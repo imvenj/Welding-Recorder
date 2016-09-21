@@ -7,21 +7,44 @@ namespace Welding_Recorder
     public partial class HistoriesForm : Form
     {
         private List<History> Histories { get; set; }
+        private bool isAutoWeld;
 
-        public HistoriesForm()
+        public HistoriesForm(bool autoWeld = false)
         {
             InitializeComponent();
-            UpdateUI();
+            UpdateUI(autoWeld);
+            isAutoWeld = autoWeld;
         }
 
-        private void UpdateUI()
+        private void UpdateUI(bool autoWeld = false)
         {
             historiesList.Items.Clear();
             var db = new DataProcess();
-            Histories = db.HistoryList();
+            if (autoWeld)
+            {
+                var list = db.AutoWeldHistoryList();
+                if (Histories == null)
+                {
+                    Histories = new List<History>();
+                }
+                else
+                {
+                    Histories.Clear();
+                }
+                list.ForEach((item) => {
+                    Histories.Add(item);
+                });
+                Text = "控制记录";
+            }
+            else
+            {
+                Histories = db.HistoryList();
+                Text = "焊接历史";
+            }
             Histories.ForEach((history) => {
                 var name = history.Name.Trim();
-                historiesList.Items.Add(name.Length == 0 ? "(未命名记录)" : name);
+                var defaultName = autoWeld ? "(未命名控制记录)" : "(未命名焊接历史)";
+                historiesList.Items.Add(name.Length == 0 ? defaultName : name);
             });
             ShowHistory();
         }
@@ -37,7 +60,7 @@ namespace Welding_Recorder
         {
             if (historiesList.SelectedIndices.Count == 0)
             {
-                historyDetailTextBox.Text = "请选择一条历史记录。";
+                historyDetailTextBox.Text = "请选择一个列表项。";
             }
             else
             {

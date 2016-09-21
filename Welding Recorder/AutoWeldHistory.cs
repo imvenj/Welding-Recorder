@@ -8,6 +8,14 @@ namespace Welding_Recorder
     public class AutoWeldHistory : History
     {
         public History Template { get; set; }
+
+        public AutoWeldHistory(Dictionary<string, object> meta) : base(meta)
+        {
+            long hid = (long)meta["history_id"];
+            Interupted = (bool)meta["interupted"];
+            Template = History.Find(hid);
+        }
+
         private List<Signal> signals;
         override public List<Signal> Signals
         {
@@ -25,13 +33,6 @@ namespace Welding_Recorder
             {
                 signals = value;
             }
-        }
-
-        public AutoWeldHistory(Dictionary<string, object> meta) : base(meta)
-        {
-            long hid = (long)meta["history_id"];
-            bool interupted = (bool)meta["interupted"];
-            Template = History.Find(hid);
         }
 
         public bool Interupted { get; set; }
@@ -70,8 +71,9 @@ namespace Welding_Recorder
         
         public override string ToString()
         {
-            var signals = Template.Signals;
+            var signals = Signals;
             var message = "自动控制记录详细信息\r\n\r\n";
+            message += string.Format("运行结果：自动控制{0}\r\n\r\n", Interupted ? "被中断" : "完成");
             message += string.Format("本记录包含{0}条焊接指令。\r\n\r\n", signals.Count);
 
             var formatString = "{0} {1} \r\n";

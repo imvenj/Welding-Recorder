@@ -503,5 +503,11 @@ namespace Welding_Recorder
                 }
             }
         }
+
+        private void EditAutoWeldHistoryMenuItem_Click(object sender, EventArgs e)
+        {
+            var historyForm = new HistoriesForm(true);
+            historyForm.ShowDialog(this);
+        }
     }
 }

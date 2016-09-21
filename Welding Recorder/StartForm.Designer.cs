@@ -51,6 +51,7 @@
             this.ClearTemplateButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.SignalLabel = new System.Windows.Forms.Label();
+            this.EditAutoWeldHistoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortStatusImageBox)).BeginInit();
             this.SuspendLayout();
@@ -144,6 +145,7 @@
             // 
             this.编辑ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.EditHistoryMenuItem,
+            this.EditAutoWeldHistoryMenuItem,
             this.EditWorkerMenuItem,
             this.ManageTemplatesMenuItem});
             this.编辑ToolStripMenuItem.Name = "编辑ToolStripMenuItem";
@@ -153,21 +155,21 @@
             // EditHistoryMenuItem
             // 
             this.EditHistoryMenuItem.Name = "EditHistoryMenuItem";
-            this.EditHistoryMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.EditHistoryMenuItem.Size = new System.Drawing.Size(152, 22);
             this.EditHistoryMenuItem.Text = "编辑焊接历史";
             this.EditHistoryMenuItem.Click += new System.EventHandler(this.EditHistoryMenuItem_Click);
             // 
             // EditWorkerMenuItem
             // 
             this.EditWorkerMenuItem.Name = "EditWorkerMenuItem";
-            this.EditWorkerMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.EditWorkerMenuItem.Size = new System.Drawing.Size(152, 22);
             this.EditWorkerMenuItem.Text = "编辑操作人员";
             this.EditWorkerMenuItem.Click += new System.EventHandler(this.EditWorkerMenuItem_Click);
             // 
             // ManageTemplatesMenuItem
             // 
             this.ManageTemplatesMenuItem.Name = "ManageTemplatesMenuItem";
-            this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.ManageTemplatesMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ManageTemplatesMenuItem.Text = "管理焊接模版";
             this.ManageTemplatesMenuItem.Click += new System.EventHandler(this.ManageTemplatesMenuItem_Click);
             // 
@@ -254,6 +256,13 @@
             this.SignalLabel.Size = new System.Drawing.Size(0, 12);
             this.SignalLabel.TabIndex = 47;
             // 
+            // EditAutoWeldHistoryMenuItem
+            // 
+            this.EditAutoWeldHistoryMenuItem.Name = "EditAutoWeldHistoryMenuItem";
+            this.EditAutoWeldHistoryMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.EditAutoWeldHistoryMenuItem.Text = "编辑控制记录";
+            this.EditAutoWeldHistoryMenuItem.Click += new System.EventHandler(this.EditAutoWeldHistoryMenuItem_Click);
+            // 
             // StartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -310,5 +319,6 @@
         private System.Windows.Forms.ToolStripMenuItem DeleteDatabaseFileMenu;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label SignalLabel;
+        private System.Windows.Forms.ToolStripMenuItem EditAutoWeldHistoryMenuItem;
     }
 }

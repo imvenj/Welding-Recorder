@@ -50,7 +50,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.WeldingItemComboBox = new System.Windows.Forms.ComboBox();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SignalsListView
@@ -60,14 +60,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SignalsListView.Location = new System.Drawing.Point(12, 84);
             this.SignalsListView.Name = "SignalsListView";
-            this.SignalsListView.Size = new System.Drawing.Size(720, 386);
+            this.SignalsListView.Size = new System.Drawing.Size(720, 400);
             this.SignalsListView.TabIndex = 1;
             this.SignalsListView.UseCompatibleStateImageBehavior = false;
             // 
             // DeleteSelectedItemsButton
             // 
             this.DeleteSelectedItemsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DeleteSelectedItemsButton.Location = new System.Drawing.Point(12, 476);
+            this.DeleteSelectedItemsButton.Location = new System.Drawing.Point(12, 499);
             this.DeleteSelectedItemsButton.Name = "DeleteSelectedItemsButton";
             this.DeleteSelectedItemsButton.Size = new System.Drawing.Size(105, 23);
             this.DeleteSelectedItemsButton.TabIndex = 2;
@@ -78,7 +78,7 @@
             // DoneButton
             // 
             this.DoneButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DoneButton.Location = new System.Drawing.Point(576, 476);
+            this.DoneButton.Location = new System.Drawing.Point(576, 499);
             this.DoneButton.Name = "DoneButton";
             this.DoneButton.Size = new System.Drawing.Size(75, 23);
             this.DoneButton.TabIndex = 3;
@@ -99,7 +99,7 @@
             // DeSelectAllButton
             // 
             this.DeSelectAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DeSelectAllButton.Location = new System.Drawing.Point(178, 476);
+            this.DeSelectAllButton.Location = new System.Drawing.Point(178, 499);
             this.DeSelectAllButton.Name = "DeSelectAllButton";
             this.DeSelectAllButton.Size = new System.Drawing.Size(75, 23);
             this.DeSelectAllButton.TabIndex = 5;
@@ -250,24 +250,24 @@
             this.WeldingItemComboBox.Size = new System.Drawing.Size(108, 20);
             this.WeldingItemComboBox.TabIndex = 54;
             // 
-            // CancelButton
+            // cancelButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(657, 476);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 68;
-            this.CancelButton.Text = "取消";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.Location = new System.Drawing.Point(657, 499);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.TabIndex = 68;
+            this.cancelButton.Text = "取消";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // EditHistoryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(744, 511);
+            this.ClientSize = new System.Drawing.Size(744, 534);
             this.ControlBox = false;
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.TaskNameTextBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label15);
@@ -325,6 +325,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox WeldingItemComboBox;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button cancelButton;
     }
 }
