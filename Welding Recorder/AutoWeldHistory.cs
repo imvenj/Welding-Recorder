@@ -88,6 +88,8 @@ namespace Welding_Recorder
             message += string.Format(formatString, "室内温度：", RoomTemperature + "℃");
             message += string.Format(formatString, "氩气流量：", ArFlow + "L/min");
             message += "\r\n";
+            message += string.Format("焊接模板：\r\n{0}", Template.ShortDescription());
+            message += "\r\n\r\n";
 
             for (int n = 0; n < signals.Count; n++)
             {

@@ -43,7 +43,7 @@ namespace Welding_Recorder
             }
             Histories.ForEach((history) => {
                 var name = history.Name.Trim();
-                var defaultName = autoWeld ? "(未命名控制记录)" : "(未命名焊接历史)";
+                var defaultName = autoWeld ? "(未命名控制记录)" : "(未命名焊接记录)";
                 historiesList.Items.Add(name.Length == 0 ? defaultName : name);
             });
             ShowHistory();
@@ -81,7 +81,7 @@ namespace Welding_Recorder
             if (index != -1 && historiesList.SelectedIndices.Count == 1)
             {
                 var history = Histories[index];
-                var editForm = new EditHistoryForm(history);
+                var editForm = new EditHistoryForm(history, isAutoWeld);
                 var result = editForm.ShowDialog(this);
                 if (result == DialogResult.OK)
                 {

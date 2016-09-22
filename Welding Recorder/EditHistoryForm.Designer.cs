@@ -31,7 +31,7 @@
             this.SignalsListView = new System.Windows.Forms.ListView();
             this.DeleteSelectedItemsButton = new System.Windows.Forms.Button();
             this.DoneButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.EditInfoLabel = new System.Windows.Forms.Label();
             this.DeSelectAllButton = new System.Windows.Forms.Button();
             this.TaskNameTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -86,15 +86,15 @@
             this.DoneButton.UseVisualStyleBackColor = true;
             this.DoneButton.Click += new System.EventHandler(this.DoneButton_Click);
             // 
-            // label1
+            // EditInfoLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(12, 67);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(157, 14);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "请勾选你要删除的条目";
+            this.EditInfoLabel.AutoSize = true;
+            this.EditInfoLabel.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.EditInfoLabel.Location = new System.Drawing.Point(12, 67);
+            this.EditInfoLabel.Name = "EditInfoLabel";
+            this.EditInfoLabel.Size = new System.Drawing.Size(157, 14);
+            this.EditInfoLabel.TabIndex = 4;
+            this.EditInfoLabel.Text = "请勾选你要删除的条目";
             // 
             // DeSelectAllButton
             // 
@@ -286,7 +286,7 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.WeldingItemComboBox);
             this.Controls.Add(this.DeSelectAllButton);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.EditInfoLabel);
             this.Controls.Add(this.DoneButton);
             this.Controls.Add(this.DeleteSelectedItemsButton);
             this.Controls.Add(this.SignalsListView);
@@ -306,7 +306,7 @@
         private System.Windows.Forms.ListView SignalsListView;
         private System.Windows.Forms.Button DeleteSelectedItemsButton;
         private System.Windows.Forms.Button DoneButton;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label EditInfoLabel;
         private System.Windows.Forms.Button DeSelectAllButton;
         private System.Windows.Forms.TextBox TaskNameTextBox;
         private System.Windows.Forms.Label label6;

@@ -12,16 +12,18 @@ namespace Welding_Recorder
     public partial class EditHistoryForm : Form
     {
         public History History { get; set; }
+        private bool isAutoWeld;
 
-        public EditHistoryForm(History history)
+        public EditHistoryForm(History history, bool autoWeld = false)
         {
             History = history;
+            isAutoWeld = autoWeld;
             InitializeComponent();
-            PopulateListViewContent();
-            DoOtherUIInitialization();
+            PopulateListViewContent(autoWeld);
+            DoOtherUIInitialization(autoWeld);
         }
 
-        private void PopulateListViewContent()
+        private void PopulateListViewContent(bool autoWeld = false)
         {
             SignalsListView.Columns.Add("", 30);
             SignalsListView.Columns.Add("ID", 40);
@@ -29,33 +31,70 @@ namespace Welding_Recorder
             SignalsListView.Columns.Add("档速", 50);
             SignalsListView.Columns.Add("时间戳", 150);
             SignalsListView.Columns.Add("时间差(ms)",80);
+            if (autoWeld)
+            {
+                SignalsListView.Columns.Add("控制信号", 100);
+                SignalsListView.Columns.Add("通讯时差(ms)", 100);
+            }
             SignalsListView.View = View.Details;
             SignalsListView.GridLines = true;
             SignalsListView.HeaderStyle = ColumnHeaderStyle.Clickable;
             SignalsListView.FullRowSelect = true;
-            SignalsListView.CheckBoxes = true;
+            SignalsListView.CheckBoxes = autoWeld ? false : true;
 
-            PopulateData();
+            PopulateData(autoWeld);
             loadWeldingDataLists();
             FillWeldingHistoryData();
         }
 
-        private void DoOtherUIInitialization()
+        private void DoOtherUIInitialization(bool autoWeld = false)
         {
             string name = History.Name;
             if (name.Length == 0)
             {
-                name = "未命名焊接记录";
+                name = autoWeld ? "未命名控制记录" : "未命名焊接记录";
             }
             Text = "正在编辑“" + name + "”";
+
+            if (autoWeld)
+            {
+                DeleteSelectedItemsButton.Visible = false;
+                DeSelectAllButton.Visible = false;
+                EditInfoLabel.Text = "自动控制信号列表";
+            }
+            else
+            {
+                DeleteSelectedItemsButton.Visible = true;
+                DeSelectAllButton.Visible = true;
+            }
         }
 
-        private void PopulateData()
+        private void PopulateData(bool autoWeld = false)
         {
             SignalsListView.Items.Clear();
-            foreach (var signal in History.Signals)
+            
+            //foreach (var signal in History.Signals)
+            for (var i = 0; i < History.Signals.Count(); i++)
             {
-                SignalsListView.Items.Add(signal.ToListItem());
+                var signal = History.Signals[i];
+                var row = signal.ToListItem();
+                if (autoWeld)
+                {
+                    var autoWeldHistory = (AutoWeldHistory)History;
+                    if (!autoWeldHistory.Interupted)
+                    {
+                        row.SubItems.Add(signal.ToString());
+                        var err = signal.Delta - autoWeldHistory.Template.Signals[i].Delta;
+                        row.SubItems.Add(string.Format("{0}", err));
+                    }
+                    else
+                    {
+                        row.SubItems.Add("-");
+                        row.SubItems.Add("-");
+                    }
+                }
+
+                SignalsListView.Items.Add(row);
             }
         }
 
@@ -110,7 +149,7 @@ namespace Welding_Recorder
                 //Console.WriteLine("Selected index is {0}, ID is {1}", index.ToString(), History.Signals[int.Parse(index.ToString())].Id);
             }
             History.ReloadSignals();
-            PopulateData();
+            PopulateData(isAutoWeld);
             MessageBox.Show(this, "操作成功！", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
         }
 
